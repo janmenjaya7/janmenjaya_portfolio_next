@@ -1,0 +1,31 @@
+# Janmenjaya Biswal — Frontend Developer
+
+> Personal portfolio of Janmenjaya Biswal, a Frontend Developer based in Pune, Maharashtra, India, with 3+ years of experience building fast, scalable web applications with React.js, Next.js, TypeScript and React Native.
+
+Janmenjaya currently builds EdTech products for IFAS Educate Pvt. Ltd. (via e2eHiring), and has delivered 4 live production platforms serving 50,000+ learners across India. Janmenjaya's focus is reusable component architecture, REST API integration, performance optimisation and mobile-first responsive UI. Janmenjaya received an Excellence Award for outstanding project performance and holds a GCP Associate Cloud Engineer certification and an MCA from Trident Academy of Creative Technology.
+
+## Portfolio
+
+- [Home](https://www.janmenjaya.in/): Overview, skills, experience, projects, credentials and contact form
+- [About](https://www.janmenjaya.in/#about): Background, interests and highlights
+- [Skills](https://www.janmenjaya.in/#skills): React.js, Next.js, TypeScript, JavaScript, React Native, Tailwind CSS, Material UI, Bootstrap, REST APIs, Git, Webpack, GCP
+- [Experience](https://www.janmenjaya.in/#experience): Junior Developer Engineer — Frontend at e2eHiring for IFAS Educate (Aug 2023 – present)
+- [Projects](https://www.janmenjaya.in/#projects): Live EdTech platforms and personal projects
+- [Contact](https://www.janmenjaya.in/#contact): Ways to get in touch
+
+## Live work
+
+- [IFAS Online](https://ifasonline.com): Main EdTech learning portal (Next.js, React.js)
+- [Lurnigo](https://lurnigo.com): Online course marketplace (React.js, TypeScript)
+- [IFAS CRM](https://crm.ifasonline.com): Internal admin CRM dashboard (React.js)
+- [Anjana Samaj](https://anjanasamaj.in): Community organisation website (React.js)
+
+## Contact
+
+- Email: janmenjayabiswal@gmail.com
+- [LinkedIn](https://linkedin.com/in/janmenjaya-biswal)
+- [GitHub](https://github.com/janmenjaya-biswal)
+
+## Optional
+
+- [Sitemap](https://www.janmenjaya.in/sitemap.xml)

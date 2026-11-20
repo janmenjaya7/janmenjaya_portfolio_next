@@ -1,0 +1,87 @@
+.ttRoot {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 240px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: #18181b;
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+  animation: ttIn 0.16s ease-out;
+}
+
+.ttTitle {
+  font-weight: 600;
+}
+
+.ttText {
+  color: #c7c7cc;
+  font-weight: 400;
+}
+
+/* Small arrow pointing at the trigger */
+.ttRoot::before {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: inherit;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+/* Placement: `translate` keeps the box beside the trigger; `scale` is free for the animation */
+.ttSide_top {
+  translate: -50% -100%;
+  transform-origin: bottom center;
+}
+.ttSide_top::before {
+  left: calc(50% - 4.5px);
+  bottom: -4px;
+}
+
+.ttSide_bottom {
+  translate: -50% 0;
+  transform-origin: top center;
+}
+.ttSide_bottom::before {
+  left: calc(50% - 4.5px);
+  top: -4px;
+}
+
+.ttSide_right {
+  translate: 0 -50%;
+  transform-origin: left center;
+}
+.ttSide_right::before {
+  left: -4px;
+  top: calc(50% - 4.5px);
+}
+
+.ttSide_left {
+  translate: -100% -50%;
+  transform-origin: right center;
+}
+.ttSide_left::before {
+  right: -4px;
+  top: calc(50% - 4.5px);
+}
+
+@keyframes ttIn {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ttRoot {
+    animation: none;
+  }
+}

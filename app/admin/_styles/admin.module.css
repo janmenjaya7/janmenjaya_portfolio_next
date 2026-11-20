@@ -1,0 +1,1047 @@
+/* ═══════ Admin theme — change colors here ═══════ */
+.admRoot {
+  --adm-bg: #e9e9eb;
+  --adm-surface: #f3f3f4;
+  --adm-card: rgba(255, 255, 255, 0.78);
+  --adm-card-solid: #ffffff;
+  --adm-text: #1d1d1f;
+  --adm-text-soft: #4a4a4f;
+  --adm-muted: #8e8e93;
+  --adm-line: rgba(0, 0, 0, 0.07);
+  --adm-hover: rgba(0, 0, 0, 0.04);
+  --adm-accent: #2e9b6a;
+  --adm-accent-strong: #23845a;
+  --adm-accent-soft: #dcf3e7;
+  --adm-warn: #e0763f;
+  --adm-warn-soft: #ffd7c2;
+  --adm-danger: #d9343f;
+  --adm-danger-soft: #fde2e3;
+  --adm-info-soft: #e4ecfb;
+  --adm-radius-xl: 32px;
+  --adm-radius-lg: 22px;
+  --adm-radius-md: 14px;
+  --adm-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 18px 40px -12px rgba(0, 0, 0, 0.1);
+  --adm-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 6px 16px -6px rgba(0, 0, 0, 0.12);
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--adm-bg);
+  color: var(--adm-text);
+  font-family: "DM Sans", system-ui, sans-serif;
+  cursor: auto;
+}
+
+.admRoot *,
+.admRoot *::before,
+.admRoot *::after {
+  box-sizing: border-box;
+}
+
+/* Admin pages only: drop the site's dark body and the browser's default margin */
+:global(body):has(.admRoot) {
+  margin: 0;
+  background: var(--adm-bg, #e9e9eb) !important;
+}
+
+/* :where() keeps this reset at zero specificity so component classes win */
+:where(.admRoot) :where(button) {
+  font: inherit;
+  color: inherit;
+}
+
+/* ═══════ Layout ═══════ */
+/* Desktop: the window doesn't scroll — sidebar list and main area scroll on their own */
+.admLayout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  padding: 18px;
+  gap: 0;
+  overflow: hidden;
+  /* Premium frame: soft emerald / violet / peach mesh over a cool grey */
+  background:
+    radial-gradient(1200px 600px at -10% -20%, rgba(46, 155, 106, 0.35), transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(124, 108, 242, 0.28), transparent 60%),
+    radial-gradient(900px 700px at 60% 120%, rgba(240, 142, 92, 0.3), transparent 60%),
+    linear-gradient(135deg, #e3ebe7 0%, #e8e6f1 50%, #f2e7df 100%);
+}
+
+/* Soft colour wash + dot grid so the white cards stand out */
+.admMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2.25rem clamp(1rem, 3vw, 3rem) 3rem;
+  border-radius: 0 var(--adm-radius-xl) var(--adm-radius-xl) 0;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(46, 155, 106, 0.16), transparent 34%),
+    radial-gradient(circle at 96% 12%, rgba(224, 118, 63, 0.13), transparent 32%),
+    radial-gradient(circle at 75% 100%, rgba(99, 102, 241, 0.1), transparent 40%),
+    radial-gradient(rgba(0, 0, 0, 0.055) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    var(--adm-surface);
+}
+
+/* Thin modern scrollbars for the two scroll areas */
+.admMain > * {
+  flex-shrink: 0;
+}
+
+.admMain,
+.admNav,
+.admSectionBody {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+
+.admMain::-webkit-scrollbar,
+.admNav::-webkit-scrollbar,
+.admSectionBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admMain::-webkit-scrollbar-track,
+.admNav::-webkit-scrollbar-track,
+.admSectionBody::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 14px 0;
+}
+
+.admMain::-webkit-scrollbar-thumb,
+.admNav::-webkit-scrollbar-thumb,
+.admSectionBody::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.14);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.admMain::-webkit-scrollbar-thumb:hover,
+.admNav::-webkit-scrollbar-thumb:hover,
+.admSectionBody::-webkit-scrollbar-thumb:hover {
+  background: var(--adm-accent);
+  background-clip: padding-box;
+}
+
+.admTitle {
+  margin: 0 0 1.75rem;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.admTitleMuted {
+  color: var(--adm-text-soft);
+  font-weight: 500;
+}
+
+/* ═══════ Sidebar ═══════ */
+.admSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-height: 0;
+  padding: 1.75rem 1rem 1rem;
+  background: var(--adm-surface);
+  border-radius: var(--adm-radius-xl) 0 0 var(--adm-radius-xl);
+  border-right: 1px solid var(--adm-line);
+  overflow: hidden;
+}
+
+.admBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+.admLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #3a3a3f, #111113);
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), var(--adm-shadow-sm);
+}
+
+.admLogoDot {
+  color: var(--adm-accent);
+}
+
+.admBrandText {
+  font-weight: 600;
+  color: var(--adm-text-soft);
+}
+
+/* Only this list scrolls; brand above and account card below stay fixed */
+.admNav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.25rem 0.35rem 0.75rem 0.25rem;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+}
+
+.admBrand {
+  flex-shrink: 0;
+}
+
+.admNavItem {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  border: 0;
+  border-radius: var(--adm-radius-md);
+  background: transparent;
+  color: var(--adm-text-soft);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admNavItem:hover {
+  background: var(--adm-hover);
+  color: var(--adm-text);
+}
+
+.admNavItem:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.admNavItemActive {
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.admNavParent {
+  color: var(--adm-text);
+  font-weight: 600;
+}
+
+.admNavChevron {
+  margin-left: auto;
+  transition: transform 0.25s ease;
+}
+
+.admNavChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Tree line on the left like the reference */
+.admSubNav {
+  list-style: none;
+  margin: 0.15rem 0 0.25rem 1.35rem;
+  padding: 0 0 0 0.85rem;
+  border-left: 1.5px solid var(--adm-line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.admSubItem {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.45rem 0.6rem 0.45rem 0.45rem;
+  border: 0;
+  border-radius: var(--adm-radius-md);
+  background: transparent;
+  color: var(--adm-muted);
+  font-size: 0.96rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admSubItem:hover {
+  color: var(--adm-text);
+  background: var(--adm-hover);
+}
+
+.admSubItemActive {
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font-weight: 600;
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.admSubLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Section icon: pops on hover, turns into a solid accent badge when active */
+.admSubIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--adm-muted);
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.admSubItem:hover .admSubIcon {
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.admSubItem:hover .admSubIcon svg {
+  animation: admIconPop 0.5s ease;
+}
+
+.admSubItemActive .admSubIcon,
+.admSubItemActive:hover .admSubIcon {
+  background: linear-gradient(135deg, var(--adm-accent), #3fbf86);
+  color: #fff;
+  box-shadow: 0 8px 18px -8px rgba(46, 155, 106, 0.9);
+}
+
+.admSubItemActive .admSubIcon svg {
+  animation: admIconBounce 0.55s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes admIconPop {
+  0% { transform: scale(1) rotate(0); }
+  35% { transform: scale(1.2) rotate(-10deg); }
+  65% { transform: scale(0.95) rotate(6deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes admIconBounce {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* Count badges: round circles */
+.admBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--adm-text);
+}
+
+/* Total for the whole Content group, sits before the chevron */
+.admBadgeTotal {
+  margin-left: auto;
+  background: var(--adm-text);
+  color: #fff;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.5);
+}
+
+.admNavParent .admNavChevron {
+  margin-left: 0.35rem;
+}
+
+.admBadgeOk {
+  background: var(--adm-accent-soft);
+}
+
+.admBadgeWarn {
+  background: var(--adm-warn-soft);
+  color: var(--adm-warn);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+/* ═══════ Account card (fixed at sidebar bottom) ═══════ */
+.admSideFoot {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border-radius: var(--adm-radius-lg);
+  background: var(--adm-card-solid);
+  border: 1px solid var(--adm-line);
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.admUser {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.admAvatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #2e9b6a, #1f6f8b);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admOnline {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #34c779;
+  border: 2.5px solid var(--adm-card-solid);
+}
+
+.admUserText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admUserName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admUserRole {
+  font-size: 0.75rem;
+  color: var(--adm-muted);
+}
+
+.admFootActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.admFootBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.5rem;
+  border: 0;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.admFootBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.admFootSite {
+  background: linear-gradient(135deg, #2b2b30, #111113);
+  color: #fff;
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.7);
+}
+
+.admFootSite:hover {
+  box-shadow: 0 12px 22px -10px rgba(0, 0, 0, 0.75);
+}
+
+.admFootArrow {
+  transition: transform 0.3s ease;
+}
+
+.admFootSite:hover .admFootArrow {
+  transform: translate(2px, -2px);
+}
+
+.admFootLogout {
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+.admFootLogout:hover:not(:disabled) {
+  background: var(--adm-danger);
+  color: #fff;
+  box-shadow: 0 10px 20px -10px rgba(217, 52, 63, 0.8);
+}
+
+.admFootLogoutIcon {
+  transition: transform 0.3s ease;
+}
+
+.admFootLogout:hover:not(:disabled) .admFootLogoutIcon {
+  transform: translateX(3px);
+}
+
+.admFootLogout:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* ═══════ Cards ═══════ */
+.admOverview {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admCard {
+  --adm-card-pad: clamp(1.25rem, 2.5vw, 2rem);
+  position: relative;
+  padding: var(--adm-card-pad);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--adm-radius-xl);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 24px 48px -20px rgba(31, 60, 45, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.admCardTitle {
+  margin: 0 0 1.5rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.admMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admMetric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding: 0.5rem 1.5rem 0.5rem 0;
+  margin-right: 1.5rem;
+  border: 0;
+  border-right: 1px solid var(--adm-line);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 0;
+  transition: transform 0.25s ease;
+}
+
+.admMetric:last-child {
+  border-right: 0;
+  margin-right: 0;
+}
+
+.admMetric:hover {
+  transform: translateY(-2px);
+}
+
+.admMetricIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  background: var(--adm-bg);
+  color: var(--adm-text);
+}
+
+.admMetricLabel {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--adm-text-soft);
+}
+
+.admMetricValue {
+  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--adm-text);
+}
+
+.admPill {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admPillOk {
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+  border: 1px solid rgba(46, 155, 106, 0.22);
+}
+
+.admPillWarn {
+  background: var(--adm-warn-soft);
+  color: var(--adm-warn);
+}
+
+/* ═══════ Storage status ═══════ */
+.admStatus {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--adm-radius-md);
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.admStatus p {
+  margin: 0;
+}
+
+.admStatus_ok {
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+}
+
+.admStatus_info {
+  background: var(--adm-info-soft);
+  color: #2f5aa8;
+}
+
+.admStatus_warn {
+  background: var(--adm-warn-soft);
+  color: #9a4618;
+}
+
+.admStatus_danger {
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+.admProfileRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admMuted {
+  margin: 0;
+  color: var(--adm-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.admStrong {
+  margin: 0.15rem 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* ═══════ Section editor ═══════ */
+/* Editor card fills the remaining height; only .admSectionBody scrolls */
+.admEditorCard {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.admSectionHead {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--adm-card-solid);
+  border-bottom: 1px solid var(--adm-line);
+}
+
+.admSectionHead .admMetricIcon {
+  margin-bottom: 0;
+  width: 42px;
+  height: 42px;
+}
+
+.admSectionHead .admCardTitle {
+  margin: 0 0 0.1rem;
+  font-size: 1.15rem;
+}
+
+.admSectionHead .admMuted {
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.admSectionBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem var(--adm-card-pad);
+}
+
+.admEditorCard .admSaveBar {
+  flex-shrink: 0;
+  margin: 0 0.75rem 0.75rem;
+}
+
+.admSaveBar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+  border-radius: var(--adm-radius-lg);
+  background: var(--adm-card-solid);
+  box-shadow: var(--adm-shadow);
+  border: 1px solid var(--adm-line);
+}
+
+.admSaveMsg {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--adm-text-soft);
+}
+
+.admSaveActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ═══════ Buttons ═══════ */
+.admPrimaryBtn,
+.admGhostBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.15rem;
+  border-radius: 12px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.admPrimaryBtn {
+  border: 0;
+  background: var(--adm-accent);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(46, 155, 106, 0.6);
+}
+
+.admPrimaryBtn:hover:not(:disabled) {
+  background: var(--adm-accent-strong);
+  transform: translateY(-1px);
+}
+
+.admGhostBtn {
+  border: 1px solid var(--adm-line);
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+}
+
+.admGhostBtn:hover:not(:disabled) {
+  background: var(--adm-hover);
+}
+
+.admPrimaryBtn:disabled,
+.admGhostBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.admRoot :focus-visible {
+  outline: 2px solid var(--adm-accent);
+  outline-offset: 2px;
+}
+
+/* ═══════ Notices ═══════ */
+.admNotice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--adm-radius-md);
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: admSlideIn 0.3s ease;
+}
+
+.admNoticeOk {
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+}
+
+.admNoticeError {
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+@keyframes admSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+/* ═══════ Responsive ═══════ */
+@media (max-width: 1100px) {
+  .admMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+  .admMetric:nth-child(2n) {
+    border-right: 0;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Phones/tablets: normal page scrolling, sidebar becomes a top bar */
+  .admLayout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    padding: 0;
+  }
+  /* Phones: page scrolls, card grows naturally; header and save bar pin to the screen */
+  .admEditorCard {
+    flex: none;
+    overflow: visible;
+  }
+  .admSectionHead {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    border-radius: var(--adm-radius-xl) var(--adm-radius-xl) 0 0;
+  }
+  .admSectionBody {
+    overflow: visible;
+    padding: 1.25rem 1rem;
+  }
+  .admEditorCard .admSaveBar {
+    position: sticky;
+    bottom: 0.75rem;
+  }
+  .admSidebar {
+    min-width: 0;
+    height: auto;
+    overflow: visible;
+    border-radius: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--adm-line);
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  .admNav {
+    flex: none;
+    min-width: 0;
+    max-width: 100%;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 0.35rem;
+    padding-bottom: 0.25rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .admNavItem {
+    width: auto;
+    flex-shrink: 0;
+  }
+  .admNavParent {
+    display: none;
+  }
+  .admSubNav {
+    display: contents;
+  }
+  .admSubItem {
+    width: auto;
+    flex-shrink: 0;
+    gap: 0.5rem;
+  }
+  .admSideFoot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .admFootActions {
+    flex-shrink: 0;
+  }
+  .admMain {
+    overflow: visible;
+    border-radius: 0;
+    padding: 1.5rem 1rem 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .admUserText {
+    display: none;
+  }
+  .admMetrics {
+    grid-template-columns: 1fr;
+  }
+  .admMetric {
+    border-right: 0;
+    margin-right: 0;
+    padding-right: 0;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--adm-line);
+  }
+  .admMetric:last-child {
+    border-bottom: 0;
+  }
+  .admMetricIcon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0.75rem;
+  }
+  .admSaveBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .admSaveActions > * {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admRoot * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ═══════ Title row + refresh ═══════ */
+.admTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.admTitleRow .admTitle {
+  min-width: 0;
+}
+
+.admRefreshBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--adm-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--adm-shadow-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.admRefreshBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--adm-card-solid);
+  box-shadow: var(--adm-shadow);
+}
+
+.admRefreshBtn:hover:not(:disabled) svg {
+  transform: rotate(90deg);
+}
+
+.admRefreshBtn svg {
+  transition: transform 0.35s ease;
+}
+
+.admRefreshBtn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.admSpin {
+  animation: admSpin 0.9s linear infinite;
+}
+
+@keyframes admSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Unread messages count in the sidebar */
+.admBadgeUnread {
+  margin-left: auto;
+  background: var(--adm-warn);
+  color: #fff;
+  box-shadow: 0 6px 12px -6px rgba(224, 118, 63, 0.9);
+  animation: admBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes admBadgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224, 118, 63, 0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(224, 118, 63, 0); }
+}

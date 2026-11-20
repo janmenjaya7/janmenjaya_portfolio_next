@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { DATA } from "../data";
+import type { PortfolioData } from "../data";
+import ContactForm from "./ContactForm";
+import { usePortfolio } from "./PortfolioProvider";
 
 /* ── REVEAL HOOK ── */
 function useReveal(delay = 0) {
@@ -46,6 +48,7 @@ function Cyan({ children }: { children: React.ReactNode }) {
    ABOUT
 ══════════════════════════════ */
 export function About() {
+  const DATA = usePortfolio();
   const rText  = useReveal(0.1);
   const rCards = useReveal(0.2);
   return (
@@ -62,16 +65,16 @@ export function About() {
               <p key={i} style={{ color: "var(--text)", marginBottom: "1rem", lineHeight: 1.85, fontSize: "0.97rem" }}>{p}</p>
             ))}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "1.5rem" }}>
-              {DATA.about.chips.map((c) => (
-                <span key={c} style={{ padding: "0.3rem 0.85rem", background: "var(--bg3)", border: "1px solid var(--border)", borderRadius: 999, fontSize: "0.78rem", color: "var(--text)" }}>{c}</span>
+              {DATA.about.chips.map((c, i) => (
+                <span key={`${i}-${c}`} style={{ padding: "0.3rem 0.85rem", background: "var(--bg3)", border: "1px solid var(--border)", borderRadius: 999, fontSize: "0.78rem", color: "var(--text)" }}>{c}</span>
               ))}
             </div>
           </div>
 
           {/* Cards column */}
           <div ref={rCards} className="reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            {DATA.about.cards.map((c) => (
-              <div key={c.title} className="glow-card" style={{ padding: "1.25rem" }}>
+            {DATA.about.cards.map((c, i) => (
+              <div key={`${i}-${c.title}`} className="glow-card" style={{ padding: "1.25rem" }}>
                 <div style={{ fontSize: "1.5rem", marginBottom: "0.6rem" }}>{c.icon}</div>
                 <h3 className="font-syne" style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--white)", marginBottom: "0.4rem" }}>{c.title}</h3>
                 <p style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--muted)" }}>{c.desc}</p>
@@ -89,6 +92,7 @@ export function About() {
    SKILLS
 ══════════════════════════════ */
 export function Skills() {
+  const DATA = usePortfolio();
   const rClusters = useReveal(0.1);
   const rPills    = useReveal(0.2);
   return (
@@ -98,14 +102,14 @@ export function Skills() {
         <SectionHeading>Tech <Cyan>Arsenal</Cyan></SectionHeading>
 
         <div ref={rClusters} className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(270px,1fr))", gap: "1.5rem", marginBottom: "2.5rem" }}>
-          {DATA.skills.map((cluster) => (
-            <SkillCluster key={cluster.cluster} cluster={cluster} />
+          {DATA.skills.map((cluster, i) => (
+            <SkillCluster key={`${i}-${cluster.cluster}`} cluster={cluster} />
           ))}
         </div>
 
         <div ref={rPills} className="reveal" style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-          {DATA.techPills.map((p) => (
-            <TechPill key={p} label={p} />
+          {DATA.techPills.map((p, i) => (
+            <TechPill key={`${i}-${p}`} label={p} />
           ))}
         </div>
       </div>
@@ -129,7 +133,7 @@ function TechPill({ label }: { label: string }) {
   );
 }
 
-function SkillCluster({ cluster }: { cluster: typeof DATA.skills[0] }) {
+function SkillCluster({ cluster }: { cluster: PortfolioData["skills"][number] }) {
   const ref = useRef<HTMLDivElement>(null);
   const [animated, setAnimated] = useState(false);
 
@@ -150,8 +154,8 @@ function SkillCluster({ cluster }: { cluster: typeof DATA.skills[0] }) {
         {cluster.cluster}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
-        {cluster.items.map((item) => (
-          <div key={item.name} style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+        {cluster.items.map((item, i) => (
+          <div key={`${i}-${item.name}`} style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
             <span style={{ fontSize: "0.82rem", color: "var(--text)" }}>{item.name}</span>
             <div style={{ height: 4, background: "rgba(255,255,255,0.07)", borderRadius: 999, overflow: "hidden" }}>
               <div
@@ -168,7 +172,7 @@ function SkillCluster({ cluster }: { cluster: typeof DATA.skills[0] }) {
         transparent 14px
       )
     `,
-                  width: animated ? item.level + "%" : "0%",
+                  width: animated ? Math.min(100, Math.max(0, item.level)) + "%" : "0%",
                   transition: "width 1.2s cubic-bezier(0.4,0,0.2,1)",
                 }}
               />
@@ -184,7 +188,7 @@ function SkillCluster({ cluster }: { cluster: typeof DATA.skills[0] }) {
    EXPERIENCE
 ══════════════════════════════ */
 export function Experience() {
-  const r1 = useReveal(0.1);
+  const DATA = usePortfolio();
   return (
     <section id="experience" className="relative z-10" style={{ padding: "7rem 0" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
@@ -195,8 +199,20 @@ export function Experience() {
           {/* Vertical line */}
           <div style={{ position: "absolute", left: 7, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, var(--blue), transparent)" }} />
 
-          {DATA.experience.map((job) => (
-            <div key={job.title} ref={r1} className="reveal" style={{ position: "relative", marginBottom: "2rem" }}>
+          {DATA.experience.map((job, i) => (
+            <ExperienceCard key={`${i}-${job.title}`} job={job} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* Own component so every job gets its own reveal observer */
+function ExperienceCard({ job }: { job: PortfolioData["experience"][number] }) {
+  const r1 = useReveal(0.1);
+  return (
+            <div ref={r1} className="reveal" style={{ position: "relative", marginBottom: "2rem" }}>
               {/* Pulse dot */}
               <div className="pulse-dot" style={{ position: "absolute", left: "-2.15rem", top: "1.75rem", width: 14, height: 14, borderRadius: "50%", background: "var(--blue)", border: "2px solid var(--bg)" }} />
 
@@ -235,24 +251,20 @@ export function Experience() {
                     Live Products
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                    {job.products.map((p) => (
-                      <ProductLink key={p.name} name={p.name} url={p.url} />
+                    {job.products.map((p, i) => (
+                      <ProductLink key={`${i}-${p.name}`} name={p.name} url={p.url} />
                     ))}
                   </div>
                 </div>
 
                 {/* Tech tags */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-                  {job.tech.map((t) => (
-                    <span key={t} className="font-mono-custom" style={{ padding: "0.2rem 0.55rem", background: "var(--bg4)", border: "1px solid var(--border)", borderRadius: 4, fontSize: "0.7rem", color: "var(--muted)" }}>{t}</span>
+                  {job.tech.map((t, i) => (
+                    <span key={`${i}-${t}`} className="font-mono-custom" style={{ padding: "0.2rem 0.55rem", background: "var(--bg4)", border: "1px solid var(--border)", borderRadius: 4, fontSize: "0.7rem", color: "var(--muted)" }}>{t}</span>
                   ))}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -280,6 +292,7 @@ function ProductLink({ name, url }: { name: string; url: string }) {
    PROJECTS
 ══════════════════════════════ */
 export function Projects() {
+  const DATA = usePortfolio();
   return (
     <section id="projects" className="relative z-10" style={{ padding: "7rem 0", background: "var(--bg2)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
@@ -287,7 +300,7 @@ export function Projects() {
         <SectionHeading>Featured <Cyan>Work</Cyan></SectionHeading>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: "1.5rem" }}>
           {DATA.projects.map((p, i) => (
-            <ProjectCard key={p.title} project={p} delay={i * 0.07} />
+            <ProjectCard key={`${i}-${p.title}`} project={p} delay={i * 0.07} />
           ))}
         </div>
       </div>
@@ -295,7 +308,7 @@ export function Projects() {
   );
 }
 
-function ProjectCard({ project: p, delay }: { project: typeof DATA.projects[0]; delay: number }) {
+function ProjectCard({ project: p, delay }: { project: PortfolioData["projects"][number]; delay: number }) {
   const ref = useReveal(delay);
   const [hov, setHov] = useState(false);
   return (
@@ -323,8 +336,8 @@ function ProjectCard({ project: p, delay }: { project: typeof DATA.projects[0]; 
       <h3 className="font-syne" style={{ fontWeight: 700, fontSize: "1rem", color: "var(--white)", marginBottom: "0.6rem" }}>{p.title}</h3>
       <p style={{ fontSize: "0.83rem", lineHeight: 1.7, marginBottom: "1.25rem", flex: 1, color: "var(--muted)" }}>{p.desc}</p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginBottom: "1.25rem" }}>
-        {p.stack.map((s) => (
-          <span key={s} className="font-mono-custom" style={{ padding: "0.15rem 0.55rem", background: "var(--bg4)", border: "1px solid var(--border)", borderRadius: 4, fontSize: "0.7rem", color: "var(--muted)" }}>{s}</span>
+        {p.stack.map((s, i) => (
+          <span key={`${i}-${s}`} className="font-mono-custom" style={{ padding: "0.15rem 0.55rem", background: "var(--bg4)", border: "1px solid var(--border)", borderRadius: 4, fontSize: "0.7rem", color: "var(--muted)" }}>{s}</span>
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -344,26 +357,31 @@ function ProjectCard({ project: p, delay }: { project: typeof DATA.projects[0]; 
    CREDENTIALS
 ══════════════════════════════ */
 export function Credentials() {
+  const DATA = usePortfolio();
   return (
     <section id="certs" className="relative z-10" style={{ padding: "7rem 0" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
         <SectionLabel label="// 05 — Credentials" />
         <SectionHeading>Education &amp; <Cyan>Certs</Cyan></SectionHeading>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))", gap: "1.25rem" }}>
-          {DATA.credentials.map((c, i) => {
-            const ref = useReveal(i * 0.1);
-            return (
-              <div key={c.title} ref={ref} className="reveal glow-card" style={{ padding: "1.5rem" }}>
-                <div style={{ fontSize: "1.75rem", marginBottom: "0.75rem" }}>{c.icon}</div>
-                <h3 className="font-syne" style={{ fontWeight: 600, fontSize: "0.95rem", color: "var(--white)", marginBottom: "0.35rem" }}>{c.title}</h3>
-                <p style={{ fontSize: "0.82rem", color: "var(--blue-light)", marginBottom: "0.25rem" }}>{c.inst}</p>
-                <p className="font-mono-custom" style={{ fontSize: "0.7rem", color: "var(--muted)" }}>{c.meta}</p>
-              </div>
-            );
-          })}
+          {DATA.credentials.map((c, i) => (
+            <CredentialCard key={`${i}-${c.title}`} cred={c} delay={i * 0.1} />
+          ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function CredentialCard({ cred: c, delay }: { cred: PortfolioData["credentials"][number]; delay: number }) {
+  const ref = useReveal(delay);
+  return (
+    <div ref={ref} className="reveal glow-card" style={{ padding: "1.5rem" }}>
+      <div style={{ fontSize: "1.75rem", marginBottom: "0.75rem" }}>{c.icon}</div>
+      <h3 className="font-syne" style={{ fontWeight: 600, fontSize: "0.95rem", color: "var(--white)", marginBottom: "0.35rem" }}>{c.title}</h3>
+      <p style={{ fontSize: "0.82rem", color: "var(--blue-light)", marginBottom: "0.25rem" }}>{c.inst}</p>
+      <p className="font-mono-custom" style={{ fontSize: "0.7rem", color: "var(--muted)" }}>{c.meta}</p>
+    </div>
   );
 }
 
@@ -371,23 +389,19 @@ export function Credentials() {
    CONTACT
 ══════════════════════════════ */
 export function Contact() {
+  const DATA = usePortfolio();
   const r1 = useReveal(0.1);
   const r2 = useReveal(0.2);
-  const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
-  };
-
-  const contactItems = [
-    { icon: "✉️", label: "Email",    val: DATA.email,       href: `mailto:${DATA.email}` },
-    { icon: "📞", label: "Phone",    val: DATA.phone,        href: `tel:${DATA.phone.replace(/\D/g, "")}` },
-    { icon: "📍", label: "Location", val: DATA.location,     href: null },
-    { icon: "💼", label: "LinkedIn", val: "View Profile →",  href: DATA.linkedin },
-    { icon: "⌨️", label: "GitHub",   val: "View Repos →",    href: DATA.github },
+  const allContactItems = [
+    { icon: "✉️", label: "Email",    val: DATA.email,       href: `mailto:${DATA.email}`, show: DATA.email },
+    { icon: "📞", label: "Phone",    val: DATA.phone,        href: `tel:${DATA.phone.replace(/[^\d+]/g, "")}`, show: DATA.phone },
+    { icon: "📍", label: "Location", val: DATA.location,     href: null, show: DATA.location },
+    { icon: "💼", label: "LinkedIn", val: "View Profile →",  href: DATA.linkedin, show: DATA.linkedin },
+    { icon: "⌨️", label: "GitHub",   val: "View Repos →",    href: DATA.github, show: DATA.github },
   ];
+  // Hide rows whose value was cleared in the admin
+  const contactItems = allContactItems.filter((item) => item.show.trim());
 
   return (
     <>
@@ -399,7 +413,7 @@ export function Contact() {
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 1.5rem" }}>
           <SectionLabel label="// 06 — Contact" />
           <SectionHeading>
-            Let's <Cyan>Connect</Cyan>
+            Let&apos;s <Cyan>Connect</Cyan>
           </SectionHeading>
           <p className="contact-heading-sub">
             Open to exciting opportunities, collaborations, and conversations.
@@ -473,155 +487,12 @@ export function Contact() {
 
             {/* ── Form ── */}
             <div ref={r2} className="reveal glow-card contact-form-card">
-              <form
-                onSubmit={handleSubmit}
-                style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
-              >
-                {[
-                  { label: "Your Name",     type: "text",  placeholder: "Enter your name" },
-                  { label: "Email Address", type: "email", placeholder: "you@example.com" },
-                  { label: "Subject",       type: "text",  placeholder: "Let's work together" },
-                ].map((f) => (
-                  <div
-                    key={f.label}
-                    style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-                  >
-                    <label
-                      className="font-mono-custom"
-                      style={{
-                        fontSize: "0.68rem",
-                        letterSpacing: "2px",
-                        textTransform: "uppercase",
-                        color: "var(--muted)",
-                      }}
-                    >
-                      {f.label}
-                    </label>
-                    <input
-                      type={f.type}
-                      placeholder={f.placeholder}
-                      required
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem 1rem",
-                        borderRadius: 8,
-                        fontSize: "0.9rem",
-                        color: "var(--white)",
-                        outline: "none",
-                        background: "var(--bg4)",
-                        border: "1px solid var(--border)",
-                        fontFamily: "inherit",
-                        boxSizing: "border-box",
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = "var(--blue)";
-                        e.target.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.15)";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = "var(--border)";
-                        e.target.style.boxShadow = "none";
-                      }}
-                    />
-                  </div>
-                ))}
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <label
-                    className="font-mono-custom"
-                    style={{
-                      fontSize: "0.68rem",
-                      letterSpacing: "2px",
-                      textTransform: "uppercase",
-                      color: "var(--muted)",
-                    }}
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    rows={5}
-                    placeholder="Tell me about your project or opportunity..."
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem 1rem",
-                      borderRadius: 8,
-                      fontSize: "0.9rem",
-                      color: "var(--white)",
-                      outline: "none",
-                      resize: "vertical",
-                      background: "var(--bg4)",
-                      border: "1px solid var(--border)",
-                      fontFamily: "inherit",
-                      boxSizing: "border-box",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "var(--blue)";
-                      e.target.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.15)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "var(--border)";
-                      e.target.style.boxShadow = "none";
-                    }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="contact-submit-btn"
-                  style={{
-                    width: "100%",
-                    padding: "0.8rem",
-                    borderRadius: 10,
-                    fontWeight: 600,
-                    fontSize: "0.9rem",
-                    color: "#fff",
-                    border: "none",
-                    cursor: "pointer",
-                    background: sent ? "#16a34a" : "var(--blue)",
-                    transition: "background 0.3s, transform 0.15s",
-                  }}
-                  onMouseEnter={(e) =>
-                    !sent && (e.currentTarget.style.transform = "translateY(-2px)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "translateY(0)")
-                  }
-                >
-                  {sent ? "✓ Message Sent!" : "Send Message ↗"}
-                </button>
-              </form>
+              <ContactForm />
             </div>
 
           </div>
         </div>
       </section>
     </>
-  );
-}
-
-/* ══════════════════════════════
-   FOOTER
-══════════════════════════════ */
-export function Footer() {
-  return (
-    <footer className="relative z-10" style={{ borderTop: "1px solid var(--border)", background: "var(--bg)", padding: "2rem" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-        <span className="font-syne" style={{ fontWeight: 800, fontSize: "1.25rem", color: "var(--white)" }}>
-          JB<span style={{ color: "var(--cyan-light)" }}>.</span>
-        </span>
-        <span className="font-mono-custom" style={{ fontSize: "0.75rem", color: "var(--muted)" }}>
-          © 2025 Janmenjaya Biswal. Built with Next.js + Tailwind CSS.
-        </span>
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          {[{ l: "LinkedIn", h: DATA.linkedin }, { l: "GitHub", h: DATA.github }, { l: "Email", h: `mailto:${DATA.email}` }].map((x) => (
-            <a key={x.l} href={x.h} target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: "0.8rem", color: "var(--muted)", transition: "color 0.2s" }}
-              onMouseEnter={e => e.currentTarget.style.color = "var(--blue-light)"}
-              onMouseLeave={e => e.currentTarget.style.color = "var(--muted)"}
-            >{x.l}</a>
-          ))}
-        </div>
-      </div>
-    </footer>
   );
 }

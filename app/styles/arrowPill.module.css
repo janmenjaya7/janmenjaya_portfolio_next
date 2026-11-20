@@ -1,0 +1,250 @@
+/* Animatable angle for the rotating border highlight */
+@property --apb-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.apbRoot {
+  --apb-pad: 6px;
+  --apb-dot: 40px;
+  --apb-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  height: calc(var(--apb-dot) + var(--apb-pad) * 2 + 2px);
+  line-height: 1;
+  padding: var(--apb-pad) 1.4rem var(--apb-pad) var(--apb-pad);
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  background: rgba(240, 246, 255, 0.07);
+  border: 1px solid rgba(240, 246, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--white);
+  transition: border-color 0.35s ease, box-shadow 0.45s ease, transform 0.35s var(--apb-ease);
+}
+
+/* Rotating light streak around the border, revealed on hover */
+.apbRoot::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--apb-angle), transparent 0 62%, rgba(147, 197, 253, 0.95) 80%, transparent 92%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+/* Expanding fill that grows from the icon circle to the full pill */
+.apbFill {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: var(--apb-pad);
+  width: var(--apb-dot);
+  height: var(--apb-dot);
+  transform: translateY(-50%);
+  border-radius: 999px;
+  transition: width 0.55s var(--apb-ease);
+}
+
+/* Glossy sweep that crosses the pill once per hover */
+.apbShine {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-160%) skewX(-18deg);
+  pointer-events: none;
+}
+
+/* Two arrows: one flies out to the top-right while the other flies in */
+.apbIcon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--apb-dot);
+  height: var(--apb-dot);
+  border-radius: 50%;
+  overflow: hidden;
+  transition: color 0.35s ease, transform 0.35s var(--apb-ease);
+}
+
+.apbArrowOut,
+.apbArrowIn {
+  transition: transform 0.45s var(--apb-ease);
+}
+
+.apbArrowIn {
+  position: absolute;
+  transform: translate(-160%, 160%);
+}
+
+.apbLabel {
+  position: relative;
+  z-index: 1;
+  transition: color 0.35s ease, transform 0.5s var(--apb-ease), letter-spacing 0.5s var(--apb-ease);
+}
+
+/* ── Hover / keyboard focus ── */
+.apbRoot:hover,
+.apbRoot:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(240, 246, 255, 0.26);
+}
+
+.apbRoot:hover::before,
+.apbRoot:focus-visible::before {
+  opacity: 1;
+  animation: apbSpin 2.4s linear infinite;
+}
+
+.apbRoot:hover .apbFill,
+.apbRoot:focus-visible .apbFill {
+  width: calc(100% - var(--apb-pad) * 2);
+}
+
+.apbRoot:hover .apbShine,
+.apbRoot:focus-visible .apbShine {
+  transform: translateX(320%) skewX(-18deg);
+  transition: transform 0.85s ease 0.15s;
+}
+
+.apbRoot:hover .apbArrowOut,
+.apbRoot:focus-visible .apbArrowOut {
+  transform: translate(160%, -160%);
+}
+
+.apbRoot:hover .apbArrowIn,
+.apbRoot:focus-visible .apbArrowIn {
+  transform: translate(0, 0);
+  transition-delay: 0.08s;
+}
+
+.apbRoot:hover .apbIcon,
+.apbRoot:focus-visible .apbIcon {
+  transform: scale(1.06);
+}
+
+.apbRoot:hover .apbLabel,
+.apbRoot:focus-visible .apbLabel {
+  transform: translateX(4px);
+  letter-spacing: 0.01em;
+}
+
+.apbRoot:active {
+  transform: translateY(-1px) scale(0.97);
+  transition-duration: 0.12s;
+}
+
+.apbRoot:focus-visible {
+  outline: 2px solid var(--cyan-light);
+  outline-offset: 3px;
+}
+
+.apbRoot:disabled {
+  cursor: progress;
+  opacity: 0.75;
+  transform: none;
+}
+
+@keyframes apbSpin {
+  to {
+    --apb-angle: 360deg;
+  }
+}
+
+/* ── Primary: blue circle, fills blue, glows ── */
+.apbPrimary .apbFill {
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.apbPrimary .apbIcon {
+  color: #fff;
+}
+.apbPrimary:hover,
+.apbPrimary:focus-visible {
+  box-shadow:
+    0 12px 32px -6px rgba(59, 130, 246, 0.55),
+    0 0 0 4px rgba(34, 211, 238, 0.08);
+}
+
+/* ── Ghost: soft grey circle, fills light ── */
+.apbGhost .apbFill {
+  background: rgba(240, 246, 255, 0.22);
+}
+.apbGhost .apbIcon {
+  color: var(--white);
+}
+.apbGhost:hover .apbFill,
+.apbGhost:focus-visible .apbFill {
+  background: linear-gradient(135deg, #ffffff, #dbeafe);
+}
+.apbGhost:hover .apbIcon,
+.apbGhost:focus-visible .apbIcon,
+.apbGhost:hover .apbLabel,
+.apbGhost:focus-visible .apbLabel {
+  color: var(--bg);
+}
+.apbGhost:hover,
+.apbGhost:focus-visible {
+  box-shadow: 0 12px 30px -8px rgba(219, 234, 254, 0.35);
+}
+.apbGhost .apbShine {
+  background: linear-gradient(105deg, transparent, rgba(59, 130, 246, 0.25), transparent);
+}
+
+/* Compact size for the navbar */
+.apbRoot.apbSm {
+  --apb-pad: 4px;
+  --apb-dot: 30px;
+  gap: 0.6rem;
+  padding-right: 1rem;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 600px) {
+  .apbRoot {
+    --apb-dot: 36px;
+    font-size: 0.88rem;
+    padding-right: 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apbRoot,
+  .apbFill,
+  .apbIcon,
+  .apbLabel,
+  .apbShine,
+  .apbArrowOut,
+  .apbArrowIn {
+    transition: none;
+  }
+  .apbRoot:hover::before {
+    animation: none;
+  }
+}

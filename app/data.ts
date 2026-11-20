@@ -1,4 +1,7 @@
+/* Default portfolio content. Live content is stored in Redis and edited at /admin;
+   this object is the seed and the fallback when Redis is empty or unreachable. */
 export const DATA = {
+  siteUrl: "https://www.janmenjaya.in",
   name: "Janmenjaya Biswal",
   role: "Frontend Developer",
   email: "janmenjayabiswal@gmail.com",
@@ -6,6 +9,7 @@ export const DATA = {
   location: "Pune, Maharashtra, India",
   linkedin: "https://linkedin.com/in/janmenjaya-biswal",
   github: "https://github.com/janmenjaya-biswal",
+  navLinks: ["About", "Skills", "Experience", "Projects", "Contact"],
   typewriterWords: [
     "React.js Apps",
     "Next.js Platforms",
@@ -155,3 +159,5 @@ export const DATA = {
     { icon: "🏆", title: "Excellence Award",                inst: "e2eHiring / IFAS Educate Pvt. Ltd.",     meta: "Outstanding Project Performance" },
   ],
 };
+
+export type PortfolioData = typeof DATA;
