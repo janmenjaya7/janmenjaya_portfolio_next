@@ -158,7 +158,7 @@
   min-width: 26px;
   height: 26px;
   padding: 0 0.4rem;
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--adm-accent-soft);
   color: var(--adm-accent-strong);
   font-size: 0.8rem;
@@ -258,7 +258,8 @@
   transition: transform 0.25s ease;
 }
 
-.edCardOpen .edChevron {
+/* Direct child only, so nested closed cards don't show as open */
+.edCardOpen > .edCardHead .edChevron {
   transform: rotate(180deg);
 }
 

@@ -1,4 +1,6 @@
 import type { PortfolioData } from "../../data";
+import type { ContactMessage } from "../../lib/messages";
+import type { StoreSource } from "../../lib/portfolio-store";
 
 export class ApiError extends Error {
   constructor(message: string, public status: number) {
@@ -28,6 +30,15 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export const adminApi = {
+  fetchLatest: () => request<{ data: PortfolioData; source: StoreSource }>("/api/admin/portfolio"),
+  listMessages: () => request<ContactMessage[]>("/api/admin/messages"),
+  setMessageRead: (id: string, read: boolean) =>
+    request<ContactMessage>(`/api/admin/messages/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ read }),
+    }),
+  deleteMessage: (id: string) =>
+    request<undefined>(`/api/admin/messages/${encodeURIComponent(id)}`, { method: "DELETE" }),
   saveSection: (key: string, value: unknown) =>
     request<PortfolioData>(`/api/portfolio/${encodeURIComponent(key)}`, {
       method: "PUT",

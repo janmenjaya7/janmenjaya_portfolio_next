@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <div className={styles.admRoot}>{children}</div>;
+  // data-adm-root: tooltips portal here so they inherit the admin theme variables
+  return (
+    <div className={styles.admRoot} data-adm-root="">
+      {children}
+    </div>
+  );
 }

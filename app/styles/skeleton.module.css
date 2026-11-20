@@ -1,0 +1,104 @@
+/* Dark shimmer skeleton for the public site (shown while content loads) */
+.skPage {
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bg);
+}
+
+.skBlock {
+  display: block;
+  border-radius: 10px;
+  background: linear-gradient(
+    100deg,
+    rgba(59, 130, 246, 0.07) 30%,
+    rgba(147, 197, 253, 0.16) 50%,
+    rgba(59, 130, 246, 0.07) 70%
+  );
+  background-size: 300% 100%;
+  animation: skShimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes skShimmer {
+  from { background-position: 100% 0; }
+  to { background-position: 0 0; }
+}
+
+.skNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  height: var(--nav-h);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.skNavLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.skHero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 6vh, 4rem) 2rem 3rem;
+  min-height: calc(100svh - var(--nav-h));
+  box-sizing: border-box;
+}
+
+.skLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 620px;
+}
+
+.skRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.skCircle {
+  border-radius: 50%;
+}
+
+.skPill {
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .skHero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 2rem;
+  }
+  .skLeft {
+    align-items: center;
+    width: 100%;
+  }
+  .skRow {
+    justify-content: center;
+  }
+  .skVisual {
+    order: -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .skNavLinks .skHideMobile {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skBlock {
+    animation: none;
+  }
+}

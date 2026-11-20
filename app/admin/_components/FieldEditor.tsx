@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, ChevronDown, Plus, Trash2 } from "lucide-react";
 import { blankFrom, itemTemplate } from "../../lib/portfolio-schema";
 import { labelFor } from "../_lib/sections";
 import { validateField } from "../_lib/validation";
+import Tooltip from "./Tooltip";
 import styles from "../_styles/editor.module.css";
 
 type FieldProps = {
@@ -209,16 +210,18 @@ function ListField({ name, value, template, onChange }: FieldProps) {
             return (
               <div key={i} className={`${styles.edCard} ${open ? styles.edCardOpen : ""}`}>
                 <div className={styles.edCardHead}>
-                  <button
-                    type="button"
-                    className={styles.edCardToggle}
-                    aria-expanded={open}
-                    onClick={() => setOpenIndex(open ? null : i)}
-                  >
-                    <span className={styles.edCardIndex}>{i + 1}</span>
-                    <span className={styles.edCardTitle}>{itemTitle(item, i)}</span>
-                    <ChevronDown size={16} className={styles.edChevron} aria-hidden="true" />
-                  </button>
+                  <Tooltip title={open ? "Hide fields" : "Edit item"} text={itemTitle(item, i)}>
+                    <button
+                      type="button"
+                      className={styles.edCardToggle}
+                      aria-expanded={open}
+                      onClick={() => setOpenIndex(open ? null : i)}
+                    >
+                      <span className={styles.edCardIndex}>{i + 1}</span>
+                      <span className={styles.edCardTitle}>{itemTitle(item, i)}</span>
+                      <ChevronDown size={16} className={styles.edChevron} aria-hidden="true" />
+                    </button>
+                  </Tooltip>
                   <ItemActions
                     index={i}
                     total={list.length}
@@ -274,9 +277,11 @@ function ListField({ name, value, template, onChange }: FieldProps) {
         </div>
       )}
 
-      <button type="button" className={styles.edAdd} onClick={add}>
-        <Plus size={16} aria-hidden="true" /> Add {objectItems ? "item" : "entry"}
-      </button>
+      <Tooltip title={`Add to ${labelFor(name)}`} text="Adds a blank one at the end. Fill it in, then save.">
+        <button type="button" className={styles.edAdd} onClick={add}>
+          <Plus size={16} aria-hidden="true" /> Add {objectItems ? "item" : "entry"}
+        </button>
+      </Tooltip>
     </div>
   );
 }
@@ -328,33 +333,42 @@ function ItemActions({
 
   return (
     <div className={styles.edActions}>
-      <button
-        type="button"
-        className={styles.edIconBtn}
-        disabled={index === 0}
-        aria-label="Move up"
-        onClick={() => onMove(index - 1)}
+      <Tooltip title="Move up" text="Shows this item earlier on the site.">
+        <button
+          type="button"
+          className={styles.edIconBtn}
+          disabled={index === 0}
+          aria-label="Move up"
+          onClick={() => onMove(index - 1)}
+        >
+          <ArrowUp size={15} />
+        </button>
+      </Tooltip>
+      <Tooltip title="Move down" text="Shows this item later on the site.">
+        <button
+          type="button"
+          className={styles.edIconBtn}
+          disabled={index === total - 1}
+          aria-label="Move down"
+          onClick={() => onMove(index + 1)}
+        >
+          <ArrowDown size={15} />
+        </button>
+      </Tooltip>
+      <Tooltip
+        title={confirming ? "Click again to delete" : "Delete"}
+        text={confirming ? "Removes it from this section. Save to apply." : "Click twice to remove this item."}
       >
-        <ArrowUp size={15} />
-      </button>
-      <button
-        type="button"
-        className={styles.edIconBtn}
-        disabled={index === total - 1}
-        aria-label="Move down"
-        onClick={() => onMove(index + 1)}
-      >
-        <ArrowDown size={15} />
-      </button>
-      <button
-        type="button"
-        className={`${styles.edIconBtn} ${styles.edDanger} ${confirming ? styles.edConfirm : ""}`}
-        aria-label={confirming ? "Confirm delete" : "Delete"}
-        onClick={() => (confirming ? onDelete() : setConfirming(true))}
-      >
-        <Trash2 size={15} />
-        {confirming && <span>Delete?</span>}
-      </button>
+        <button
+          type="button"
+          className={`${styles.edIconBtn} ${styles.edDanger} ${confirming ? styles.edConfirm : ""}`}
+          aria-label={confirming ? "Confirm delete" : "Delete"}
+          onClick={() => (confirming ? onDelete() : setConfirming(true))}
+        >
+          <Trash2 size={15} />
+          {confirming && <span>Delete?</span>}
+        </button>
+      </Tooltip>
     </div>
   );
 }

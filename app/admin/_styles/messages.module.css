@@ -1,0 +1,246 @@
+.msTabs {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--adm-bg);
+}
+
+.msTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--adm-text-soft);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.msTabActive {
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.msTabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+  font-size: 0.75rem;
+}
+
+.msList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.msItem {
+  position: relative;
+  border: 1px solid var(--adm-line);
+  border-radius: 18px;
+  background: var(--adm-card-solid);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.msItem:hover {
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.msUnread {
+  border-color: rgba(46, 155, 106, 0.35);
+  background: linear-gradient(90deg, rgba(46, 155, 106, 0.06), #fff 40%);
+}
+
+.msOpen {
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.msHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 1rem 1rem 0.5rem;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.msAvatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2e9b6a, #1f6f8b);
+  color: #fff;
+  font-weight: 700;
+}
+
+.msMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.msTop {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.msName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.msDot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--adm-accent);
+  box-shadow: 0 0 0 3px var(--adm-accent-soft);
+}
+
+.msDate {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--adm-muted);
+}
+
+.msSubject {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--adm-text-soft);
+}
+
+.msPreview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 0.88rem;
+  color: var(--adm-muted);
+  line-height: 1.5;
+}
+
+.msBody {
+  padding: 0.25rem 1rem 0.25rem calc(1rem + 40px + 0.85rem);
+}
+
+.msEmail {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--adm-accent-strong);
+  word-break: break-all;
+}
+
+.msText {
+  margin: 0.6rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: var(--adm-surface);
+  font-size: 0.93rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.msFull {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--adm-muted);
+}
+
+.msActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem 0.9rem;
+}
+
+.msBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--adm-line);
+  border-radius: 999px;
+  background: var(--adm-card-solid);
+  color: var(--adm-text-soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.msBtn:hover {
+  background: var(--adm-hover);
+  color: var(--adm-text);
+  transform: translateY(-1px);
+}
+
+.msBtnDanger:hover {
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+.msBtnConfirm,
+.msBtnConfirm:hover {
+  background: var(--adm-danger);
+  border-color: var(--adm-danger);
+  color: #fff;
+}
+
+.msEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 2rem auto;
+  max-width: 360px;
+  text-align: center;
+  color: var(--adm-muted);
+  font-size: 0.92rem;
+}
+
+.msEmpty p {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .msBody {
+    padding-left: 1rem;
+  }
+  .msActions {
+    justify-content: flex-start;
+  }
+}

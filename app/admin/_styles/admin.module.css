@@ -50,20 +50,81 @@
 }
 
 /* ═══════ Layout ═══════ */
+/* Desktop: the window doesn't scroll — sidebar list and main area scroll on their own */
 .admLayout {
   display: grid;
   grid-template-columns: 280px 1fr;
-  min-height: 100vh;
-  min-height: 100dvh;
+  grid-template-rows: minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
   padding: 18px;
   gap: 0;
+  overflow: hidden;
+  /* Premium frame: soft emerald / violet / peach mesh over a cool grey */
+  background:
+    radial-gradient(1200px 600px at -10% -20%, rgba(46, 155, 106, 0.35), transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(124, 108, 242, 0.28), transparent 60%),
+    radial-gradient(900px 700px at 60% 120%, rgba(240, 142, 92, 0.3), transparent 60%),
+    linear-gradient(135deg, #e3ebe7 0%, #e8e6f1 50%, #f2e7df 100%);
 }
 
+/* Soft colour wash + dot grid so the white cards stand out */
 .admMain {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 2.25rem clamp(1rem, 3vw, 3rem) 3rem;
-  background: var(--adm-surface);
   border-radius: 0 var(--adm-radius-xl) var(--adm-radius-xl) 0;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(46, 155, 106, 0.16), transparent 34%),
+    radial-gradient(circle at 96% 12%, rgba(224, 118, 63, 0.13), transparent 32%),
+    radial-gradient(circle at 75% 100%, rgba(99, 102, 241, 0.1), transparent 40%),
+    radial-gradient(rgba(0, 0, 0, 0.055) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    var(--adm-surface);
+}
+
+/* Thin modern scrollbars for the two scroll areas */
+.admMain > * {
+  flex-shrink: 0;
+}
+
+.admMain,
+.admNav,
+.admSectionBody {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+
+.admMain::-webkit-scrollbar,
+.admNav::-webkit-scrollbar,
+.admSectionBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admMain::-webkit-scrollbar-track,
+.admNav::-webkit-scrollbar-track,
+.admSectionBody::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 14px 0;
+}
+
+.admMain::-webkit-scrollbar-thumb,
+.admNav::-webkit-scrollbar-thumb,
+.admSectionBody::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.14);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.admMain::-webkit-scrollbar-thumb:hover,
+.admNav::-webkit-scrollbar-thumb:hover,
+.admSectionBody::-webkit-scrollbar-thumb:hover {
+  background: var(--adm-accent);
+  background-clip: padding-box;
 }
 
 .admTitle {
@@ -83,15 +144,13 @@
 .admSidebar {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.75rem 1.25rem;
+  gap: 1.25rem;
+  min-height: 0;
+  padding: 1.75rem 1rem 1rem;
   background: var(--adm-surface);
   border-radius: var(--adm-radius-xl) 0 0 var(--adm-radius-xl);
   border-right: 1px solid var(--adm-line);
-  position: sticky;
-  top: 18px;
-  height: calc(100dvh - 36px);
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .admBrand {
@@ -126,10 +185,21 @@
   color: var(--adm-text-soft);
 }
 
+/* Only this list scrolls; brand above and account card below stay fixed */
 .admNav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  padding: 0.25rem 0.35rem 0.75rem 0.25rem;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+}
+
+.admBrand {
+  flex-shrink: 0;
 }
 
 .admNavItem {
@@ -194,9 +264,9 @@
 .admSubItem {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.65rem;
   width: 100%;
-  padding: 0.6rem 0.8rem;
+  padding: 0.45rem 0.6rem 0.45rem 0.45rem;
   border: 0;
   border-radius: var(--adm-radius-md);
   background: transparent;
@@ -220,17 +290,85 @@
   box-shadow: var(--adm-shadow-sm);
 }
 
+.admSubLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Section icon: pops on hover, turns into a solid accent badge when active */
+.admSubIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--adm-muted);
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.admSubItem:hover .admSubIcon {
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.admSubItem:hover .admSubIcon svg {
+  animation: admIconPop 0.5s ease;
+}
+
+.admSubItemActive .admSubIcon,
+.admSubItemActive:hover .admSubIcon {
+  background: linear-gradient(135deg, var(--adm-accent), #3fbf86);
+  color: #fff;
+  box-shadow: 0 8px 18px -8px rgba(46, 155, 106, 0.9);
+}
+
+.admSubItemActive .admSubIcon svg {
+  animation: admIconBounce 0.55s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes admIconPop {
+  0% { transform: scale(1) rotate(0); }
+  35% { transform: scale(1.2) rotate(-10deg); }
+  65% { transform: scale(0.95) rotate(6deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes admIconBounce {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* Count badges: round circles */
 .admBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
-  height: 28px;
-  padding: 0 0.45rem;
-  border-radius: 9px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--adm-text);
+}
+
+/* Total for the whole Content group, sits before the chevron */
+.admBadgeTotal {
+  margin-left: auto;
+  background: var(--adm-text);
+  color: #fff;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.5);
+}
+
+.admNavParent .admNavChevron {
+  margin-left: 0.35rem;
 }
 
 .admBadgeOk {
@@ -244,13 +382,140 @@
   line-height: 1;
 }
 
+/* ═══════ Account card (fixed at sidebar bottom) ═══════ */
 .admSideFoot {
-  margin-top: auto;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--adm-line);
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border-radius: var(--adm-radius-lg);
+  background: var(--adm-card-solid);
+  border: 1px solid var(--adm-line);
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.admUser {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.admAvatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #2e9b6a, #1f6f8b);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admOnline {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #34c779;
+  border: 2.5px solid var(--adm-card-solid);
+}
+
+.admUserText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admUserName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admUserRole {
+  font-size: 0.75rem;
+  color: var(--adm-muted);
+}
+
+.admFootActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.admFootBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.5rem;
+  border: 0;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.admFootBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.admFootSite {
+  background: linear-gradient(135deg, #2b2b30, #111113);
+  color: #fff;
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.7);
+}
+
+.admFootSite:hover {
+  box-shadow: 0 12px 22px -10px rgba(0, 0, 0, 0.75);
+}
+
+.admFootArrow {
+  transition: transform 0.3s ease;
+}
+
+.admFootSite:hover .admFootArrow {
+  transform: translate(2px, -2px);
+}
+
+.admFootLogout {
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+.admFootLogout:hover:not(:disabled) {
+  background: var(--adm-danger);
+  color: #fff;
+  box-shadow: 0 10px 20px -10px rgba(217, 52, 63, 0.8);
+}
+
+.admFootLogoutIcon {
+  transition: transform 0.3s ease;
+}
+
+.admFootLogout:hover:not(:disabled) .admFootLogoutIcon {
+  transform: translateX(3px);
+}
+
+.admFootLogout:disabled {
+  opacity: 0.6;
+  cursor: progress;
 }
 
 /* ═══════ Cards ═══════ */
@@ -260,12 +525,16 @@
 }
 
 .admCard {
+  --adm-card-pad: clamp(1.25rem, 2.5vw, 2rem);
   position: relative;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
-  background: var(--adm-card);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  padding: var(--adm-card-pad);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.95);
   border-radius: var(--adm-radius-xl);
-  box-shadow: var(--adm-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 24px 48px -20px rgba(31, 60, 45, 0.18);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -413,26 +682,57 @@
 }
 
 /* ═══════ Section editor ═══════ */
+/* Editor card fills the remaining height; only .admSectionBody scrolls */
+.admEditorCard {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
 .admSectionHead {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.75rem;
+  gap: 0.85rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--adm-card-solid);
+  border-bottom: 1px solid var(--adm-line);
 }
 
 .admSectionHead .admMetricIcon {
   margin-bottom: 0;
-  width: 56px;
-  height: 56px;
+  width: 42px;
+  height: 42px;
 }
 
 .admSectionHead .admCardTitle {
-  margin-bottom: 0.2rem;
+  margin: 0 0 0.1rem;
+  font-size: 1.15rem;
+}
+
+.admSectionHead .admMuted {
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.admSectionBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem var(--adm-card-pad);
+}
+
+.admEditorCard .admSaveBar {
+  flex-shrink: 0;
+  margin: 0 0.75rem 0.75rem;
 }
 
 .admSaveBar {
-  position: sticky;
-  bottom: 1rem;
+  position: relative;
   z-index: 5;
   display: flex;
   align-items: center;
@@ -549,13 +849,38 @@
 }
 
 @media (max-width: 900px) {
+  /* Phones/tablets: normal page scrolling, sidebar becomes a top bar */
   .admLayout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
     padding: 0;
   }
+  /* Phones: page scrolls, card grows naturally; header and save bar pin to the screen */
+  .admEditorCard {
+    flex: none;
+    overflow: visible;
+  }
+  .admSectionHead {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    border-radius: var(--adm-radius-xl) var(--adm-radius-xl) 0 0;
+  }
+  .admSectionBody {
+    overflow: visible;
+    padding: 1.25rem 1rem;
+  }
+  .admEditorCard .admSaveBar {
+    position: sticky;
+    bottom: 0.75rem;
+  }
   .admSidebar {
-    position: static;
+    min-width: 0;
     height: auto;
+    overflow: visible;
     border-radius: 0;
     border-right: 0;
     border-bottom: 1px solid var(--adm-line);
@@ -563,12 +888,18 @@
     gap: 0.75rem;
   }
   .admNav {
+    flex: none;
+    min-width: 0;
+    max-width: 100%;
     flex-direction: row;
     align-items: center;
     flex-wrap: nowrap;
     overflow-x: auto;
+    overflow-y: hidden;
     gap: 0.35rem;
     padding-bottom: 0.25rem;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
   .admNavItem {
     width: auto;
@@ -587,16 +918,24 @@
   }
   .admSideFoot {
     flex-direction: row;
-    margin-top: 0;
-    padding-top: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .admFootActions {
+    flex-shrink: 0;
   }
   .admMain {
+    overflow: visible;
     border-radius: 0;
     padding: 1.5rem 1rem 2.5rem;
   }
 }
 
 @media (max-width: 600px) {
+  .admUserText {
+    display: none;
+  }
   .admMetrics {
     grid-template-columns: 1fr;
   }
@@ -630,4 +969,79 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ═══════ Title row + refresh ═══════ */
+.admTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.admTitleRow .admTitle {
+  min-width: 0;
+}
+
+.admRefreshBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--adm-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--adm-shadow-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.admRefreshBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--adm-card-solid);
+  box-shadow: var(--adm-shadow);
+}
+
+.admRefreshBtn:hover:not(:disabled) svg {
+  transform: rotate(90deg);
+}
+
+.admRefreshBtn svg {
+  transition: transform 0.35s ease;
+}
+
+.admRefreshBtn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.admSpin {
+  animation: admSpin 0.9s linear infinite;
+}
+
+@keyframes admSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Unread messages count in the sidebar */
+.admBadgeUnread {
+  margin-left: auto;
+  background: var(--adm-warn);
+  color: #fff;
+  box-shadow: 0 6px 12px -6px rgba(224, 118, 63, 0.9);
+  animation: admBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes admBadgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224, 118, 63, 0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(224, 118, 63, 0); }
 }

@@ -2,6 +2,7 @@
 import { Award, Briefcase, CodeXml, Database, FolderKanban, RotateCcw } from "lucide-react";
 import type { PortfolioData } from "../../data";
 import type { StoreSource } from "../../lib/portfolio-store";
+import Tooltip from "./Tooltip";
 import styles from "../_styles/admin.module.css";
 
 type Props = {
@@ -69,16 +70,18 @@ export default function AdminOverview({ data, source, storeConfigured, onOpen, o
         <h2 id="adm-overview-title" className={styles.admCardTitle}>Overview</h2>
         <div className={styles.admMetrics}>
           {metrics.map((m) => (
-            <button key={m.id} type="button" className={styles.admMetric} onClick={() => onOpen(m.id)}>
-              <span className={styles.admMetricIcon}>
-                <m.icon size={22} aria-hidden="true" />
-              </span>
-              <span className={styles.admMetricLabel}>{m.label}</span>
-              <span className={styles.admMetricValue}>{m.value}</span>
-              <span className={`${styles.admPill} ${m.tone === "ok" ? styles.admPillOk : styles.admPillWarn}`}>
-                {m.badge}
-              </span>
-            </button>
+            <Tooltip key={m.id} title={`Open ${m.label}`} text={`Edit your ${m.label.toLowerCase()} — ${m.badge}.`}>
+              <button type="button" className={styles.admMetric} onClick={() => onOpen(m.id)}>
+                <span className={styles.admMetricIcon}>
+                  <m.icon size={22} aria-hidden="true" />
+                </span>
+                <span className={styles.admMetricLabel}>{m.label}</span>
+                <span className={styles.admMetricValue}>{m.value}</span>
+                <span className={`${styles.admPill} ${m.tone === "ok" ? styles.admPillOk : styles.admPillWarn}`}>
+                  {m.badge}
+                </span>
+              </button>
+            </Tooltip>
           ))}
         </div>
       </section>
@@ -95,15 +98,20 @@ export default function AdminOverview({ data, source, storeConfigured, onOpen, o
             <p className={styles.admStrong}>{data.name || "—"}</p>
             <p className={styles.admMuted}>{data.role || "—"}</p>
           </div>
-          <button
-            type="button"
-            className={styles.admGhostBtn}
-            onClick={onResetAll}
-            disabled={!storeConfigured || source !== "redis" || resetting}
+          <Tooltip
+            title="Reset to defaults"
+            text="Deletes everything saved in Redis and goes back to the content in data.ts. Asks to confirm first."
           >
-            <RotateCcw size={16} aria-hidden="true" />
-            {resetting ? "Resetting…" : "Reset to defaults"}
-          </button>
+            <button
+              type="button"
+              className={styles.admGhostBtn}
+              onClick={onResetAll}
+              disabled={!storeConfigured || source !== "redis" || resetting}
+            >
+              <RotateCcw size={16} aria-hidden="true" />
+              {resetting ? "Resetting…" : "Reset to defaults"}
+            </button>
+          </Tooltip>
         </div>
       </section>
     </div>

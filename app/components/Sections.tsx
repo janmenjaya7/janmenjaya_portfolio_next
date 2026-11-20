@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import type { PortfolioData } from "../data";
+import ContactForm from "./ContactForm";
 import { usePortfolio } from "./PortfolioProvider";
 
 /* ── REVEAL HOOK ── */
@@ -391,13 +392,6 @@ export function Contact() {
   const DATA = usePortfolio();
   const r1 = useReveal(0.1);
   const r2 = useReveal(0.2);
-  const [sent, setSent] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
-  };
 
   const allContactItems = [
     { icon: "✉️", label: "Email",    val: DATA.email,       href: `mailto:${DATA.email}`, show: DATA.email },
@@ -493,123 +487,7 @@ export function Contact() {
 
             {/* ── Form ── */}
             <div ref={r2} className="reveal glow-card contact-form-card">
-              <form
-                onSubmit={handleSubmit}
-                style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
-              >
-                {[
-                  { label: "Your Name",     type: "text",  placeholder: "Enter your name" },
-                  { label: "Email Address", type: "email", placeholder: "you@example.com" },
-                  { label: "Subject",       type: "text",  placeholder: "Let's work together" },
-                ].map((f) => (
-                  <div
-                    key={f.label}
-                    style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-                  >
-                    <label
-                      className="font-mono-custom"
-                      style={{
-                        fontSize: "0.68rem",
-                        letterSpacing: "2px",
-                        textTransform: "uppercase",
-                        color: "var(--muted)",
-                      }}
-                    >
-                      {f.label}
-                    </label>
-                    <input
-                      type={f.type}
-                      placeholder={f.placeholder}
-                      required
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem 1rem",
-                        borderRadius: 8,
-                        fontSize: "0.9rem",
-                        color: "var(--white)",
-                        outline: "none",
-                        background: "var(--bg4)",
-                        border: "1px solid var(--border)",
-                        fontFamily: "inherit",
-                        boxSizing: "border-box",
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = "var(--blue)";
-                        e.target.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.15)";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = "var(--border)";
-                        e.target.style.boxShadow = "none";
-                      }}
-                    />
-                  </div>
-                ))}
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <label
-                    className="font-mono-custom"
-                    style={{
-                      fontSize: "0.68rem",
-                      letterSpacing: "2px",
-                      textTransform: "uppercase",
-                      color: "var(--muted)",
-                    }}
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    rows={5}
-                    placeholder="Tell me about your project or opportunity..."
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem 1rem",
-                      borderRadius: 8,
-                      fontSize: "0.9rem",
-                      color: "var(--white)",
-                      outline: "none",
-                      resize: "vertical",
-                      background: "var(--bg4)",
-                      border: "1px solid var(--border)",
-                      fontFamily: "inherit",
-                      boxSizing: "border-box",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "var(--blue)";
-                      e.target.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.15)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "var(--border)";
-                      e.target.style.boxShadow = "none";
-                    }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="contact-submit-btn"
-                  style={{
-                    width: "100%",
-                    padding: "0.8rem",
-                    borderRadius: 10,
-                    fontWeight: 600,
-                    fontSize: "0.9rem",
-                    color: "#fff",
-                    border: "none",
-                    cursor: "pointer",
-                    background: sent ? "#16a34a" : "var(--blue)",
-                    transition: "background 0.3s, transform 0.15s",
-                  }}
-                  onMouseEnter={(e) =>
-                    !sent && (e.currentTarget.style.transform = "translateY(-2px)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "translateY(0)")
-                  }
-                >
-                  {sent ? "✓ Message Sent!" : "Send Message ↗"}
-                </button>
-              </form>
+              <ContactForm />
             </div>
 
           </div>

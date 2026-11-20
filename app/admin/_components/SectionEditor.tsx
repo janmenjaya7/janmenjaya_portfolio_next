@@ -5,6 +5,7 @@ import type { SectionKey } from "../../lib/portfolio-schema";
 import type { ContentGroup } from "../_lib/sections";
 import { collectErrors } from "../_lib/validation";
 import { FieldEditor } from "./FieldEditor";
+import Tooltip from "./Tooltip";
 import styles from "../_styles/admin.module.css";
 import editorStyles from "../_styles/editor.module.css";
 
@@ -24,7 +25,7 @@ export default function SectionEditor({ group, draft, dirty, saving, canSave, on
   const errors = group.keys.flatMap((k) => collectErrors(k, draft[k]));
 
   return (
-    <section className={styles.admCard} aria-labelledby="adm-section-title">
+    <section className={`${styles.admCard} ${styles.admEditorCard}`} aria-labelledby="adm-section-title">
       <header className={styles.admSectionHead}>
         <span className={styles.admMetricIcon}>
           <group.icon size={22} aria-hidden="true" />
@@ -35,16 +36,19 @@ export default function SectionEditor({ group, draft, dirty, saving, canSave, on
         </div>
       </header>
 
-      <div className={editorStyles.edGrid}>
-        {group.keys.map((key) => (
-          <FieldEditor
-            key={key}
-            name={key}
-            value={draft[key]}
-            template={DATA[key]}
-            onChange={(v) => onChange(key, v)}
-          />
-        ))}
+      {/* Only this area scrolls; header and save bar stay in place */}
+      <div className={styles.admSectionBody}>
+        <div className={editorStyles.edGrid}>
+          {group.keys.map((key) => (
+            <FieldEditor
+              key={key}
+              name={key}
+              value={draft[key]}
+              template={DATA[key]}
+              onChange={(v) => onChange(key, v)}
+            />
+          ))}
+        </div>
       </div>
 
       <div className={styles.admSaveBar} role="region" aria-label="Save changes">
@@ -56,18 +60,30 @@ export default function SectionEditor({ group, draft, dirty, saving, canSave, on
               : "All changes saved."}
         </p>
         <div className={styles.admSaveActions}>
-          <button type="button" className={styles.admGhostBtn} onClick={onDiscard} disabled={!dirty || saving}>
-            <Undo2 size={16} aria-hidden="true" /> Discard
-          </button>
-          <button
-            type="button"
-            className={styles.admPrimaryBtn}
-            onClick={onSave}
-            disabled={!dirty || saving || errors.length > 0 || !canSave}
-            title={!canSave ? "Configure Redis to enable saving" : undefined}
+          <Tooltip title="Discard" text={`Undo unsaved edits in ${group.label}.`}>
+            <button type="button" className={styles.admGhostBtn} onClick={onDiscard} disabled={!dirty || saving}>
+              <Undo2 size={16} aria-hidden="true" /> Discard
+            </button>
+          </Tooltip>
+          <Tooltip
+            title="Save changes"
+            text={
+              !canSave
+                ? "Saving is disabled until Redis is configured and reachable."
+                : errors.length > 0
+                  ? "Fix the highlighted fields first."
+                  : "Stores this section in Redis and updates the live site right away."
+            }
           >
-            <Save size={16} aria-hidden="true" /> {saving ? "Saving…" : "Save changes"}
-          </button>
+            <button
+              type="button"
+              className={styles.admPrimaryBtn}
+              onClick={onSave}
+              disabled={!dirty || saving || errors.length > 0 || !canSave}
+            >
+              <Save size={16} aria-hidden="true" /> {saving ? "Saving…" : "Save changes"}
+            </button>
+          </Tooltip>
         </div>
       </div>
     </section>
