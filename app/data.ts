@@ -6,6 +6,7 @@ export const DATA = {
   location: "Pune, Maharashtra, India",
   linkedin: "https://linkedin.com/in/janmenjaya-biswal",
   github: "https://github.com/janmenjaya-biswal",
+  navLinks: ["About", "Skills", "Experience", "Projects", "Contact"],
   typewriterWords: [
     "React.js Apps",
     "Next.js Platforms",

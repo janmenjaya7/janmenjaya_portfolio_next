@@ -258,6 +258,7 @@
 import { useEffect, useState, useRef } from "react";
 import { DATA } from "../data";
 import styles from "../styles/hero.module.css";
+import ArrowPillButton from "./ArrowPillButton";
 
 function useReveal(delay = 0) {
   const ref = useRef<HTMLDivElement>(null);
@@ -272,7 +273,7 @@ function useReveal(delay = 0) {
           obs.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.15 },
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -288,25 +289,28 @@ function Typewriter({ words }: { words: string[] }) {
 
   useEffect(() => {
     const word = words[wi];
-    const timeout = setTimeout(() => {
-      if (!deleting) {
-        setText(word.slice(0, ci + 1));
-        if (ci + 1 === word.length) {
-          setTimeout(() => setDeleting(true), 1800);
+    const timeout = setTimeout(
+      () => {
+        if (!deleting) {
+          setText(word.slice(0, ci + 1));
+          if (ci + 1 === word.length) {
+            setTimeout(() => setDeleting(true), 1800);
+          } else {
+            setCi(ci + 1);
+          }
         } else {
-          setCi(ci + 1);
+          setText(word.slice(0, ci - 1));
+          if (ci - 1 === 0) {
+            setDeleting(false);
+            setWi((wi + 1) % words.length);
+            setCi(0);
+          } else {
+            setCi(ci - 1);
+          }
         }
-      } else {
-        setText(word.slice(0, ci - 1));
-        if (ci - 1 === 0) {
-          setDeleting(false);
-          setWi((wi + 1) % words.length);
-          setCi(0);
-        } else {
-          setCi(ci - 1);
-        }
-      }
-    }, deleting ? 55 : 90);
+      },
+      deleting ? 55 : 90,
+    );
     return () => clearTimeout(timeout);
   }, [ci, deleting, wi, words]);
 
@@ -318,16 +322,62 @@ function Typewriter({ words }: { words: string[] }) {
 }
 
 const orbitRings = [
-  { size: 160, dur: "8s",  cls: "orbit-cw",  dotColor: "var(--blue)",       ringCls: styles.orbitRing0 },
-  { size: 210, dur: "12s", cls: "orbit-ccw", dotColor: "var(--cyan-light)",  ringCls: styles.orbitRing1 },
-  { size: 265, dur: "18s", cls: "orbit-cw",  dotColor: "var(--blue-pale)",   ringCls: styles.orbitRing2 },
+  {
+    size: 160,
+    dur: "8s",
+    cls: "orbit-cw",
+    dotColor: "var(--blue)",
+    ringCls: styles.orbitRing0,
+  },
+  {
+    size: 210,
+    dur: "12s",
+    cls: "orbit-ccw",
+    dotColor: "var(--cyan-light)",
+    ringCls: styles.orbitRing1,
+  },
+  {
+    size: 265,
+    dur: "18s",
+    cls: "orbit-cw",
+    dotColor: "var(--blue-pale)",
+    ringCls: styles.orbitRing2,
+  },
 ] as const;
 
 const floatTags = [
-  { text: "<React />",    delay: "0s",   top: "10%",    left: "-20%",  bottom: undefined, right: undefined },
-  { text: "Next.js",      delay: "0.7s", top: "8%",     right: "-14%", bottom: undefined, left: undefined  },
-  { text: "TypeScript",   delay: "1.4s", bottom: "18%", left: "-24%",  top: undefined,    right: undefined },
-  { text: "React Native", delay: "2.1s", bottom: "10%", right: "-20%", top: undefined,    left: undefined  },
+  {
+    text: "<React />",
+    delay: "0s",
+    top: "10%",
+    left: "-20%",
+    bottom: undefined,
+    right: undefined,
+  },
+  {
+    text: "Next.js",
+    delay: "0.7s",
+    top: "8%",
+    right: "-14%",
+    bottom: undefined,
+    left: undefined,
+  },
+  {
+    text: "TypeScript",
+    delay: "1.4s",
+    bottom: "18%",
+    left: "-24%",
+    top: undefined,
+    right: undefined,
+  },
+  {
+    text: "React Native",
+    delay: "2.1s",
+    bottom: "10%",
+    right: "-20%",
+    top: undefined,
+    left: undefined,
+  },
 ];
 
 export default function Hero() {
@@ -338,10 +388,8 @@ export default function Hero() {
 
   return (
     <section id="hero" className={styles.heroSection}>
-
       {/* ── LEFT CONTENT ── */}
       <div className={styles.heroLeft}>
-
         {/* Name */}
         <div ref={r1} className="reveal">
           <h1 className={`${styles.heroName} font-syne font-black`}>
@@ -351,7 +399,8 @@ export default function Hero() {
             <span
               style={{
                 display: "block",
-                background: "linear-gradient(135deg, var(--blue-light), var(--cyan-light))",
+                background:
+                  "linear-gradient(135deg, var(--blue-light), var(--cyan-light))",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -363,78 +412,55 @@ export default function Hero() {
         </div>
 
         {/* Typewriter */}
-        <div ref={r2} className={`${styles.heroTypewriter} reveal font-mono-custom`}>
+        <div
+          ref={r2}
+          className={`${styles.heroTypewriter} reveal font-mono-custom`}
+        >
           <span>I build &nbsp;</span>
           <Typewriter words={DATA.typewriterWords} />
         </div>
 
         {/* Description */}
-        <div ref={r3} className="reveal" style={{ marginBottom: "2rem" }}>
-  <p className={styles.heroDesc}>
-    Frontend Developer with{" "}
-    <strong style={{ color: "var(--white)", fontWeight: 600 }}>
-      3 years of experience
-    </strong>{" "}
-    crafting performant, scalable web applications. Based in{" "}
-    <strong style={{ color: "var(--white)", fontWeight: 600 }}>
-      Pune, Maharashtra
-    </strong>{" "}
-    — currently at{" "}
-    <strong style={{ color: "var(--white)", fontWeight: 600 }}>
-      IFAS Educate
-    </strong>
-    , building ed-tech products that help students across India crack
-    competitive exams. Previously at{" "}
-    <strong style={{ color: "var(--white)", fontWeight: 600 }}>
-      e2eHiring
-    </strong>
-    .
-  </p>
-</div>
+        <div ref={r3} className={`${styles.heroDescWrap} reveal`}>
+          <p className={styles.heroDesc}>
+            Frontend Developer with{" "}
+            <strong style={{ color: "var(--white)", fontWeight: 600 }}>
+              3 years of experience
+            </strong>{" "}
+            crafting performant, scalable web applications. Based in{" "}
+            <strong style={{ color: "var(--white)", fontWeight: 600 }}>
+              Pune, Maharashtra
+            </strong>{" "}
+            — currently at{" "}
+            <strong style={{ color: "var(--white)", fontWeight: 600 }}>
+              IFAS Educate
+            </strong>
+            , building ed-tech products that help students across India crack
+            competitive exams. Previously at{" "}
+            <strong style={{ color: "var(--white)", fontWeight: 600 }}>
+              e2eHiring
+            </strong>
+            .
+          </p>
+        </div>
 
         {/* CTA + Stats */}
         <div ref={r4} className="reveal">
-
           {/* Buttons */}
           <div className={styles.heroCta}>
-            <a
-              href="#projects"
-              className={`${styles.ctaPrimary} no-underline`}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--blue-light)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(59,130,246,0.35)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "var(--blue)";
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              View My Work
-            </a>
-            <a
-              href="#contact"
-              className={`${styles.ctaSecondary} no-underline`}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "var(--blue)";
-                e.currentTarget.style.color = "var(--white)";
-                e.currentTarget.style.background = "var(--glow)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--border2)";
-                e.currentTarget.style.color = "var(--text)";
-                e.currentTarget.style.background = "transparent";
-              }}
-            >
+            <ArrowPillButton href="#projects">View My Work</ArrowPillButton>
+            <ArrowPillButton href="#contact" variant="ghost">
               Get In Touch
-            </a>
+            </ArrowPillButton>
           </div>
 
           {/* Stats */}
           <div className={styles.heroStats}>
             {DATA.stats.map((s, i) => (
-              <div key={s.num} style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <div
+                key={s.num}
+                style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+              >
                 {i > 0 && (
                   <div
                     style={{
@@ -445,7 +471,9 @@ export default function Hero() {
                     }}
                   />
                 )}
-                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 3 }}
+                >
                   <span className={`${styles.statNum} font-syne`}>{s.num}</span>
                   <span
                     className="font-mono-custom"
@@ -466,7 +494,6 @@ export default function Hero() {
 
       {/* ── RIGHT VISUAL ── */}
       <div className={styles.heroVisual}>
-
         {/* Orbit rings */}
         {orbitRings.map((o, i) => (
           <div
@@ -475,8 +502,6 @@ export default function Hero() {
             style={{
               position: "absolute",
               borderRadius: "50%",
-              width: o.size,
-              height: o.size,
               border: "1px dashed var(--border)",
               animationDuration: o.dur,
             }}

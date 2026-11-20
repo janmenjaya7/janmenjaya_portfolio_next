@@ -598,30 +598,3 @@ export function Contact() {
     </>
   );
 }
-
-/* ══════════════════════════════
-   FOOTER
-══════════════════════════════ */
-export function Footer() {
-  return (
-    <footer className="relative z-10" style={{ borderTop: "1px solid var(--border)", background: "var(--bg)", padding: "2rem" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-        <span className="font-syne" style={{ fontWeight: 800, fontSize: "1.25rem", color: "var(--white)" }}>
-          JB<span style={{ color: "var(--cyan-light)" }}>.</span>
-        </span>
-        <span className="font-mono-custom" style={{ fontSize: "0.75rem", color: "var(--muted)" }}>
-          © 2025 Janmenjaya Biswal. Built with Next.js + Tailwind CSS.
-        </span>
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          {[{ l: "LinkedIn", h: DATA.linkedin }, { l: "GitHub", h: DATA.github }, { l: "Email", h: `mailto:${DATA.email}` }].map((x) => (
-            <a key={x.l} href={x.h} target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: "0.8rem", color: "var(--muted)", transition: "color 0.2s" }}
-              onMouseEnter={e => e.currentTarget.style.color = "var(--blue-light)"}
-              onMouseLeave={e => e.currentTarget.style.color = "var(--muted)"}
-            >{x.l}</a>
-          ))}
-        </div>
-      </div>
-    </footer>
-  );
-}
