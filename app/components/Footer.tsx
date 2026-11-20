@@ -1,17 +1,19 @@
 "use client";
 import { ArrowUp } from "lucide-react";
-import { DATA } from "../data";
 import ArrowPillButton from "./ArrowPillButton";
+import { usePortfolio } from "./PortfolioProvider";
 import styles from "../styles/footer.module.css";
 
-const socials = [
-  { label: "LinkedIn", href: DATA.linkedin },
-  { label: "GitHub", href: DATA.github },
-  { label: "Email", href: DATA.email ? `mailto:${DATA.email}` : "" },
-].filter((s) => s.href);
-
 export default function Footer() {
+  const DATA = usePortfolio();
   const year = new Date().getFullYear();
+  const watermark = DATA.name.trim().split(/\s+/)[0] || "JB";
+
+  const socials = [
+    { label: "LinkedIn", href: DATA.linkedin },
+    { label: "GitHub", href: DATA.github },
+    { label: "Email", href: DATA.email ? `mailto:${DATA.email}` : "" },
+  ].filter((s) => s.href);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -47,8 +49,7 @@ export default function Footer() {
               JB<span className={styles.ftLogoDot}>.</span>
             </a>
             <p className={styles.ftTagline}>
-              {DATA.role} crafting fast, accessible and delightful web
-              experiences with React &amp; Next.js.
+              {`${DATA.role} crafting fast, accessible and delightful web experiences with React & Next.js.`}
             </p>
           </div>
 
@@ -105,9 +106,17 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── Giant dotted name ── */}
+      {/* ── Watermark name: outlined letters with a travelling glow ── */}
       <div className={`${styles.ftGiant} font-syne`} aria-hidden="true">
-        {DATA.name.split(" ")[0] || "JB"}
+        {Array.from(watermark).map((ch, i) => (
+          <span
+            key={i}
+            className={styles.ftGiantLetter}
+            style={{ "--i": i } as React.CSSProperties}
+          >
+            {ch}
+          </span>
+        ))}
       </div>
 
       {/* ── Bottom bar ── */}

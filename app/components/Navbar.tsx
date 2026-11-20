@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { DATA } from "../data";
-
-const links = DATA.navLinks;
+import ArrowPillButton from "./ArrowPillButton";
+import { usePortfolio } from "./PortfolioProvider";
 
 export default function Navbar() {
+  const DATA = usePortfolio();
+  const links = DATA.navLinks.filter(Boolean);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -148,31 +149,13 @@ export default function Navbar() {
           </ul>
 
           {/* Desktop Hire Me */}
-          <a
-            href={`mailto:${DATA.email}`}
-            className="nav-hire font-semibold"
-            style={{
-              alignItems: "center",
-              padding: "0.45rem 1.2rem",
-              background: "var(--blue)",
-              color: "#fff",
-              borderRadius: 8,
-              fontSize: "0.85rem",
-              textDecoration: "none",
-              flexShrink: 0,
-              transition: "background 0.2s, transform 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "var(--blue-light)";
-              e.currentTarget.style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "var(--blue)";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
-          >
-            Hire Me
-          </a>
+          {DATA.email && (
+            <span className="nav-hire" style={{ flexShrink: 0 }}>
+              <ArrowPillButton href={`mailto:${DATA.email}`} size="sm">
+                Hire Me
+              </ArrowPillButton>
+            </span>
+          )}
 
           {/* Hamburger */}
           <button
@@ -283,7 +266,7 @@ export default function Navbar() {
           ))}
 
           {/* Mobile Hire Me */}
-          <li
+          {DATA.email && <li
             style={{
               marginTop: "0.75rem",
               paddingTop: "0.75rem",
@@ -313,7 +296,7 @@ export default function Navbar() {
             >
               Hire Me ✉
             </a>
-          </li>
+          </li>}
         </ul>
       </div>
 

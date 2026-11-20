@@ -256,9 +256,9 @@
 
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { DATA } from "../data";
 import styles from "../styles/hero.module.css";
 import ArrowPillButton from "./ArrowPillButton";
+import { usePortfolio } from "./PortfolioProvider";
 
 function useReveal(delay = 0) {
   const ref = useRef<HTMLDivElement>(null);
@@ -381,6 +381,8 @@ const floatTags = [
 ];
 
 export default function Hero() {
+  const DATA = usePortfolio();
+  const words = DATA.typewriterWords.filter((w) => w.trim());
   const r1 = useReveal(0.0);
   const r2 = useReveal(0.1);
   const r3 = useReveal(0.2);
@@ -416,8 +418,12 @@ export default function Hero() {
           ref={r2}
           className={`${styles.heroTypewriter} reveal font-mono-custom`}
         >
-          <span>I build &nbsp;</span>
-          <Typewriter words={DATA.typewriterWords} />
+          {words.length > 0 && (
+            <>
+              <span>I build &nbsp;</span>
+              <Typewriter words={words} />
+            </>
+          )}
         </div>
 
         {/* Description */}

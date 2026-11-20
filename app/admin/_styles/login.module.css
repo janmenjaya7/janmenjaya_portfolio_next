@@ -1,0 +1,175 @@
+.lgPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1.5rem 1rem;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(46, 155, 106, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(224, 118, 63, 0.1), transparent 40%),
+    var(--adm-bg);
+}
+
+.lgCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  padding: clamp(1.75rem, 5vw, 2.5rem);
+  background: var(--adm-card);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--adm-radius-xl);
+  box-shadow: var(--adm-shadow);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: lgRise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes lgRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.lgIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  background: var(--adm-bg);
+  color: var(--adm-text);
+}
+
+.lgTitle {
+  margin: 0 0 0.35rem;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.lgTitleMuted {
+  color: var(--adm-text-soft);
+  font-weight: 500;
+}
+
+.lgSub {
+  margin: 0 0 1.5rem;
+  color: var(--adm-muted);
+  font-size: 0.95rem;
+}
+
+.lgLabel {
+  margin: 0.9rem 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--adm-text-soft);
+}
+
+.lgInput {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid var(--adm-line);
+  border-radius: 12px;
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lgInput:focus {
+  border-color: var(--adm-accent);
+  box-shadow: 0 0 0 4px var(--adm-accent-soft);
+}
+
+.lgInput:disabled {
+  opacity: 0.6;
+}
+
+.lgCode {
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.6em;
+  text-align: center;
+  padding-left: 1.4rem;
+}
+
+.lgLinks {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.lgLinkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--adm-text-soft);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lgLinkBtn:hover:not(:disabled) {
+  background: var(--adm-hover);
+  color: var(--adm-text);
+}
+
+.lgLinkBtn:disabled {
+  color: var(--adm-muted);
+  cursor: not-allowed;
+}
+
+.lgError {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.lgError svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.lgSubmit {
+  margin-top: 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-radius: 14px;
+  background: var(--adm-text);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.lgSubmit:hover:not(:disabled) {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+.lgSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

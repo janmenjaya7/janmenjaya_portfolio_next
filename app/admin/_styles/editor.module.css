@@ -1,0 +1,353 @@
+.edGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.25rem;
+}
+
+.edWide {
+  grid-column: 1 / -1;
+}
+
+.edField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.edLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--adm-text-soft);
+}
+
+.edLabelHint {
+  font-weight: 600;
+  color: var(--adm-accent-strong);
+}
+
+.edInput {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--adm-line);
+  border-radius: 12px;
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edInput:focus {
+  border-color: var(--adm-accent);
+  box-shadow: 0 0 0 4px var(--adm-accent-soft);
+}
+
+.edInput[aria-invalid="true"] {
+  border-color: var(--adm-danger);
+  box-shadow: 0 0 0 4px var(--adm-danger-soft);
+}
+
+.edTextarea {
+  resize: vertical;
+  min-height: 4.5rem;
+  line-height: 1.55;
+}
+
+.edError {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--adm-danger);
+}
+
+.edNumberRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.edRange {
+  flex: 1;
+  accent-color: var(--adm-accent);
+}
+
+.edNumberSmall {
+  width: 84px;
+  flex-shrink: 0;
+}
+
+/* Toggle switch */
+.edSwitch {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #cfcfd4;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.edSwitchOn {
+  background: var(--adm-accent);
+}
+
+.edSwitchKnob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease;
+}
+
+.edSwitchOn .edSwitchKnob {
+  transform: translateX(20px);
+}
+
+/* Nested object group */
+.edGroup {
+  margin: 0;
+  padding: 1.1rem 1.1rem 1.25rem;
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-radius-lg);
+  background: rgba(255, 255, 255, 0.5);
+  min-width: 0;
+}
+
+.edGroupTitle {
+  padding: 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--adm-text);
+}
+
+/* Lists */
+.edList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-radius-lg);
+  background: rgba(255, 255, 255, 0.5);
+  min-width: 0;
+}
+
+.edListHead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.edListHead .edGroupTitle {
+  padding: 0;
+}
+
+.edCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 0.4rem;
+  border-radius: 8px;
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.edEmpty {
+  margin: 0;
+  padding: 1rem;
+  border: 1.5px dashed var(--adm-line);
+  border-radius: 12px;
+  text-align: center;
+  color: var(--adm-muted);
+  font-size: 0.9rem;
+}
+
+.edRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.edCards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.edCard {
+  border: 1px solid var(--adm-line);
+  border-radius: 16px;
+  background: var(--adm-card-solid);
+  transition: box-shadow 0.2s ease;
+}
+
+.edCardOpen {
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.edCardHead {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.35rem;
+}
+
+.edCardToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.edCardToggle:hover {
+  background: var(--adm-hover);
+}
+
+.edCardIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--adm-bg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--adm-text-soft);
+}
+
+.edCardTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.edChevron {
+  flex-shrink: 0;
+  color: var(--adm-muted);
+  transition: transform 0.25s ease;
+}
+
+.edCardOpen .edChevron {
+  transform: rotate(180deg);
+}
+
+.edCardBody {
+  padding: 0.5rem 1rem 1.1rem;
+  border-top: 1px solid var(--adm-line);
+  padding-top: 1rem;
+}
+
+.edActions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.edIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--adm-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.edIconBtn:hover:not(:disabled) {
+  background: var(--adm-hover);
+  color: var(--adm-text);
+}
+
+.edIconBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.edDanger:hover:not(:disabled) {
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+.edConfirm {
+  background: var(--adm-danger) !important;
+  color: #fff !important;
+}
+
+.edAdd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.6rem 1rem;
+  border: 1.5px dashed rgba(46, 155, 106, 0.45);
+  border-radius: 12px;
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.edAdd:hover {
+  background: #c9ecda;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 700px) {
+  .edGrid {
+    grid-template-columns: 1fr;
+  }
+  .edRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .edActions {
+    justify-content: flex-end;
+  }
+  .edList,
+  .edGroup {
+    padding: 0.85rem;
+  }
+}

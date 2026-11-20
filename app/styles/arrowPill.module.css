@@ -3,10 +3,12 @@
   --apb-dot: 40px;
   position: relative;
   isolation: isolate;
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
-  min-height: calc(var(--apb-dot) + var(--apb-pad) * 2);
+  height: calc(var(--apb-dot) + var(--apb-pad) * 2 + 2px);
+  line-height: 1;
   padding: var(--apb-pad) 1.4rem var(--apb-pad) var(--apb-pad);
   border-radius: 999px;
   font-weight: 600;
@@ -27,10 +29,11 @@
 .apbFill {
   position: absolute;
   z-index: -1;
-  top: var(--apb-pad);
+  top: 50%;
   left: var(--apb-pad);
   width: var(--apb-dot);
   height: var(--apb-dot);
+  transform: translateY(-50%);
   border-radius: 999px;
   transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
@@ -105,6 +108,15 @@
 .apbGhost:hover .apbLabel,
 .apbGhost:focus-visible .apbLabel {
   color: var(--bg);
+}
+
+/* Compact size for the navbar */
+.apbRoot.apbSm {
+  --apb-pad: 4px;
+  --apb-dot: 30px;
+  gap: 0.6rem;
+  padding-right: 1rem;
+  font-size: 0.82rem;
 }
 
 @media (max-width: 600px) {
