@@ -1,0 +1,273 @@
+/* "What I do" pinned chapter on /newone. Prefix: sv.
+   Base (phones, tablets, reduced motion): a plain stacked list.
+   Desktop with motion: the section pins while the four services take turns. */
+.svRoot {
+  position: relative;
+  border-top: 1px solid var(--no-tertiary);
+  margin-top: clamp(72px, 10vw, 128px);
+}
+
+.svTrack {
+  position: relative;
+}
+
+.svSticky {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(56px, 8vw, 96px) var(--no-gutter);
+}
+
+.svHead {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.svIndex {
+  color: var(--no-secondary);
+}
+
+.svTitle {
+  margin: 0;
+  max-width: 18ch;
+  font-size: clamp(32px, 4.4vw, 52px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.svTitleMuted {
+  color: var(--no-highlight);
+  font-weight: 400;
+}
+
+.svStage {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.svPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.svCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.svLead {
+  margin: 0;
+  font-size: 14px;
+  color: var(--no-primary-60);
+}
+
+.svName {
+  margin: 0;
+  font-size: clamp(44px, 9vw, 96px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.svBody {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--no-primary-60);
+}
+
+.svScene {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  max-width: 560px;
+}
+
+.svCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* the tab row only makes sense while pinned */
+.svTabs {
+  display: none;
+}
+
+/* ── pinned layout: desktop, motion allowed ── */
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .svTrack {
+    /* one screen to arrive + ~0.9 screen per service */
+    height: calc(100svh + var(--sv-count, 4) * 90svh);
+  }
+
+  .svSticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 620px;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: clamp(88px, 11vh, 120px);
+    padding-bottom: 40px;
+  }
+
+  .svStage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: block;
+  }
+
+  .svPanel {
+    position: absolute;
+    inset: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s var(--no-ease), visibility 0s linear 0.5s;
+  }
+
+  .svPanel[data-active] {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.6s var(--no-ease), visibility 0s;
+  }
+
+  /* entering text rises in, word block by block */
+  .svPanel .svLead,
+  .svPanel .svName,
+  .svPanel .svBody {
+    transform: translateY(18px);
+    opacity: 0;
+    transition: transform 0.7s var(--no-ease), opacity 0.7s var(--no-ease);
+  }
+
+  .svPanel[data-active] .svLead,
+  .svPanel[data-active] .svName,
+  .svPanel[data-active] .svBody {
+    transform: none;
+    opacity: 1;
+  }
+
+  .svPanel[data-active] .svName {
+    transition-delay: 0.06s;
+  }
+
+  .svPanel[data-active] .svBody {
+    transition-delay: 0.14s;
+  }
+
+  .svScene {
+    max-width: none;
+    height: min(100%, 460px);
+    aspect-ratio: auto;
+    justify-self: stretch;
+    transform: scale(0.96);
+    transition: transform 0.9s var(--no-ease);
+  }
+
+  .svPanel[data-active] .svScene {
+    transform: none;
+  }
+
+  .svTabs {
+    display: grid;
+    grid-template-columns: repeat(var(--sv-count, 4), minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .svTab {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4px 10px;
+    width: 100%;
+    padding: 14px 0 4px;
+    border: 0;
+    background: none;
+    text-align: left;
+    font: inherit;
+    color: var(--no-primary-30);
+    transition: color 0.3s var(--no-ease);
+  }
+
+  .svTab:hover,
+  .svTab[aria-current="step"],
+  .svTab[data-done] {
+    color: var(--no-primary);
+  }
+
+  .svTab[data-done] {
+    color: var(--no-primary-60);
+  }
+
+  /* progress bar: empty, filling (current, driven by --sv-local), or full (done) */
+  .svTabBar {
+    grid-column: 1 / -1;
+    position: relative;
+    height: 2px;
+    margin-bottom: 8px;
+    background: var(--no-tertiary);
+    overflow: hidden;
+  }
+
+  .svTabBar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--no-highlight);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .svTab[data-done] .svTabBar::after {
+    transform: scaleX(1);
+    background: var(--no-primary-60);
+  }
+
+  .svTab[aria-current="step"] .svTabBar::after {
+    transform: scaleX(var(--sv-local, 0));
+  }
+
+  .svTabNum {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--no-secondary);
+  }
+
+  .svTabName {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+/* stacked layout: give each service its own row with a hairline */
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .svPanel {
+    padding-top: 28px;
+    border-top: 1px solid var(--no-tertiary);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 899px) {
+  .svPanel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}

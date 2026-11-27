@@ -7,8 +7,8 @@ export const DATA = {
   email: "janmenjayabiswal@gmail.com",
   phone: "+91 7377617717",
   location: "Pune, Maharashtra, India",
-  linkedin: "https://linkedin.com/in/janmenjaya-biswal",
-  github: "https://github.com/janmenjaya-biswal",
+  linkedin: "https://www.linkedin.com/in/janmenjaya-biswal-0ba83b212/",
+  github: "https://github.com/janmenjaya7",
   navLinks: ["About", "Skills", "Experience", "Projects", "Contact"],
   typewriterWords: [
     "React.js Apps",
@@ -18,7 +18,7 @@ export const DATA = {
     "EdTech Products",
   ],
   summary:
-    "Results-driven Frontend Developer with 3 years of experience crafting performant, scalable web applications. Delivered 4 live production platforms at IFAS Educate Pvt. Ltd. serving 50,000+ learners. Proficient in React.js, Next.js, TypeScript, and React Native with strong skills in API integration, performance optimisation, and component-driven architecture.",
+    "Results-driven Frontend Developer with 3 years of experience crafting performant, scalable web applications. Delivered 4 live production platforms at IFAS Edutech Pvt. Ltd. serving 50,000+ learners. Proficient in React.js, Next.js, TypeScript, and React Native with strong skills in API integration, performance optimisation, and component-driven architecture.",
   stats: [
     { num: "3+", label: "Years Exp." },
     { num: "4",  label: "Live Products" },
@@ -27,13 +27,14 @@ export const DATA = {
   ],
   about: {
     paragraphs: [
-      "I'm a passionate Frontend Developer specialising in building fast, beautiful, and user-centric web applications. My focus is on writing clean, maintainable code and delivering products that users love.",
-      "Currently working at e2eHiring on the IFAS Educate ecosystem — a suite of EdTech platforms that help thousands of aspirants crack competitive exams across India.",
-      "When I'm not pushing pixels, you'll find me with a camera in hand, exploring new places, or buried in a good book.",
+      "I got into frontend development because I liked watching an idea turn into something people can actually click, scroll and use. That feeling still hasn't worn off.",
+      "My path ran from an MCA at Trident Academy, through Android experiments and a Google Cloud certification, to building production web apps — first at e2eHiring in Bengaluru, and now as a Software Developer — Frontend at IFAS Edutech Pvt. Ltd. in Pune, where the products I work on are used by 50,000+ learners.",
+      "Most days I'm deep in React.js and Next.js: shaping components that are easy to reuse, wiring up APIs, and sweating the small details that make an interface feel calm and obvious.",
+      "I'm still learning every week — system design, web performance, better accessibility. Away from the keyboard you'll usually find me with a camera, planning a trip, or halfway through a book.",
     ],
     chips: ["📍 Pune, MH", "🎓 MCA — Trident Academy", "☁️ GCP Certified", "📸 Photography", "✈️ Travel"],
     cards: [
-      { icon: "🏆", title: "Excellence Award", desc: "Recognised for outstanding performance on production projects at IFAS Educate Pvt. Ltd." },
+      { icon: "🏆", title: "Excellence Award", desc: "Recognised for outstanding performance on production projects at IFAS Edutech Pvt. Ltd." },
       { icon: "🚀", title: "4 Live Products", desc: "Delivered four live platforms from scratch — learning portals, marketplace, CRM & community site." },
       { icon: "👥", title: "Mentor & Leader", desc: "Guided 2 junior developers through code reviews, pair programming and knowledge-sharing sessions." },
       { icon: "⚡", title: "Performance Focus", desc: "Cut bundle sizes & improved page load times by ~25% through Webpack/Babel optimisation." },
@@ -77,20 +78,19 @@ export const DATA = {
   ],
   experience: [
     {
-      title: "Junior Developer Engineer — Frontend",
-      company: "e2eHiring",
-      client: "IFAS Educate Pvt. Ltd.",
-      date: "Aug 2023 – Present",
+      title: "Software Developer — Frontend",
+      company: "IFAS Edutech Pvt. Ltd.",
+      client: "",
+      date: "Present",
       location: "Pune, Maharashtra",
       current: true,
       bullets: [
-        "Delivered 4 live production platforms serving 50,000+ active learners across India.",
-        "Architected reusable React.js/TypeScript component libraries reducing UI development time by ~30%.",
-        "Integrated 20+ RESTful APIs for auth, course management, video streaming and payment workflows.",
-        "Optimised Webpack/Babel build pipelines, cutting bundle sizes and improving load times by ~25%.",
-        "Built full admin CRM dashboard with role-based access, real-time reporting and student progress tracking.",
-        "Delivered mobile-first responsive UI with cross-device consistency (desktop, tablet, mobile).",
-        "Mentored 2 junior developers through code reviews and knowledge-sharing sessions.",
+        "Own the frontend of 4 live production platforms used by 50,000+ learners across India.",
+        "Build and scale Next.js applications with SSR / SSG — fast, SEO-friendly and production-ready.",
+        "Integrated 100+ REST APIs end-to-end for authentication, courses, video streaming and payments.",
+        "Designed reusable React + TypeScript component libraries that cut UI development time by ~30%.",
+        "Optimised Webpack / Babel builds — leaner bundles and ~25% faster page loads.",
+        "Shipped an admin CRM with role-based access, real-time reports and student progress tracking.",
       ],
       products: [
         { name: "ifasonline.com",      url: "https://ifasonline.com",      tech: "Next.js · React.js",     desc: "Main EdTech learning portal" },
@@ -99,6 +99,21 @@ export const DATA = {
         { name: "anjanasamaj.in",      url: "https://anjanasamaj.in",      tech: "React.js · Admin",       desc: "Community organisation site" },
       ],
       tech: ["React.js","Next.js","TypeScript","Bootstrap","Material UI","REST API","Webpack"],
+    },
+    {
+      title: "Frontend Developer",
+      company: "e2eHiring",
+      client: "",
+      date: "From Aug 2023",
+      location: "Bengaluru, Karnataka",
+      current: false,
+      bullets: [
+        "Started my professional journey shipping production React.js interfaces for EdTech products.",
+        "Delivered mobile-first responsive UI and worked in Agile sprints with Jira and Git.",
+        "Mentored 2 junior developers through code reviews and knowledge-sharing sessions.",
+      ],
+      products: [],
+      tech: ["React.js","JavaScript","REST API","Bootstrap","Git"],
     },
   ],
   projects: [
@@ -110,6 +125,14 @@ export const DATA = {
       url: "https://ifasonline.com",
       status: "live",
       featured: true,
+    },
+    {
+      icon: "📖",
+      title: "Two Brothers Publication",
+      desc: "E-commerce store for children's books: shop by category and by age group, best-seller and new-arrival tabs, discounted product cards with age tags, a wishlist and customer login.",
+      stack: ["React.js","TypeScript"],
+      url: "https://twobrothers.pub",
+      status: "live",
     },
     {
       icon: "🛒",
@@ -128,6 +151,14 @@ export const DATA = {
       status: "live",
     },
     {
+      icon: "🛠️",
+      title: "IFAS Admin Panel",
+      desc: "Admin panel for the IFAS Online platform.",
+      stack: [],
+      url: "https://admin.ifasonline.com",
+      status: "live",
+    },
+    {
       icon: "🌐",
       title: "Anjana Samaj Community Site",
       desc: "Community and social organisation website with member portal, events management and announcement board.",
@@ -136,11 +167,19 @@ export const DATA = {
       status: "live",
     },
     {
+      icon: "📘",
+      title: "ELA Learn",
+      desc: "",
+      stack: [],
+      url: "https://elalearn.com",
+      status: "live",
+    },
+    {
       icon: "✈️",
       title: "Keep Calm and Travel On",
       desc: "Travel app with JWT auth, profile management, destination bookmarking, booking history and a community review & rating system.",
       stack: ["React.js","TypeScript","JWT Auth"],
-      url: "https://github.com/janmenjaya-biswal",
+      url: "https://github.com/janmenjaya7/Tourism-management",
       status: "personal",
     },
     {
@@ -148,7 +187,7 @@ export const DATA = {
       title: "Course Management System",
       desc: "Instructor-facing platform for course creation, organisation and delivery with student enrollment, progress dashboards and content management.",
       stack: ["React.js","REST API","Bootstrap"],
-      url: "https://github.com/janmenjaya-biswal",
+      url: "https://github.com/janmenjaya7/Course-management-system",
       status: "personal",
     },
   ],
@@ -156,7 +195,7 @@ export const DATA = {
     { icon: "🎓", title: "Master of Computer Applications", inst: "Trident Academy of Creative Technology", meta: "Bhubaneswar, Odisha · 2019 – 2022" },
     { icon: "☁️", title: "GCP Associate Cloud Engineer",    inst: "Google Cloud Platform",                  meta: "Certified · January 2023" },
     { icon: "📱", title: "Android App Development",         inst: "Mobile Development Certification",        meta: "Certified · May 2020" },
-    { icon: "🏆", title: "Excellence Award",                inst: "e2eHiring / IFAS Educate Pvt. Ltd.",     meta: "Outstanding Project Performance" },
+    { icon: "🏆", title: "Excellence Award",                inst: "IFAS Edutech Pvt. Ltd.",                 meta: "Outstanding Project Performance" },
   ],
 };
 

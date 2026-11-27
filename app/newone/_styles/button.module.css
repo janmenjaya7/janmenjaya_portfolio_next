@@ -1,0 +1,75 @@
+.noBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 8px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--no-radius-full);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.25s var(--no-ease), color 0.25s var(--no-ease), border-color 0.25s var(--no-ease);
+}
+
+.noBtnLabel {
+  display: inline-block;
+}
+
+.noBtnIcon {
+  display: inline-flex;
+  transition: transform 0.3s var(--no-ease);
+}
+
+.noBtn:hover .noBtnIcon {
+  transform: translate(2px, 2px);
+}
+
+/* light fill, dark text — the strongest action */
+.noBtnPrimary {
+  background: var(--no-primary);
+  color: var(--no-neutral) !important;
+}
+
+.noBtnPrimary:hover {
+  background: var(--no-primary-60);
+}
+
+/* quiet, border-driven */
+.noBtnSecondary {
+  background: var(--no-neutral);
+  color: var(--no-primary);
+  border-color: var(--no-primary-30);
+}
+
+.noBtnSecondary:hover {
+  border-color: var(--no-primary);
+}
+
+/* the single amber accent — use once per screen (dark text: 7.9:1 on amber) */
+.noBtnAccent {
+  background: var(--no-secondary);
+  color: var(--no-on-accent) !important;
+}
+
+.noBtnAccent:hover {
+  background: var(--no-accent-hover);
+}
+
+/* text only */
+.noBtnTertiary {
+  height: auto;
+  padding: 0;
+  border-radius: var(--no-radius-none);
+  background: transparent;
+  color: var(--no-primary-60);
+}
+
+.noBtnTertiary:hover {
+  color: var(--no-primary);
+}

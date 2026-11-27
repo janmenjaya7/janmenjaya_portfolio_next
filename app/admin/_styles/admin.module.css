@@ -1,17 +1,26 @@
-/* ═══════ Admin theme — change colors here ═══════ */
+/* ═══════ Admin theme — change colors here ═══════
+   Light workspace in the JK brand (palette in globals.css): royal blue for actions and the active item,
+   gold for brand details, green only for "OK / live / saved" states. */
 .admRoot {
-  --adm-bg: #e9e9eb;
-  --adm-surface: #f3f3f4;
-  --adm-card: rgba(255, 255, 255, 0.78);
+  --adm-bg: #e8ebf1;
+  --adm-surface: #f3f4f7;
+  --adm-card: rgba(255, 255, 255, 0.8);
   --adm-card-solid: #ffffff;
-  --adm-text: #1d1d1f;
-  --adm-text-soft: #4a4a4f;
-  --adm-muted: #8e8e93;
-  --adm-line: rgba(0, 0, 0, 0.07);
-  --adm-hover: rgba(0, 0, 0, 0.04);
-  --adm-accent: #2e9b6a;
-  --adm-accent-strong: #23845a;
-  --adm-accent-soft: #dcf3e7;
+  --adm-text: #111a2e; /* navy-black */
+  --adm-text-soft: #444c5e;
+  --adm-muted: #6f778a; /* 4.6:1 on white */
+  --adm-line: rgba(17, 26, 46, 0.08);
+  --adm-hover: rgba(36, 71, 154, 0.05);
+  --adm-accent: var(--brand-royal-600); /* white text on it: 8.6:1 */
+  --adm-accent-strong: #1b3a7e;
+  --adm-accent-soft: #e4eafa;
+  --adm-gold: var(--brand-gold-500);
+  --adm-gold-text: var(--brand-gold-700); /* 5.9:1 on white */
+  --adm-gold-soft: #f6ecd6;
+  --adm-gold-gradient: var(--brand-gold-gradient);
+  --adm-ok: var(--brand-emerald-600);
+  --adm-ok-strong: #1f6b4a;
+  --adm-ok-soft: #dcf3e7;
   --adm-warn: #e0763f;
   --adm-warn-soft: #ffd7c2;
   --adm-danger: #d9343f;
@@ -27,7 +36,7 @@
   min-height: 100dvh;
   background: var(--adm-bg);
   color: var(--adm-text);
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
   cursor: auto;
 }
 
@@ -40,7 +49,7 @@
 /* Admin pages only: drop the site's dark body and the browser's default margin */
 :global(body):has(.admRoot) {
   margin: 0;
-  background: var(--adm-bg, #e9e9eb) !important;
+  background: var(--adm-bg, #e8ebf1) !important;
 }
 
 /* :where() keeps this reset at zero specificity so component classes win */
@@ -60,12 +69,12 @@
   padding: 18px;
   gap: 0;
   overflow: hidden;
-  /* Premium frame: soft emerald / violet / peach mesh over a cool grey */
+  /* Premium frame: royal / gold / peacock mesh from the logo over a cool ivory */
   background:
-    radial-gradient(1200px 600px at -10% -20%, rgba(46, 155, 106, 0.35), transparent 60%),
-    radial-gradient(900px 600px at 110% 0%, rgba(124, 108, 242, 0.28), transparent 60%),
-    radial-gradient(900px 700px at 60% 120%, rgba(240, 142, 92, 0.3), transparent 60%),
-    linear-gradient(135deg, #e3ebe7 0%, #e8e6f1 50%, #f2e7df 100%);
+    radial-gradient(1200px 600px at -10% -20%, rgba(36, 71, 154, 0.3), transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(217, 180, 106, 0.34), transparent 60%),
+    radial-gradient(900px 700px at 60% 120%, rgba(61, 171, 188, 0.22), transparent 60%),
+    linear-gradient(135deg, #e3e8f3 0%, #eceef4 50%, #f4eee2 100%);
 }
 
 /* Soft colour wash + dot grid so the white cards stand out */
@@ -79,10 +88,10 @@
   padding: 2.25rem clamp(1rem, 3vw, 3rem) 3rem;
   border-radius: 0 var(--adm-radius-xl) var(--adm-radius-xl) 0;
   background:
-    radial-gradient(circle at 8% 0%, rgba(46, 155, 106, 0.16), transparent 34%),
-    radial-gradient(circle at 96% 12%, rgba(224, 118, 63, 0.13), transparent 32%),
-    radial-gradient(circle at 75% 100%, rgba(99, 102, 241, 0.1), transparent 40%),
-    radial-gradient(rgba(0, 0, 0, 0.055) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    radial-gradient(circle at 8% 0%, rgba(36, 71, 154, 0.12), transparent 34%),
+    radial-gradient(circle at 96% 12%, rgba(217, 180, 106, 0.18), transparent 32%),
+    radial-gradient(circle at 75% 100%, rgba(61, 171, 188, 0.09), transparent 40%),
+    radial-gradient(rgba(17, 26, 46, 0.055) 1px, transparent 1.4px) 0 0 / 22px 22px,
     var(--adm-surface);
 }
 
@@ -160,29 +169,26 @@
   padding: 0 0.5rem;
 }
 
-.admLogo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: linear-gradient(145deg, #3a3a3f, #111113);
-  color: #fff;
-  font-family: "Syne", sans-serif;
-  font-weight: 800;
-  font-size: 1.15rem;
-  letter-spacing: -0.5px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), var(--adm-shadow-sm);
-}
-
-.admLogoDot {
-  color: var(--adm-accent);
-}
-
 .admBrandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.admBrandEyebrow {
+  font-size: 0.68rem;
   font-weight: 600;
-  color: var(--adm-text-soft);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--adm-gold-text);
+}
+
+.admBrandTitle {
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--adm-text);
 }
 
 /* Only this list scrolls; brand above and account card below stay fixed */
@@ -193,9 +199,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 0.25rem 0.35rem 0.75rem 0.25rem;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+  /* the fade lives inside the padding, so an item at rest (e.g. an active Dashboard at the top) is never faded or
+     clipped; the extra side padding (offset by the negative margin) leaves room for the active item's shadow */
+  margin: 0 -0.5rem;
+  padding: 0.75rem 0.5rem 1.25rem;
+  scroll-padding-block: 0.75rem 1.25rem;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 0.7rem, #000 calc(100% - 1.1rem), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 0.7rem, #000 calc(100% - 1.1rem), transparent 100%);
 }
 
 .admBrand {
@@ -323,7 +333,7 @@
 .admSubItemActive:hover .admSubIcon {
   background: linear-gradient(135deg, var(--adm-accent), #3fbf86);
   color: #fff;
-  box-shadow: 0 8px 18px -8px rgba(46, 155, 106, 0.9);
+  box-shadow: 0 8px 18px -8px rgba(36, 71, 154, 0.9);
 }
 
 .admSubItemActive .admSubIcon svg {
@@ -373,6 +383,7 @@
 
 .admBadgeOk {
   background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
 }
 
 .admBadgeWarn {
@@ -411,7 +422,7 @@
   width: 40px;
   height: 40px;
   border-radius: 13px;
-  background: linear-gradient(135deg, #2e9b6a, #1f6f8b);
+  background: linear-gradient(135deg, #24479a, #17707a);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 700;
@@ -477,9 +488,9 @@
 }
 
 .admFootSite {
-  background: linear-gradient(135deg, #2b2b30, #111113);
+  background: linear-gradient(135deg, var(--brand-navy-700), var(--brand-navy-900));
   color: #fff;
-  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(217, 180, 106, 0.35), 0 8px 18px -10px rgba(7, 19, 39, 0.7);
 }
 
 .admFootSite:hover {
@@ -536,7 +547,6 @@
     0 1px 2px rgba(0, 0, 0, 0.04),
     0 24px 48px -20px rgba(31, 60, 45, 0.18);
   backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 .admCardTitle {
@@ -614,9 +624,9 @@
 }
 
 .admPillOk {
-  background: var(--adm-accent-soft);
-  color: var(--adm-accent-strong);
-  border: 1px solid rgba(46, 155, 106, 0.22);
+  background: var(--adm-ok-soft);
+  color: var(--adm-ok-strong);
+  border: 1px solid rgba(46, 138, 98, 0.22);
 }
 
 .admPillWarn {
@@ -641,8 +651,8 @@
 }
 
 .admStatus_ok {
-  background: var(--adm-accent-soft);
-  color: var(--adm-accent-strong);
+  background: var(--adm-ok-soft);
+  color: var(--adm-ok-strong);
 }
 
 .admStatus_info {
@@ -690,6 +700,15 @@
   flex-direction: column;
   padding: 0;
   overflow: hidden;
+}
+
+/* Desktop: when another panel follows the editor (Projects → screenshots), the editor keeps a fixed,
+   usable height with its own scroll, and the page scrolls down to the next panel */
+@media (min-width: 901px) {
+  .admEditorCard:not(:last-child) {
+    flex: none;
+    height: clamp(420px, calc(100dvh - 13rem), 680px);
+  }
 }
 
 .admSectionHead {
@@ -776,7 +795,7 @@
   border: 0;
   background: var(--adm-accent);
   color: #fff;
-  box-shadow: 0 6px 16px -6px rgba(46, 155, 106, 0.6);
+  box-shadow: 0 6px 16px -6px rgba(36, 71, 154, 0.6);
 }
 
 .admPrimaryBtn:hover:not(:disabled) {
@@ -820,8 +839,8 @@
 }
 
 .admNoticeOk {
-  background: var(--adm-accent-soft);
-  color: var(--adm-accent-strong);
+  background: var(--adm-ok-soft);
+  color: var(--adm-ok-strong);
 }
 
 .admNoticeError {
@@ -897,9 +916,12 @@
     overflow-x: auto;
     overflow-y: hidden;
     gap: 0.35rem;
-    padding-bottom: 0.25rem;
-    -webkit-mask-image: none;
-    mask-image: none;
+    margin: 0;
+    padding: 0.25rem 0.75rem;
+    scroll-padding-inline: 1.5rem;
+    /* soft edges hint that the strip scrolls sideways */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
   }
   .admNavItem {
     width: auto;
@@ -999,7 +1021,6 @@
   cursor: pointer;
   box-shadow: var(--adm-shadow-sm);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 

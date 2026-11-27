@@ -6,8 +6,8 @@
   min-height: 100dvh;
   padding: 1.5rem 1rem;
   background:
-    radial-gradient(circle at 20% 15%, rgba(46, 155, 106, 0.12), transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(224, 118, 63, 0.1), transparent 40%),
+    radial-gradient(circle at 20% 15%, rgba(36, 71, 154, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(217, 180, 106, 0.18), transparent 40%),
     var(--adm-bg);
 }
 
@@ -22,7 +22,6 @@
   border-radius: var(--adm-radius-xl);
   box-shadow: var(--adm-shadow);
   backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   animation: lgRise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -34,15 +33,24 @@
 }
 
 .lgIcon {
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 1.35rem;
+}
+
+.lgStep {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin-bottom: 1.25rem;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: var(--adm-bg);
-  color: var(--adm-text);
+  background: var(--adm-card-solid);
+  color: var(--adm-accent);
+  box-shadow: 0 0 0 2px var(--adm-card-solid), 0 0 0 3px rgba(217, 180, 106, 0.6);
 }
 
 .lgTitle {
@@ -155,7 +163,7 @@
   padding: 0.85rem 1rem;
   border: 0;
   border-radius: 14px;
-  background: var(--adm-text);
+  background: var(--adm-accent);
   color: #fff;
   font: inherit;
   font-size: 1rem;
@@ -165,7 +173,7 @@
 }
 
 .lgSubmit:hover:not(:disabled) {
-  background: #000;
+  background: var(--adm-accent-strong);
   transform: translateY(-1px);
 }
 

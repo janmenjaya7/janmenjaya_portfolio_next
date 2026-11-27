@@ -1,0 +1,326 @@
+/* Selected work on /newone: stacking project deck + compact index. Prefix: wk. */
+.wkRoot {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(72px, 10vw, 128px) var(--no-gutter) 0;
+}
+
+.wkHead {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto clamp(32px, 5vw, 56px);
+}
+
+.wkIndex {
+  color: var(--no-secondary);
+}
+
+.wkTitle {
+  margin: 0;
+  font-size: clamp(34px, 4.4vw, 52px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.wkEmpty {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── deck ── */
+.wkDeck {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wkCard {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.wkInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  min-height: 560px;
+  padding: clamp(20px, 3vw, 36px);
+  border: 1px solid var(--no-tertiary);
+  border-radius: var(--no-radius-xl);
+  background: var(--no-surface);
+  isolation: isolate;
+  outline: none;
+}
+
+/* screenshot: black-and-white halftone by default, full colour on hover/focus */
+.wkShot {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.wkImg {
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(1) contrast(1.1) brightness(0.85);
+  transform: scale(1.03);
+  transition: filter 0.8s var(--no-ease), transform 1.2s var(--no-ease), object-position 6s linear;
+}
+
+.wkHalftone {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 46%, rgba(20, 16, 12, 0.62) 54%) 0 0 / 5px 5px;
+  transition: opacity 0.8s var(--no-ease);
+}
+
+/* legibility: a fixed ink gradient behind the title and copy, in every state (screenshots are often white) */
+.wkShot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(20, 16, 12, 0.55) 0%, rgba(20, 16, 12, 0) 22%),
+    linear-gradient(0deg, rgba(20, 16, 12, 0.96) 0%, rgba(20, 16, 12, 0.86) 34%, rgba(20, 16, 12, 0) 70%);
+  pointer-events: none;
+}
+
+.wkInner:hover .wkImg,
+.wkInner:focus-within .wkImg {
+  filter: grayscale(0) contrast(1) brightness(0.72);
+  transform: none;
+}
+
+.wkInner:hover .wkImgTall,
+.wkInner:focus-within .wkImgTall {
+  object-position: bottom center; /* tall full-page shots scroll slowly inside the card */
+}
+
+.wkInner:hover .wkHalftone,
+.wkInner:focus-within .wkHalftone {
+  opacity: 0.35;
+}
+
+.wkMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--no-primary-60);
+}
+
+.wkCount {
+  font-variant-numeric: tabular-nums;
+}
+
+.wkStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--no-primary-10);
+  border-radius: var(--no-radius-full);
+  background: rgba(20, 16, 12, 0.55);
+  backdrop-filter: blur(6px);
+  font-size: 12px;
+  color: var(--no-primary);
+  white-space: nowrap;
+}
+
+.wkDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--no-primary-30);
+}
+
+.wkStatus[data-tone="live"] .wkDot {
+  background: var(--no-success);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.18);
+}
+
+.wkBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 24px clamp(24px, 4vw, 64px);
+}
+
+.wkName {
+  margin: 0;
+  font-size: clamp(40px, 6.4vw, 92px);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.wkSide {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.wkDesc {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(242, 239, 232, 0.78);
+}
+
+.wkStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wkStack li {
+  padding: 4px 10px;
+  border: 1px solid var(--no-primary-10);
+  border-radius: var(--no-radius-full);
+  font-size: 12px;
+  color: var(--no-primary-60);
+}
+
+.wkLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  min-height: 44px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--no-highlight);
+  text-decoration: none;
+}
+
+.wkLink svg {
+  transition: transform 0.3s var(--no-ease);
+}
+
+.wkLink:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* desktop: cards pin and stack over each other, each a little lower than the last */
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .wkCard {
+    position: sticky;
+    top: calc(88px + var(--wk-i, 0) * 14px);
+    margin-bottom: 14svh;
+  }
+
+  .wkCard:last-child {
+    margin-bottom: 0;
+  }
+
+  .wkInner {
+    height: min(76svh, 680px);
+    min-height: 520px;
+    box-shadow: 0 -24px 60px -20px rgba(0, 0, 0, 0.65);
+  }
+}
+
+/* ── compact index ── */
+.wkMore {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 1200px;
+  margin: clamp(56px, 8vw, 96px) auto 0;
+}
+
+.wkList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--no-tertiary);
+}
+
+.wkRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px 24px;
+  min-height: 72px;
+  padding: 14px 0;
+  border-top: 1px solid var(--no-tertiary);
+}
+
+.wkRowName {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.wkRowStack {
+  font-size: 14px;
+  color: var(--no-primary-60);
+}
+
+.wkRowLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-size: 14px;
+  color: var(--no-primary);
+  text-decoration: none;
+}
+
+.wkRowLink:hover {
+  color: var(--no-highlight);
+}
+
+@media (max-width: 899px) {
+  .wkInner {
+    min-height: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  .wkShot {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .wkMeta {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .wkBody {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 20px;
+  }
+
+  .wkRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .wkRowStack {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .wkRowLink {
+    grid-column: 1 / -1;
+  }
+}

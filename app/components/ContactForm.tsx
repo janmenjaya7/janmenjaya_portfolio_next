@@ -22,6 +22,11 @@ export default function ContactForm() {
   const [sending, setSending] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  // when the form appeared: submissions faster than a person can type are treated as bots by the server
+  const shownAt = useRef(0);
+  useEffect(() => {
+    shownAt.current = Date.now();
+  }, []);
 
   const update = (key: keyof ContactInput, v: string) => {
     setValues((s) => ({ ...s, [key]: v }));
@@ -48,7 +53,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result.data, website: honeypot }),
+        body: JSON.stringify({ ...result.data, website: honeypot, elapsed: shownAt.current ? Date.now() - shownAt.current : null }),
       });
       const body = (await res.json().catch(() => null)) as
         | { ok?: boolean; error?: string; fields?: FieldErrors }
@@ -78,7 +83,7 @@ export default function ContactForm() {
       <form ref={formRef} className={styles.cfForm} onSubmit={submit} noValidate>
         {FIELDS.map((f) => (
           <div key={f.key} className={styles.cfField}>
-            <label htmlFor={`cf-${f.key}`} className={`${styles.cfLabel} font-mono-custom`}>
+            <label htmlFor={`cf-${f.key}`} className={styles.cfLabel}>
               {f.label}
             </label>
             <input
@@ -102,7 +107,7 @@ export default function ContactForm() {
         ))}
 
         <div className={styles.cfField}>
-          <label htmlFor="cf-message" className={`${styles.cfLabel} font-mono-custom`}>
+          <label htmlFor="cf-message" className={styles.cfLabel}>
             Message
             <span className={styles.cfCount}>
               {values.message.length}/{CONTACT_LIMITS.message}
@@ -188,7 +193,7 @@ function SuccessModal({ name, onClose }: { name: string; onClose: () => void }) 
           <circle className={styles.cfCheckCircle} cx="26" cy="26" r="24" />
           <path className={styles.cfCheckMark} d="M15 27l7 7 15-16" />
         </svg>
-        <h3 id="cf-modal-title" className={`${styles.cfModalTitle} font-syne`}>
+        <h3 id="cf-modal-title" className={styles.cfModalTitle}>
           Your response is submitted
         </h3>
         <p id="cf-modal-text" className={styles.cfModalText}>

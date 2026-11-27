@@ -63,13 +63,6 @@ export function normalizeSection<K extends SectionKey>(key: K, value: Json): Por
   return normalize(tpl, value, false) as PortfolioData[K];
 }
 
-/* Normalized empty item for an array section — used when adding new entries */
-export function blankItem(key: SectionKey): Json {
-  const tpl = DATA[key] as Json;
-  if (!Array.isArray(tpl)) return null;
-  return normalize(itemTemplate(tpl), undefined, false);
-}
-
 /* Blank value matching any template (used by nested array editors in the admin) */
 export function blankFrom(tpl: Json): Json {
   return normalize(Array.isArray(tpl) ? itemTemplate(tpl) : tpl, undefined, false);

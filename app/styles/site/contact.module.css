@@ -1,0 +1,205 @@
+.ctSection {
+  overflow: hidden;
+  isolation: isolate;
+  border-top: 1px solid var(--jb-line-ink);
+}
+
+.ctInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.ctIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ctTitle {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+}
+
+.ctLead {
+  max-width: 44ch;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--jb-on-ink-muted);
+}
+
+.ctLines {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--jb-line-ink);
+}
+
+.ctLine {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--jb-line-ink);
+}
+
+.ctLabel {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--jb-on-ink-muted);
+}
+
+.ctValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* comfortable touch area (44px) without changing the look */
+  min-height: 44px;
+  margin: -9px 0;
+  width: fit-content;
+  font-size: 1.02rem;
+  color: var(--jb-on-ink);
+  text-decoration: none;
+  word-break: break-word;
+}
+
+a.ctValue svg {
+  color: var(--jb-accent-ink);
+  transition: transform 0.35s var(--jb-ease);
+}
+
+a.ctValue:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* the existing contact form, re-themed through its CSS variables */
+.ctForm {
+  --bg: var(--jb-ink);
+  --bg4: var(--jb-ink-3);
+  --border: var(--jb-line-ink);
+  --border2: rgba(235, 232, 225, 0.22);
+  --blue: var(--jb-accent);
+  --cyan: var(--jb-accent-ink);
+  --cyan-light: var(--jb-accent-ink);
+  --white: var(--jb-on-ink);
+  --text: var(--jb-on-ink);
+  --muted: var(--jb-on-ink-muted);
+
+  padding: clamp(24px, 3.5vw, 40px);
+  border: 1px solid var(--jb-line-ink);
+  border-radius: 18px;
+  background: rgba(12, 27, 53, 0.78);
+  backdrop-filter: blur(10px);
+}
+
+/* ── footer ── */
+.ftRoot {
+  /* tight top: the wordmark itself is the visual break after Contact */
+  padding: clamp(20px, 2.5vw, 36px) 0 calc(32px + 96px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--jb-line-ink);
+}
+
+.ftRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--jb-line-ink);
+  font-size: 14px;
+  color: var(--jb-on-ink-muted);
+}
+
+.ftCopy {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* the JK logo beside the copyright */
+.ftLogo {
+  margin: 4px 0;
+}
+
+.ftLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.ftLinks a,
+.ftReplay,
+.ftTop {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--jb-on-ink);
+  text-decoration: none;
+  transition: color 0.25s var(--jb-ease);
+}
+
+.ftLinks a:hover,
+.ftReplay:hover,
+.ftTop:hover {
+  color: var(--jb-accent-ink);
+}
+
+.ftTop {
+  gap: 6px;
+}
+
+.ftNewLook {
+  gap: 8px;
+}
+
+/* small pill so the link reads as "try the other design", not just another profile link */
+.ftNewTag {
+  padding: 2px 8px;
+  border: 1px solid var(--jb-line-ink);
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jb-gold);
+}
+
+.ftReplay {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .ctInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .ctLine {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .ftRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* an even two-by-two grid instead of ragged wrapped rows */
+  .ftLinks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    width: 100%;
+  }
+}

@@ -1,0 +1,147 @@
+/* MacBook-style device frame, all CSS. Width-driven: scale it by setting the width of .mb. */
+.mb {
+  position: relative;
+  width: 100%;
+  padding: 0 5.5%;
+}
+
+.mbLid {
+  position: relative;
+  padding: 2.4% 2.4% 3%;
+  border-radius: 18px 18px 6px 6px;
+  background: linear-gradient(180deg, #1b1e25 0%, #0c0e12 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 0 1px #4a4f59;
+}
+
+.mbCam {
+  position: absolute;
+  top: 1%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2b3140;
+  box-shadow: 0 0 0 2px #0f1218;
+  transform: translateX(-50%);
+}
+
+.mbScreen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #f4f3ef;
+}
+
+.mbBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 7.5%;
+  min-height: 20px;
+  padding: 0 2.5%;
+  background: rgba(244, 243, 239, 0.96);
+  border-bottom: 1px solid rgba(21, 24, 29, 0.1);
+  backdrop-filter: blur(6px);
+}
+
+.mbDots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.mbDots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.mbDots i:nth-child(2) {
+  background: #febc2e;
+}
+
+.mbDots i:nth-child(3) {
+  background: #28c840;
+}
+
+.mbUrl {
+  flex: 0 1 46%;
+  margin: 0 auto;
+  padding: 3px 12px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: rgba(21, 24, 29, 0.06);
+  font-size: clamp(9px, 0.85vw, 12px);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #5d616a;
+}
+
+.mbView {
+  position: absolute;
+  inset: 7.5% 0 0;
+  overflow: hidden;
+}
+
+/* faint reflection across the glass */
+.mbGlare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 38%);
+  pointer-events: none;
+}
+
+/* aluminium base, a little wider than the lid, with the thumb notch */
+.mbBase {
+  position: relative;
+  height: 0;
+  padding-bottom: 3.2%;
+  margin: 0 -6%;
+  border-radius: 0 0 14px 14px / 0 0 60% 60%;
+  background: linear-gradient(180deg, #d9dbe0 0%, #b7bbc4 45%, #8e939d 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.mbNotch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14%;
+  height: 38%;
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(180deg, #9da2ab, #c3c6cd);
+  transform: translateX(-50%);
+}
+
+.mbShadow {
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  bottom: -18px;
+  height: 30px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(21, 24, 29, 0.35), transparent);
+  filter: blur(6px);
+}
+
+@media (max-width: 576px) {
+  .mbLid {
+    border-radius: 12px 12px 4px 4px;
+  }
+
+  .mbDots i {
+    width: 6px;
+    height: 6px;
+  }
+}

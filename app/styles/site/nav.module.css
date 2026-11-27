@@ -1,0 +1,73 @@
+/* Slim top strip over the hero (not sticky). Section navigation is the floating dock. */
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: var(--jb-nav-h);
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 100%;
+  max-width: var(--jb-max);
+  margin: 0 auto;
+  padding: 0 var(--jb-gutter);
+}
+
+/* Logo lockup: the animated JK tile, then the name (sans first name + serif surname on one baseline) */
+.navBrand {
+  display: inline-flex;
+  align-items: center;
+  /* ≥ 44px touch area */
+  padding: 4px 0;
+  gap: 12px;
+  color: var(--jb-on-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 12px;
+}
+
+.navBrandLogo {
+  transition: transform 0.35s var(--jb-ease);
+}
+
+.navBrand:hover .navBrandLogo,
+.navBrand:focus-visible .navBrandLogo {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.navBrandName {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navBrandLogo {
+    transition: none;
+  }
+}
+
+.navBrandFirst {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.navBrandLast {
+  font-family: var(--jb-serif);
+  font-size: 19px;
+  font-style: italic;
+  color: var(--jb-on-ink-muted);
+}
+
+@media (max-width: 420px) {
+  .navBrandLast {
+    display: none;
+  }
+}

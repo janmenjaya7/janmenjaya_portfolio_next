@@ -1,0 +1,243 @@
+/* ─────────────────────────────────────────────────────────────
+   /newone motion layer. Hidden "before" states only apply when
+   scripting is on and the visitor has not asked for less motion,
+   so content is always readable without JavaScript.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── scroll progress bar ── */
+.noProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  height: 2px;
+  background: var(--no-primary);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--no-progress, 0));
+  pointer-events: none;
+}
+
+.noProgress::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 64px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--no-secondary));
+  filter: blur(2px);
+}
+
+/* ── reveal: fade + rise ── */
+.noReveal {
+  --no-rise: 28px;
+}
+
+/* ── split headline: words slide up out of a mask ── */
+.noSplit {
+  text-wrap: balance;
+}
+
+.noSplitWord {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+  vertical-align: top;
+}
+
+.noSplitInner {
+  display: inline-block;
+}
+
+.noSplitMuted {
+  color: var(--no-primary-60);
+}
+
+/* ── line that draws itself ── */
+.noDrawLine {
+  display: block;
+  height: 1px;
+  background: var(--no-tertiary);
+  transform-origin: 0 50%;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .noReveal {
+    opacity: 0;
+    translate: 0 var(--no-rise);
+    transition:
+      opacity 0.9s var(--no-ease) var(--no-d, 0ms),
+      translate 1s var(--no-ease) var(--no-d, 0ms);
+  }
+
+  .noReveal[data-shown] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .noSplitInner {
+    translate: 0 105%;
+    transition: translate 1.05s var(--no-ease) calc(var(--i, 0) * 55ms + var(--no-d, 0ms));
+  }
+
+  .noSplit[data-shown] .noSplitInner {
+    translate: 0 0;
+  }
+
+  .noDrawLine {
+    transform: scaleX(0);
+    transition: transform 1.4s var(--no-ease) var(--no-d, 0ms);
+  }
+
+  [data-shown] > .noDrawLine,
+  .noDrawLine[data-shown] {
+    transform: scaleX(1);
+  }
+}
+
+/* ── marquee ── */
+.noMarquee {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(40px, 7vw, 72px) 0;
+  overflow: hidden;
+  border-top: 1px solid var(--no-tertiary);
+  border-bottom: 1px solid var(--no-tertiary);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.noMarqueeRow {
+  display: flex;
+  width: max-content;
+  animation: noMarquee 48s linear infinite;
+}
+
+.noMarqueeReverse {
+  animation-direction: reverse;
+  animation-duration: 56s;
+  opacity: 0.45;
+}
+
+.noMarquee:hover .noMarqueeRow {
+  animation-play-state: paused;
+}
+
+.noMarqueeTrack {
+  display: flex;
+  flex: none;
+}
+
+.noMarqueeItem {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(18px, 2.5vw, 36px);
+  padding-right: clamp(18px, 2.5vw, 36px);
+  font-size: clamp(28px, 4.4vw, 56px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.noMarqueeReverse .noMarqueeItem {
+  font-weight: 300;
+}
+
+.noMarqueeStar {
+  font-size: 0.4em;
+  color: var(--no-secondary);
+}
+
+@keyframes noMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+/* ── trailing cursor ring (mouse only; see NoCursor) ── */
+.noCursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 95;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--no-ease);
+}
+
+.noCursor[data-on] {
+  opacity: 1;
+}
+
+.noCursorRing {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(217, 155, 82, 0.7);
+  border-radius: 50%;
+  transition: transform 0.35s var(--no-ease), background-color 0.35s var(--no-ease), border-color 0.35s var(--no-ease);
+}
+
+.noCursor[data-hot] .noCursorRing {
+  transform: scale(1.7);
+  border-color: rgba(217, 155, 82, 0.9);
+  background: rgba(217, 155, 82, 0.08);
+}
+
+.noCursor[data-down] .noCursorRing {
+  transform: scale(0.8);
+}
+
+/* ── film grain over everything: very faint, shifts a few times a second ── */
+.noGrain {
+  position: fixed;
+  inset: -50%;
+  z-index: 94;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: noGrainShift 0.9s steps(4) infinite;
+}
+
+@keyframes noGrainShift {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-3%, 2%);
+  }
+  50% {
+    transform: translate(2%, -3%);
+  }
+  75% {
+    transform: translate(-2%, -1%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noGrain {
+    animation: none;
+  }
+
+  .noMarqueeRow {
+    animation: none;
+  }
+
+  .noProgress {
+    display: none;
+  }
+}

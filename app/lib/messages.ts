@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { ContactInput } from "./contact-validation";
+import { oldestRead } from "./inbox-rules";
 import { getRedis, StoreNotConfiguredError } from "./portfolio-store";
 
 export { validateContact } from "./contact-validation";
@@ -29,7 +30,12 @@ export class InboxFullError extends Error {}
 
 export async function addMessage(input: ContactInput): Promise<ContactMessage> {
   const redis = requireRedis();
-  if ((await redis.hlen(KEY)) >= MAX_STORED) throw new InboxFullError("Inbox is full.");
+  if ((await redis.hlen(KEY)) >= MAX_STORED) {
+    // make room by dropping the oldest message you've already read, so a full inbox doesn't silence new visitors
+    const victim = oldestRead(await listMessages());
+    if (!victim) throw new InboxFullError("Inbox is full.");
+    await redis.hdel(KEY, victim.id);
+  }
   const msg: ContactMessage = { id: randomUUID(), ...input, createdAt: new Date().toISOString(), read: false };
   await redis.hset(KEY, { [msg.id]: msg });
   return msg;

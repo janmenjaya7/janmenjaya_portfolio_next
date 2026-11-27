@@ -74,7 +74,7 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   {
     id: "projects",
     label: "Projects",
-    description: "Project cards. Status \"live\" shows the green Live badge.",
+    description: "Project cards. Status \"live\" shows the green Live badge; \"internal\" marks a sign-in-only tool (no public link); \"offline\" keeps a past production project but hides its dead link. Screenshots are below.",
     icon: FolderKanban,
     keys: ["projects"],
     count: (d) => d.projects.length,

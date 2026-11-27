@@ -1,0 +1,783 @@
+/* Admin dashboard. All classes are prefixed `ov`; colours come from the admin tokens in admin.module.css. */
+
+.ov {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* ── shared surfaces ── */
+.ovPanel {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--adm-radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.84));
+  box-shadow: var(--adm-shadow);
+}
+
+.ovPanelHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.ovPanelTitle {
+  margin: 0;
+  color: var(--adm-text);
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.ovCount {
+  color: var(--adm-muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ovLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 32px;
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--adm-accent-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ovEmpty {
+  margin: 0;
+  padding: 1.25rem 0.25rem;
+  color: var(--adm-muted);
+  font-size: 0.9rem;
+}
+
+/* ── welcome ── */
+.ovHello {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 1.4rem 1.5rem;
+  border-radius: var(--adm-radius-lg);
+  background:
+    radial-gradient(90% 140% at 100% 0%, rgba(217, 180, 106, 0.2), transparent 55%),
+    radial-gradient(70% 120% at 0% 100%, rgba(47, 95, 208, 0.28), transparent 60%),
+    linear-gradient(135deg, var(--brand-navy-700), var(--brand-navy-900));
+  color: #f4f1ea;
+  border: 1px solid rgba(217, 180, 106, 0.28);
+  box-shadow: var(--adm-shadow);
+}
+
+.ovDate {
+  margin: 0 0 0.2rem;
+  color: var(--brand-gold-400);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+.ovHelloTitle {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.ovStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.6rem 0 0;
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+}
+
+.ovStatusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 25%, transparent);
+}
+
+.ovStatus_ok {
+  color: #6ee7b7;
+}
+
+.ovStatus_info {
+  color: #93c5fd;
+}
+
+.ovStatus_warn {
+  color: #fdba74;
+}
+
+.ovStatus_danger {
+  color: #fca5a5;
+}
+
+.ovHelloActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ovBtnPrimary,
+.ovBtnGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ovBtnPrimary {
+  border: 0;
+  background: #fff;
+  color: var(--brand-navy-900);
+}
+
+.ovBtnGhost {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: transparent;
+  color: #f4f4f5;
+}
+
+/* ── headline tiles ── */
+.ovTiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.ovTile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  width: 100%;
+  height: 100%;
+  min-height: 132px;
+  padding: 1rem 1.1rem;
+  overflow: hidden;
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-radius-lg);
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--adm-shadow-sm);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ovTile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(36, 71, 154, 0.35);
+  box-shadow: var(--adm-shadow);
+}
+
+.ovTileAlert {
+  border-color: rgba(224, 118, 63, 0.45);
+  background: linear-gradient(180deg, #fff, #fff7f2);
+}
+
+.ovTileHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--adm-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ovTileValue {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ovTileSub {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--adm-text-soft);
+  font-size: 0.8rem;
+}
+
+.ovTileRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.15rem;
+}
+
+.ovTileRow .ovTileValue {
+  margin-top: 0;
+}
+
+.ovTileSkeleton {
+  width: 60%;
+  height: 2.6rem;
+  margin-top: 0.35rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--adm-hover) 25%, rgba(0, 0, 0, 0.07) 50%, var(--adm-hover) 75%);
+  background-size: 200% 100%;
+  animation: ovShimmer 1.3s linear infinite;
+}
+
+.ovSpark {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  width: 42%;
+  height: 34px;
+}
+
+.ovSparkLine {
+  fill: none;
+  stroke: var(--adm-accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.ovSparkArea {
+  fill: var(--adm-accent-soft);
+  opacity: 0.7;
+}
+
+.ovRing {
+  flex: none;
+  width: 48px;
+  height: 48px;
+}
+
+.ovRingTrack {
+  fill: none;
+  stroke: var(--adm-hover);
+  stroke-width: 6;
+}
+
+.ovRingValue {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+}
+
+.ovRingGood .ovRingValue {
+  stroke: var(--adm-ok);
+}
+
+.ovRingOk .ovRingValue {
+  stroke: #d9a23a;
+}
+
+.ovRingLow .ovRingValue {
+  stroke: var(--adm-warn);
+}
+
+/* ── attention + messages ── */
+.ovSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.ovIssues {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.ovIssue {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--adm-line);
+}
+
+.ovIssue:first-child {
+  border-top: 0;
+}
+
+.ovIssueDot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.ovIssueFix {
+  background: var(--adm-warn);
+  box-shadow: 0 0 0 3px var(--adm-warn-soft);
+}
+
+.ovIssueTip {
+  background: #9aa3b2;
+  box-shadow: 0 0 0 3px #eef0f3;
+}
+
+.ovIssueText {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  color: var(--adm-text);
+  font-size: 0.88rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.ovIssueLevel {
+  color: var(--adm-muted);
+  font-size: 0.74rem;
+}
+
+.ovIssueBtn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 32px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--adm-line);
+  border-radius: 999px;
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ovIssueBtn:hover {
+  border-color: var(--adm-accent);
+  color: var(--adm-accent-strong);
+}
+
+.ovMore {
+  margin-top: 0.5rem;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--adm-accent-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ovAllGood {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--adm-radius-md);
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+  font-weight: 600;
+}
+
+.ovMsgs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ovMsg {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.55rem 0.5rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--adm-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ovMsg:hover {
+  background: var(--adm-hover);
+}
+
+.ovAvatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--adm-accent), #1f6f4c);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ovMsgMain {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.ovMsgTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.ovMsgName {
+  overflow: hidden;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ovMsgTime {
+  flex: none;
+  color: var(--adm-muted);
+  font-size: 0.75rem;
+}
+
+.ovMsgSubject {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  overflow: hidden;
+  color: var(--adm-text-soft);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ovUnreadDot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--adm-warn);
+}
+
+/* ── content map ── */
+.ovGroups {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.6rem;
+}
+
+.ovGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  height: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-radius-md);
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.ovGroup:hover {
+  border-color: rgba(36, 71, 154, 0.35);
+  background: #fbfdfc;
+}
+
+.ovGroupIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-strong);
+}
+
+.ovGroupMain {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.ovGroupLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.ovGroupDesc {
+  overflow: hidden;
+  color: var(--adm-muted);
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ovGroupMeta {
+  display: grid;
+  flex: none;
+  justify-items: end;
+  gap: 2px;
+}
+
+.ovGroupCount {
+  color: var(--adm-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* "opens" affordance at the end of each content card */
+.ovGroupArrow {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-right: -0.2rem;
+  border-radius: 50%;
+  background: var(--adm-hover);
+  color: var(--adm-muted);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.ovGroup:hover .ovGroupArrow,
+.ovGroup:focus-visible .ovGroupArrow {
+  transform: translateX(3px);
+  background: var(--adm-accent);
+  color: #fff;
+}
+
+.ovGroupGap {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--adm-warn-soft);
+  color: #9a4a1d;
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── system ── */
+.ovSystem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ovSystemInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.ovSystemIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--brand-navy-800);
+}
+
+.ovSystemText {
+  margin: 0.2rem 0 0;
+  color: var(--adm-text-soft);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.ovDanger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--adm-line);
+}
+
+.ovDangerLabel {
+  color: var(--adm-danger);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ovBtnDanger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 38px;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(217, 52, 63, 0.3);
+  border-radius: 999px;
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ovBtnDanger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* focus */
+.ovBtnPrimary:focus-visible,
+.ovBtnGhost:focus-visible,
+.ovTile:focus-visible,
+.ovIssueBtn:focus-visible,
+.ovMore:focus-visible,
+.ovLink:focus-visible,
+.ovMsg:focus-visible,
+.ovGroup:focus-visible,
+.ovBtnDanger:focus-visible {
+  outline: 2px solid var(--adm-accent);
+  outline-offset: 2px;
+}
+
+@keyframes ovShimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ── laptop ── */
+@media (max-width: 1200px) {
+  .ovTiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── tablet ── */
+@media (max-width: 900px) {
+  .ovSplit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── phone ── */
+@media (max-width: 575.98px) {
+  .ovHello {
+    padding: 1.15rem;
+  }
+
+  .ovHelloActions {
+    width: 100%;
+  }
+
+  .ovBtnPrimary,
+  .ovBtnGhost {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .ovTiles {
+    gap: 0.6rem;
+  }
+
+  .ovTile {
+    min-height: 118px;
+    padding: 0.85rem;
+  }
+
+  .ovTileValue {
+    font-size: 1.6rem;
+  }
+
+  .ovSpark {
+    display: none;
+  }
+
+  .ovRing {
+    width: 38px;
+    height: 38px;
+  }
+
+  .ovPanel {
+    padding: 1rem;
+  }
+
+  .ovDanger {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.75rem 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--adm-line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ovTile,
+  .ovGroup,
+  .ovGroupArrow,
+  .ovRingValue {
+    transition: none;
+  }
+
+  .ovGroup:hover .ovGroupArrow {
+    transform: none;
+  }
+
+  .ovTileSkeleton {
+    animation: none;
+  }
+}

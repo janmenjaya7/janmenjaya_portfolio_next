@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
-import { ArrowUpRight, ChevronDown, Globe, Inbox, Layers, LayoutGrid, LogOut } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, ChartNoAxesColumn, ChevronDown, FileText, Globe, Inbox, Layers, LayoutGrid, LogOut } from "lucide-react";
 import type { PortfolioData } from "../../data";
 import { CONTENT_GROUPS } from "../_lib/sections";
+import BrandLogo from "../../components/BrandLogo";
 import Tooltip from "./Tooltip";
 import styles from "../_styles/admin.module.css";
 
@@ -24,18 +25,44 @@ function initials(name: string): string {
 /* Brand (fixed) · scrollable section list · account card (fixed) */
 export default function AdminSidebar({ active, data, dirtyGroups, unreadCount, onSelect, onLogout, loggingOut }: Props) {
   const [contentOpen, setContentOpen] = useState(true);
+  const navRef = useRef<HTMLElement>(null);
+
+  // Keep the active item fully visible in the scrolling nav: centred in the phone/tablet strip, and scrolled into
+  // view (only if it isn't already) in the desktop sidebar — never hidden under the edge fade or cut off
+  useEffect(() => {
+    const nav = navRef.current;
+    const item = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !item) return;
+    let behavior: ScrollBehavior = "smooth";
+    try {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) behavior = "auto";
+    } catch {
+      /* keep smooth */
+    }
+    const navBox = nav.getBoundingClientRect();
+    const itemBox = item.getBoundingClientRect();
+    if (nav.scrollWidth > nav.clientWidth + 1) {
+      const left = nav.scrollLeft + (itemBox.left - navBox.left) - (nav.clientWidth - itemBox.width) / 2;
+      nav.scrollTo({ left: Math.max(0, left), behavior });
+    } else if (nav.scrollHeight > nav.clientHeight + 1) {
+      const edge = 20; // keep clear of the top/bottom fade
+      if (itemBox.top < navBox.top + edge) nav.scrollTo({ top: Math.max(0, nav.scrollTop - (navBox.top + edge - itemBox.top)), behavior });
+      else if (itemBox.bottom > navBox.bottom - edge) nav.scrollTo({ top: nav.scrollTop + (itemBox.bottom - (navBox.bottom - edge)), behavior });
+    }
+  }, [active, contentOpen]);
   const totalItems = CONTENT_GROUPS.reduce((n, g) => n + (g.count?.(data) ?? 0), 0);
 
   return (
     <aside className={styles.admSidebar}>
       <div className={styles.admBrand}>
-        <span className={styles.admLogo}>
-          JB<span className={styles.admLogoDot}>.</span>
+        <BrandLogo size={48} />
+        <span className={styles.admBrandText}>
+          <span className={styles.admBrandEyebrow}>Portfolio</span>
+          <span className={styles.admBrandTitle}>Admin</span>
         </span>
-        <span className={styles.admBrandText}>Admin</span>
       </div>
 
-      <nav className={styles.admNav} aria-label="Admin sections">
+      <nav ref={navRef} className={styles.admNav} aria-label="Admin sections">
         <Tooltip side="right" title="Dashboard" text="Overview of your content and Redis storage status.">
           <button
             type="button"
@@ -66,6 +93,30 @@ export default function AdminSidebar({ active, data, dirtyGroups, unreadCount, o
                 {unreadCount}
               </span>
             )}
+          </button>
+        </Tooltip>
+
+        <Tooltip side="right" title="Visitors" text="Who visited your site, where they came from and what they clicked.">
+          <button
+            type="button"
+            className={`${styles.admNavItem} ${active === "visitors" ? styles.admNavItemActive : ""}`}
+            aria-current={active === "visitors" ? "page" : undefined}
+            onClick={() => onSelect("visitors")}
+          >
+            <ChartNoAxesColumn size={20} aria-hidden="true" />
+            <span>Visitors</span>
+          </button>
+        </Tooltip>
+
+        <Tooltip side="right" title="Resume" text="Upload or replace the PDF behind the “Download resume” button.">
+          <button
+            type="button"
+            className={`${styles.admNavItem} ${active === "resume" ? styles.admNavItemActive : ""}`}
+            aria-current={active === "resume" ? "page" : undefined}
+            onClick={() => onSelect("resume")}
+          >
+            <FileText size={20} aria-hidden="true" />
+            <span>Resume</span>
           </button>
         </Tooltip>
 

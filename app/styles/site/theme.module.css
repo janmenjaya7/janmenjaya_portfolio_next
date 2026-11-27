@@ -1,0 +1,277 @@
+/* ─────────────────────────────────────────────────────────────
+   "The Developer's Journey — From Curiosity to Craft"
+   Design tokens for the main site. Navy ink (night) and ivory paper
+   (day) surfaces from the JK monogram: royal blue for interaction,
+   gold for expressive type, peacock for small signature accents.
+   Built from the brand palette in globals.css. Prefix: jb.
+   ───────────────────────────────────────────────────────────── */
+.jbRoot {
+  --jb-ink: var(--brand-navy-900);
+  --jb-ink-2: var(--brand-navy-800);
+  --jb-ink-3: var(--brand-navy-700);
+  --jb-paper: var(--brand-ivory);
+  --jb-paper-2: var(--brand-ivory-2);
+  --jb-on-ink: var(--brand-ink-text);
+  --jb-on-ink-muted: #a6b0c3; /* 8.5:1 on ink */
+  --jb-on-paper: #111a2e; /* navy-black text on ivory */
+  --jb-on-paper-muted: #545c6c;
+  --jb-line-ink: rgba(217, 180, 106, 0.14); /* hairlines carry a hint of gold */
+  --jb-line-paper: rgba(17, 26, 46, 0.14);
+  --jb-accent: var(--brand-royal-400);
+  --jb-accent-ink: var(--brand-royal-300);
+  --jb-accent-paper: var(--brand-royal-700);
+  /* gold: expressive type and fine rules only (royal blue stays for interaction) */
+  --jb-gold: var(--brand-gold-400); /* on ink */
+  --jb-gold-deep: var(--brand-gold-700); /* on paper: 5.2:1 */
+  --jb-gold-gradient: var(--brand-gold-gradient);
+  --jb-peacock: var(--brand-peacock-400); /* signature accent on ink */
+  --jb-peacock-deep: var(--brand-peacock-700); /* on paper */
+  --jb-cloud: #aebbd3;
+  --jb-ok: var(--brand-emerald-400);
+
+  --jb-sans: var(--no-font-sans), "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --jb-serif: var(--jb-font-serif), "Instrument Serif", Georgia, serif;
+  --jb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --jb-gutter: clamp(16px, 4.5vw, 72px);
+  --jb-max: 1280px;
+  --jb-nav-h: 72px;
+
+  position: relative;
+  background: var(--jb-ink);
+  color: var(--jb-on-ink);
+  font-family: var(--jb-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+.jbRoot *,
+.jbRoot *::before,
+.jbRoot *::after {
+  box-sizing: border-box;
+}
+
+.jbRoot :focus-visible {
+  outline: 2px solid var(--jb-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.jbRoot ::selection {
+  background: rgba(217, 180, 106, 0.32);
+}
+
+/* the main site doesn't use the custom cursor; the body matches the page ink */
+:global(body):has(.jbRoot) {
+  cursor: auto;
+  background: var(--brand-navy-900);
+}
+
+/* ── shared layout ── */
+.jbWrap {
+  width: 100%;
+  max-width: var(--jb-max);
+  margin: 0 auto;
+  padding: 0 var(--jb-gutter);
+}
+
+.jbInk {
+  background: var(--jb-ink);
+  color: var(--jb-on-ink);
+}
+
+.jbPaper {
+  background: var(--jb-paper);
+  color: var(--jb-on-paper);
+}
+
+/* ── type ── */
+.jbEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.jbEyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--jb-gold-deep);
+  opacity: 0.85;
+}
+
+.jbInk .jbEyebrow::before {
+  background: var(--jb-gold);
+  opacity: 0.7;
+}
+
+.jbInk .jbEyebrow {
+  color: var(--jb-on-ink-muted);
+}
+
+.jbPaper .jbEyebrow {
+  color: var(--jb-on-paper-muted);
+}
+
+.jbTitle {
+  margin: 0;
+  font-family: var(--jb-sans);
+  font-size: clamp(2.3rem, 5.2vw, 4.4rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.jbSerif {
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.jbInk .jbSerif {
+  color: var(--jb-gold);
+}
+
+.jbPaper .jbSerif {
+  color: var(--jb-gold-deep);
+}
+
+.jbLead {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.jbInk .jbLead {
+  color: var(--jb-on-ink-muted);
+}
+
+.jbPaper .jbLead {
+  color: var(--jb-on-paper-muted);
+}
+
+
+/* ── buttons ── */
+.jbBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--jb-sans);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.3s var(--jb-ease), color 0.3s var(--jb-ease), border-color 0.3s var(--jb-ease), transform 0.3s var(--jb-ease);
+}
+
+.jbBtn svg {
+  transition: transform 0.35s var(--jb-ease);
+}
+
+.jbBtn:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.jbBtnSolid {
+  background: var(--jb-on-ink);
+  color: var(--jb-ink);
+}
+
+.jbBtnSolid:hover {
+  background: #ffffff;
+}
+
+.jbBtnLine {
+  border-color: var(--jb-line-ink);
+  color: var(--jb-on-ink);
+}
+
+.jbBtnLine:hover {
+  border-color: var(--jb-on-ink);
+}
+
+.jbPaper .jbBtnSolid {
+  background: var(--jb-on-paper);
+  color: var(--jb-paper);
+}
+
+.jbPaper .jbBtnLine {
+  border-color: var(--jb-line-paper);
+  color: var(--jb-on-paper);
+}
+
+.jbPaper .jbBtnLine:hover {
+  border-color: var(--jb-on-paper);
+}
+
+.jbIconBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--jb-line-ink);
+  border-radius: 50%;
+  color: var(--jb-on-ink);
+  transition: border-color 0.3s var(--jb-ease), background-color 0.3s var(--jb-ease);
+}
+
+.jbIconBtn:hover {
+  border-color: var(--jb-on-ink);
+  background: rgba(235, 232, 225, 0.06);
+}
+
+/* ── section rhythm ── */
+.jbSection {
+  position: relative;
+  /* one rhythm for every section: ~144px on desktop, ~88px on phones */
+  padding: clamp(88px, 11vw, 144px) 0;
+}
+
+.jbSectionHead {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 32px;
+  align-items: end;
+  margin-bottom: clamp(48px, 7vw, 96px);
+}
+
+.jbSectionHead > :last-child {
+  max-width: 46ch;
+  justify-self: end;
+}
+
+@media (max-width: 900px) {
+  .jbSectionHead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .jbSectionHead > :last-child {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jbRoot *,
+  .jbRoot *::before,
+  .jbRoot *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

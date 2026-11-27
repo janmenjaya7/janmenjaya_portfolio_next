@@ -1,0 +1,234 @@
+.noHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 48px);
+  height: 80px;
+  padding: 0 var(--no-gutter);
+  font-size: 15px;
+  line-height: 20px;
+  border-bottom: 1px solid transparent;
+  transition: height 0.4s var(--no-ease), background-color 0.4s var(--no-ease), border-color 0.4s var(--no-ease);
+}
+
+/* after the page moves: compact, frosted bar */
+:global(#no-root[data-scrolled]) .noHeader {
+  height: 64px;
+  /* near-solid: a lighter glass picked up the ivory About band and turned a muddy grey */
+  background: rgba(20, 16, 12, 0.92);
+  border-bottom-color: var(--no-tertiary);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* backdrop-filter would trap the fixed full-screen menu inside the bar, so drop it while open */
+.noHeader.noHeaderOpen {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-bottom-color: transparent !important;
+}
+
+.noHeaderName {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.noHeaderDots,
+.noHeaderMenuDots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.noHeaderDots i,
+.noHeaderMenuDots i {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--no-secondary);
+}
+
+.noHeaderMenuDots i {
+  background: var(--no-primary);
+  transition: transform 0.3s var(--no-ease);
+}
+
+.noHeaderMenuDotsOpen i:first-child {
+  transform: translateX(4px);
+}
+
+.noHeaderMenuDotsOpen i:last-child {
+  transform: translateX(-4px);
+}
+
+.noHeaderRole {
+  font-weight: 300;
+  color: var(--no-primary-60);
+  white-space: nowrap;
+}
+
+.noHeaderStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-weight: 300;
+  color: var(--no-primary-60);
+  white-space: nowrap;
+}
+
+.noHeaderPulse {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--no-success);
+}
+
+.noHeaderPulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--no-success);
+  opacity: 0;
+  animation: noPulse 2.2s var(--no-ease) infinite;
+}
+
+.noHeaderNav {
+  display: flex;
+  gap: clamp(20px, 2.4vw, 36px);
+}
+
+.noHeaderLink {
+  position: relative;
+  text-decoration: none;
+  color: var(--no-primary);
+}
+
+.noHeaderLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--no-ease);
+}
+
+.noHeaderLink:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.noHeaderMenuBtn {
+  position: relative;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--no-primary-30);
+  border-radius: var(--no-radius-full);
+  background: var(--no-neutral);
+  font: inherit;
+  transition: border-color 0.25s var(--no-ease);
+}
+
+.noHeaderMenuBtn:hover {
+  border-color: var(--no-primary);
+}
+
+/* full-screen menu (small screens) */
+.noMenu {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 96px var(--no-gutter) 48px;
+  background: rgba(20, 16, 12, 0.97);
+  opacity: 0;
+  transition: opacity 0.3s var(--no-ease);
+}
+
+/* `display` above would otherwise override the [hidden] attribute and leave an invisible layer catching clicks */
+.noMenu[hidden] {
+  display: none;
+}
+
+.noMenu:not(.noMenuOpen) {
+  pointer-events: none;
+}
+
+.noMenuOpen {
+  opacity: 1;
+}
+
+.noMenuList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.noMenuLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: clamp(34px, 9vw, 48px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.noMenuIndex {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--no-secondary);
+}
+
+@keyframes noPulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@media (max-width: 1100px) {
+  .noHeaderRole {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .noHeaderNav,
+  .noHeaderStatus {
+    display: none;
+  }
+
+  .noHeaderMenuBtn {
+    display: inline-flex;
+    margin-left: auto;
+  }
+}

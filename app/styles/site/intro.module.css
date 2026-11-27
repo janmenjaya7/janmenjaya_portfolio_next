@@ -1,0 +1,2136 @@
+/* ─────────────────────────────────────────────────────────────
+   Cinematic intro — "Clouds of possibility, unroll my journey".
+   Prefix: ci. Shown only when <html data-intro="play|static"> (set before paint).
+   play   → pinned (sticky) scene scrubbed by GSAP ScrollTrigger
+   static → reduced motion: the same scene laid out flat, resume fully open
+   ───────────────────────────────────────────────────────────── */
+.ciRoot {
+  --ci-bg: #101114;
+  --ci-cloud: #191b20;
+  --ci-paper: #e8d4ab; /* aged parchment */
+  --ci-paper-hi: #f2e4c4;
+  --ci-ink: #2b1d10; /* iron-gall brown */
+  --ci-ink-2: #5c4630; /* ≥ 4.5:1 even on the darker lower paper */
+  --ci-accent: #9a5b25; /* sepia, decorative */
+  --ci-accent-ink: #7a3f16; /* sepia for small text on paper */
+  --ci-gold: #d4ad62;
+  --ci-on-dark: #f1e6cc;
+  --ci-display: var(--jb-font-display), "Cinzel", Georgia, serif;
+  --ci-script: var(--jb-font-script), "Pinyon Script", cursive;
+  --ci-mast-h: 64px;
+  --ci-top: 12svh;
+  --ci-w: min(680px, calc(100vw - 48px));
+  --ci-len: 3.2; /* scroll length in screens: long enough to read the paper, short enough for a skimming recruiter */
+  --ci-roll-at: 0.8; /* where the rolled paper sits on the first screen (share of the height); read by the timeline too */
+  --ci-safe-t: env(safe-area-inset-top, 0px);
+  --ci-safe-b: env(safe-area-inset-bottom, 0px);
+
+  display: none;
+  position: relative;
+  z-index: 75; /* above the dock (70) and the page progress bar (60) */
+  color: var(--ci-on-dark);
+}
+
+:global(html[data-intro="play"]) .ciRoot,
+:global(html[data-intro="static"]) .ciRoot {
+  display: block;
+}
+
+/* play: (1 + len) screens tall; the last screen overlaps the hero so the clouds open straight onto it */
+:global(html[data-intro="play"]) .ciRoot {
+  height: calc((1 + var(--ci-len)) * 100vh);
+  height: calc((1 + var(--ci-len)) * 100svh);
+  margin-bottom: -100vh;
+  margin-bottom: -100svh;
+  pointer-events: none; /* the overlapping box must not block the hero; the stage re-enables events */
+}
+
+.ciStage {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--ci-bg);
+}
+
+:global(html[data-intro="play"]) .ciStage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  pointer-events: auto;
+  background: transparent; /* the base layer fades out at the end, revealing the hero underneath */
+}
+
+.ciSr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── atmosphere ─────────────────────────────────────────────── */
+.ciAtmo,
+.ciBase,
+.ciCloud,
+.ciRays,
+.ciFog {
+  position: absolute;
+  pointer-events: none;
+}
+
+.ciAtmo {
+  inset: 0;
+  z-index: 0;
+}
+
+.ciBase {
+  inset: 0;
+  background:
+    radial-gradient(70% 55% at 78% 4%, rgba(182, 138, 96, 0.16), transparent 70%),
+    radial-gradient(120% 80% at 50% 120%, #1a1c21 0%, transparent 60%),
+    linear-gradient(180deg, #0d0e11 0%, var(--ci-bg) 45%, #14161a 100%);
+}
+
+.ciCloud {
+  inset: -18% -12%;
+  will-change: transform;
+}
+
+.ciCloudInner {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.ciCloudInner::before,
+.ciFog::before,
+.ciRays::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* far bank: dim, cool, broad */
+.ciCloudFar {
+  opacity: 0.5;
+}
+.ciCloudFar .ciCloudInner::before {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005 .009' numOctaves='5' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 .36 0 0 0 0 .36 0 0 0 0 .39 0 0 0 2.4 -1.1'/%3E%3CfeGaussianBlur stdDeviation='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E")
+    0 0 / max(150vw, 1300px) auto repeat; /* softness is baked into the SVG (a live blur re-runs every frame) */
+  animation: ciDrift 110s ease-in-out infinite alternate;
+}
+
+/* mid bank: lit from the upper right — the volumetric layer */
+.ciCloudMid {
+  opacity: 0.62;
+}
+.ciCloudMid .ciCloudInner::before {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.007 .012' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.7 -1.32' result='a'/%3E%3CfeDiffuseLighting in='n' surfaceScale='3' diffuseConstant='1' lighting-color='%23a99a88' result='l'%3E%3CfeDistantLight azimuth='315' elevation='40'/%3E%3C/feDiffuseLighting%3E%3CfeComposite in='l' in2='a' operator='in'/%3E%3CfeGaussianBlur stdDeviation='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E")
+    0 0 / max(130vw, 1100px) auto repeat;
+  animation: ciDrift 80s ease-in-out -30s infinite alternate-reverse;
+}
+
+/* warm light falling from the upper right */
+.ciRays {
+  top: -30%;
+  right: -20%;
+  width: 95vw;
+  height: 140%;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+  transform-origin: 85% 0%;
+}
+.ciRays::before {
+  background:
+    radial-gradient(30% 22% at 82% 8%, rgba(232, 190, 140, 0.22), transparent 70%),
+    repeating-conic-gradient(from 198deg at 84% 4%, rgba(214, 170, 120, 0.09) 0deg 1.6deg, transparent 1.6deg 6deg);
+  -webkit-mask-image: radial-gradient(75% 70% at 84% 4%, #000 10%, transparent 75%);
+  mask-image: radial-gradient(75% 70% at 84% 4%, #000 10%, transparent 75%);
+  filter: blur(10px);
+  animation: ciSway 26s ease-in-out infinite alternate;
+}
+
+.ciFog {
+  inset: -10%;
+}
+.ciFog::before {
+  background:
+    radial-gradient(38% 22% at 24% 78%, rgba(160, 154, 156, 0.16), transparent 70%),
+    radial-gradient(44% 20% at 78% 62%, rgba(160, 154, 156, 0.13), transparent 70%),
+    radial-gradient(60% 18% at 50% 104%, rgba(176, 166, 154, 0.18), transparent 70%);
+  animation: ciFogDrift 24s ease-in-out -6s infinite alternate;
+}
+
+/* a second bank drifting the other way at another speed: the fog visibly rolls */
+.ciFog2::before {
+  background:
+    radial-gradient(34% 16% at 70% 30%, rgba(150, 146, 152, 0.12), transparent 70%),
+    radial-gradient(40% 18% at 18% 44%, rgba(150, 146, 152, 0.1), transparent 70%);
+  animation: ciFogDrift2 31s ease-in-out -11s infinite alternate;
+}
+
+@keyframes ciFogDrift {
+  from {
+    transform: translate3d(-7%, 1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(7%, -2.5%, 0) scale(1.08);
+  }
+}
+
+@keyframes ciFogDrift2 {
+  from {
+    transform: translate3d(8%, -1%, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(-8%, 2%, 0) scale(0.97);
+  }
+}
+
+/* warm golden mist lying along the bottom */
+.ciGoldFog {
+  position: absolute;
+  left: -15%;
+  right: -15%;
+  bottom: -8%;
+  height: 46%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.ciGoldFog::before,
+.ciGoldFog::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.ciGoldFog::before {
+  background:
+    radial-gradient(30% 42% at 22% 82%, rgba(214, 168, 88, 0.2), transparent 70%),
+    radial-gradient(34% 38% at 64% 92%, rgba(226, 180, 98, 0.18), transparent 70%),
+    radial-gradient(26% 30% at 88% 76%, rgba(200, 150, 70, 0.14), transparent 70%);
+  animation: ciGoldDrift 18s ease-in-out infinite alternate;
+}
+.ciGoldFog::after {
+  background:
+    radial-gradient(28% 34% at 40% 88%, rgba(240, 200, 120, 0.14), transparent 70%),
+    radial-gradient(24% 30% at 8% 70%, rgba(214, 168, 88, 0.12), transparent 70%);
+  animation: ciGoldDrift 23s ease-in-out -9s infinite alternate-reverse;
+}
+
+@keyframes ciGoldDrift {
+  0% {
+    transform: translate3d(-5%, 2%, 0) scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(5%, -4%, 0) scale(1.12);
+    opacity: 0.8;
+  }
+}
+
+@keyframes ciDrift {
+  from {
+    transform: translate3d(-2.5%, 0, 0);
+  }
+  to {
+    transform: translate3d(2.5%, -1.5%, 0);
+  }
+}
+
+@keyframes ciSway {
+  from {
+    transform: rotate(-1.5deg);
+    opacity: 0.8;
+  }
+  to {
+    transform: rotate(1.5deg);
+    opacity: 1;
+  }
+}
+
+/* foreground banks: gather over the document, then part onto the hero */
+.ciCurtain {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.ciCurtainBank {
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  width: 78vw;
+  visibility: hidden; /* the timeline parks it off-screen and shows it (a CSS transform here would add to GSAP's) */
+  will-change: transform;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='5' seed='23' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.2 -.7' result='a'/%3E%3CfeDiffuseLighting in='n' surfaceScale='3' diffuseConstant='.9' lighting-color='%238d8378' result='l'%3E%3CfeDistantLight azimuth='300' elevation='45'/%3E%3C/feDiffuseLighting%3E%3CfeComposite in='l' in2='a' operator='in'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E")
+      center / cover no-repeat,
+    radial-gradient(closest-side, rgba(25, 27, 32, 0.98) 55%, rgba(25, 27, 32, 0.7) 80%, transparent);
+}
+
+.ciCurtainL {
+  left: -6vw;
+  -webkit-mask-image: linear-gradient(90deg, #000 58%, transparent);
+  mask-image: linear-gradient(90deg, #000 58%, transparent);
+}
+
+.ciCurtainR {
+  right: -6vw;
+  -webkit-mask-image: linear-gradient(270deg, #000 58%, transparent);
+  mask-image: linear-gradient(270deg, #000 58%, transparent);
+}
+
+.ciGrain {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.045; /* plain alpha, no blend mode: a full-screen blend re-composites the whole scene every frame */
+}
+.ciGrain::before {
+  content: "";
+  position: absolute;
+  inset: -60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  animation: ciGrain 0.9s steps(4) infinite;
+}
+
+@keyframes ciGrain {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-22px, 14px, 0);
+  }
+  50% {
+    transform: translate3d(18px, -26px, 0);
+  }
+  75% {
+    transform: translate3d(-10px, -12px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ambient loops rest while the intro is off screen */
+.ciRoot[data-idle] .ciCloudInner::before,
+.ciRoot[data-idle] .ciFog::before,
+.ciRoot[data-idle] .ciRays::before,
+.ciRoot[data-idle] .ciGrain::before,
+.ciRoot[data-idle] .ciCueRing,
+.ciRoot[data-idle] .ciCueCore svg,
+.ciRoot[data-idle] .ciGoldFog::before,
+.ciRoot[data-idle] .ciGoldFog::after,
+.ciRoot[data-idle] .ciTassel {
+  animation-play-state: paused;
+}
+
+/* ── identity ───────────────────────────────────────────────── */
+.ciIdentity {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* the name is centred in the space above the rolled paper, whatever the screen height */
+  padding: calc(var(--ci-safe-t) + 76px) var(--jb-gutter, 24px) calc((1 - var(--ci-roll-at)) * 100svh + 56px);
+  text-align: center;
+  will-change: transform, opacity;
+}
+
+.ciIdInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  will-change: transform;
+}
+
+.ciIdKicker {
+  margin: 0;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: clamp(17px, 1.6vw, 22px);
+  letter-spacing: 0.02em;
+  color: var(--ci-gold);
+  animation: ciFadeUp 1s var(--jb-ease) 0.1s both;
+}
+
+.ciIdName {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* the name emblem (public/brand/janmen-biswal.svg, 1100×280): a heading-sized banner, never cramped or oversized */
+.ciLogo {
+  --ci-logo-w: min(820px, 70vw);
+  display: block;
+  width: var(--ci-logo-w);
+  height: auto;
+  aspect-ratio: 1100 / 280;
+  /* the artwork ends ~215/280 down (the rest is room for the J's descender and the swing): tuck the next line up */
+  margin-bottom: calc(var(--ci-logo-w) * -0.05);
+}
+
+.ciIdRole {
+  margin: 10px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 18px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(241, 230, 204, 0.84);
+  animation: ciFadeUp 1.1s var(--jb-ease) 1.15s both;
+}
+
+.ciIdStack {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  letter-spacing: 0.16em;
+  color: var(--ci-gold);
+}
+.ciIdStack::before {
+  content: "✦";
+  font-size: 9px;
+  color: rgba(229, 199, 127, 0.7);
+}
+
+.ciIdQuote {
+  margin: 2px 0 0;
+  max-width: 32ch;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: clamp(19px, 2.1vw, 25px);
+  line-height: 1.3;
+  color: rgba(241, 230, 204, 0.7);
+  animation: ciFadeUp 1.1s var(--jb-ease) 1.3s both;
+}
+
+@keyframes ciFadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* "scroll to discover": an engraved seal — rotating inscription round a gold boss with a bobbing arrow */
+.ciCue {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--ci-safe-b) + 10px);
+  width: 96px;
+  height: 96px;
+  margin: 0 0 0 -48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: ciFadeUp 1s var(--jb-ease) 1.6s both;
+}
+.ciCue:focus-visible {
+  outline: 2px solid var(--ci-gold);
+  outline-offset: 4px;
+}
+
+.ciCueRing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: ciSpin 22s linear infinite;
+  transition: scale 0.5s var(--jb-ease);
+}
+.ciCue:hover .ciCueRing {
+  scale: 1.08;
+}
+
+.ciCueOuter {
+  fill: rgba(14, 15, 18, 0.45);
+  stroke: rgba(229, 199, 127, 0.35);
+  stroke-width: 0.8;
+}
+.ciCueInner {
+  fill: none;
+  stroke: rgba(229, 199, 127, 0.55);
+  stroke-width: 0.8;
+  stroke-dasharray: 1.5 3;
+}
+.ciCueText {
+  font-family: var(--ci-display);
+  font-size: 9.4px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  fill: #e5c77f;
+}
+
+.ciCueCore {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f8e2a6, #c0903a 55%, #6b4712);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 240, 200, 0.7),
+    inset 0 -3px 4px rgba(60, 30, 0, 0.5),
+    0 8px 18px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s var(--jb-ease);
+}
+.ciCue:hover .ciCueCore {
+  transform: translateY(2px) scale(1.06);
+}
+.ciCueCore svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #3b2405;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: ciBob 1.8s ease-in-out infinite;
+}
+
+@keyframes ciSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ciBob {
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.ciToSite {
+  animation: ciFadeUp 1.1s var(--jb-ease) both;
+}
+
+/* ── the document ───────────────────────────────────────────── */
+.ciScene {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  padding-top: var(--ci-top);
+  perspective: 1500px;
+  perspective-origin: 50% 18%;
+  pointer-events: none;
+}
+
+.ciRise {
+  position: relative;
+  width: var(--ci-w);
+  height: fit-content;
+  transform-origin: 50% 0%;
+  will-change: transform;
+}
+
+:global(html[data-intro="play"]) .ciRise {
+  /* pre-JS first frame ≈ the timeline's first frame (GSAP takes over with exact values) */
+  transform: translate3d(0, calc(var(--ci-roll-at) * 100svh - var(--ci-top) - var(--ci-mast-h)), 0) rotateX(24deg) scale(0.94);
+}
+
+.ciTilt {
+  transform-origin: 50% 30%;
+  will-change: transform;
+}
+
+.ciFollow {
+  position: relative;
+  will-change: transform;
+}
+
+.ciShadow {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0%;
+  box-shadow:
+    0 40px 80px -20px rgba(0, 0, 0, 0.7),
+    0 18px 30px -12px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+/* the engraved old-gold stave */
+.ciRod {
+  position: absolute;
+  z-index: 4;
+  top: -9px;
+  left: -18px;
+  right: -18px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.ciSvgDefs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.ciRodBody {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='16'%3E%3Cg fill='none' stroke='%234a2f06' stroke-width='.8' opacity='.62'%3E%3Cpath d='M0 8c4-5 8-5 12 0s8 5 12 0 8-5 12 0 8 5 12 0'/%3E%3Cpath d='M8 8a2.2 2.2 0 1 0 .1 0M32 8a2.2 2.2 0 1 0 .1 0'/%3E%3Cpath d='M0 2.6h48M0 13.4h48' stroke-dasharray='1 1.6'/%3E%3C/g%3E%3Cpath d='M18 7c0-2 2-3 3-1M42 9c0 2-2 3-3 1' fill='none' stroke='%23fff3c4' stroke-width='.55' opacity='.55'/%3E%3C/svg%3E")
+      0 50% / 48px 16px repeat-x,
+    linear-gradient(180deg, #4a2f06 0%, #c99a3c 20%, #fbe6a2 36%, #d9ab4f 52%, #8f6420 78%, #3d2604 100%);
+  box-shadow:
+    0 8px 12px -4px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 1px rgba(60, 35, 5, 0.55);
+}
+/* light running along the flute */
+.ciRodBody::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 14%;
+  background: linear-gradient(90deg, transparent, rgba(255, 250, 225, 0.85), transparent);
+  translate: -110% 0;
+  animation: ciRodSheen 6s ease-in-out 1.5s infinite;
+}
+
+@keyframes ciRodSheen {
+  0% {
+    translate: -110% 0;
+  }
+  45%,
+  100% {
+    translate: 820% 0;
+  }
+}
+
+/* silk thread bindings: maroon wound with gold */
+.ciBind {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  width: 11px;
+  margin-left: -5.5px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 40%, rgba(0, 0, 0, 0.35)),
+    repeating-linear-gradient(90deg, #7d1b1b 0 2px, #e3b85e 2px 3px);
+}
+
+/* finger holes (and the larger blow hole) */
+.ciHole {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 5px;
+  margin: -2.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 60%, #1a0f02 45%, #4a2f06 75%);
+  box-shadow: 0 1px 0 rgba(255, 240, 190, 0.6);
+}
+.ciHoleBlow {
+  width: 9px;
+  margin-left: -4.5px;
+}
+
+/* peacock-head end (left) and tasselled mouth end (right) — shared by the flute and the roll's axle */
+.ciPeacock {
+  position: absolute;
+  top: 50%;
+  width: 46px;
+  height: 40px;
+  translate: 0 -65%;
+  overflow: visible;
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.5));
+}
+.ciPeacockScales {
+  fill: none;
+  stroke: rgba(232, 196, 106, 0.75);
+  stroke-width: 0.8;
+  stroke-dasharray: 1.5 1.5;
+}
+.ciPeacockCrest {
+  fill: none;
+  stroke: #c99a3c;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+.ciEndL {
+  right: calc(100% - 3px);
+}
+.ciFluteTip.ciEndR {
+  left: calc(100% - 2px);
+}
+
+.ciFluteTip {
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 40px;
+  translate: 0 -65%;
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.5));
+}
+.ciFluteTip svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ciTassel {
+  position: absolute;
+  left: 5px;
+  top: 30px;
+  width: 16px;
+  height: 46px;
+  transform-origin: 50% 0;
+  animation: ciSwing 3.4s ease-in-out infinite alternate;
+}
+.ciTassel svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ciTasselCord {
+  fill: none;
+  stroke: #9b2a22;
+  stroke-width: 1.4;
+}
+.ciTasselKnot {
+  fill: #d9ab4f;
+  stroke: #6e4a12;
+  stroke-width: 0.8;
+}
+.ciTasselFringe {
+  fill: none;
+  stroke: #a8302a;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+.ciTasselBand {
+  fill: #e7bd62;
+}
+
+@keyframes ciSwing {
+  from {
+    transform: rotate(-7deg);
+  }
+  to {
+    transform: rotate(7deg);
+  }
+}
+
+.ciFinialEdge {
+  stroke: #4a2f06;
+  stroke-width: 0.6;
+}
+
+/* aged parchment with burnt, ragged side edges */
+.ciSheet {
+  position: relative;
+  z-index: 1;
+  color: var(--ci-ink);
+  background:
+    radial-gradient(60% 40% at 22% 14%, rgba(255, 246, 220, 0.55), transparent 70%),
+    radial-gradient(50% 30% at 78% 68%, rgba(160, 110, 50, 0.1), transparent 70%),
+    linear-gradient(180deg, var(--ci-paper-hi) 0%, var(--ci-paper) 45%, #dfc596 100%);
+  -webkit-mask-image:
+    linear-gradient(#000, #000),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='150'%3E%3Cpath d='M10 0H5L7 9 3 17 6 26 2 35 5 44 3 52 8 61 4 70 2 79 6 88 3 97 7 106 4 115 2 124 5 133 3 141 5 150H10Z'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='150'%3E%3Cpath d='M0 0H5L3 9 7 17 4 26 8 35 5 44 7 52 2 61 6 70 8 79 4 88 7 97 3 106 6 115 8 124 5 133 7 141 5 150H0Z'/%3E%3C/svg%3E");
+  -webkit-mask-size:
+    calc(100% - 20px) 100%,
+    10px 150px,
+    10px 150px;
+  -webkit-mask-position:
+    10px 0,
+    0 0,
+    100% 0;
+  -webkit-mask-repeat: no-repeat, repeat-y, repeat-y;
+  mask-image:
+    linear-gradient(#000, #000),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='150'%3E%3Cpath d='M10 0H5L7 9 3 17 6 26 2 35 5 44 3 52 8 61 4 70 2 79 6 88 3 97 7 106 4 115 2 124 5 133 3 141 5 150H10Z'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='150'%3E%3Cpath d='M0 0H5L3 9 7 17 4 26 8 35 5 44 7 52 2 61 6 70 8 79 4 88 7 97 3 106 6 115 8 124 5 133 7 141 5 150H0Z'/%3E%3C/svg%3E");
+  mask-size:
+    calc(100% - 20px) 100%,
+    10px 150px,
+    10px 150px;
+  mask-position:
+    10px 0,
+    0 0,
+    100% 0;
+  mask-repeat: no-repeat, repeat-y, repeat-y;
+  pointer-events: auto;
+}
+
+:global(html[data-intro="play"]) .ciSheet {
+  clip-path: inset(0 0 calc(100% - var(--ci-mast-h)) 0); /* rolled up: only the letterhead before JS */
+}
+
+.ciPaperTex,
+.ciBurn,
+.ciWatermark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ciPaperTex {
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .22 0 0 0 .6 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+
+/* scorched edges and water stains */
+.ciBurn {
+  mix-blend-mode: multiply;
+  background:
+    linear-gradient(180deg, rgba(90, 50, 15, 0.4), transparent 26px),
+    linear-gradient(
+      90deg,
+      rgba(62, 30, 6, 0.85) 0,
+      rgba(118, 60, 16, 0.42) 12px,
+      rgba(150, 95, 40, 0.14) 34px,
+      transparent 80px,
+      transparent calc(100% - 80px),
+      rgba(150, 95, 40, 0.14) calc(100% - 34px),
+      rgba(118, 60, 16, 0.42) calc(100% - 12px),
+      rgba(62, 30, 6, 0.85) 100%
+    ),
+    radial-gradient(circle at 12% 9%, rgba(130, 78, 24, 0.16) 0 26px, transparent 64px),
+    radial-gradient(circle at 88% 31%, rgba(130, 78, 24, 0.13) 0 20px, transparent 52px),
+    radial-gradient(circle at 24% 58%, rgba(130, 78, 24, 0.1) 0 34px, transparent 80px),
+    radial-gradient(circle at 80% 84%, rgba(130, 78, 24, 0.13) 0 24px, transparent 60px);
+}
+
+/* faint rosette watermark pressed into the sheet */
+.ciWatermark {
+  inset: 90px -60px auto auto;
+  width: 380px;
+  height: 380px;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cpath id='p' d='M100 100C92 78 92 52 100 30C108 52 108 78 100 100Z'/%3E%3C/defs%3E%3Cg fill='none' stroke='%235a3714' stroke-width='1.2'%3E%3Ccircle cx='100' cy='100' r='94'/%3E%3Ccircle cx='100' cy='100' r='88' stroke-dasharray='2 4'/%3E%3Ccircle cx='100' cy='100' r='26'/%3E%3Cuse href='%23p'/%3E%3Cuse href='%23p' transform='rotate(30 100 100)'/%3E%3Cuse href='%23p' transform='rotate(60 100 100)'/%3E%3Cuse href='%23p' transform='rotate(90 100 100)'/%3E%3Cuse href='%23p' transform='rotate(120 100 100)'/%3E%3Cuse href='%23p' transform='rotate(150 100 100)'/%3E%3Cuse href='%23p' transform='rotate(180 100 100)'/%3E%3Cuse href='%23p' transform='rotate(210 100 100)'/%3E%3Cuse href='%23p' transform='rotate(240 100 100)'/%3E%3Cuse href='%23p' transform='rotate(270 100 100)'/%3E%3Cuse href='%23p' transform='rotate(300 100 100)'/%3E%3Cuse href='%23p' transform='rotate(330 100 100)'/%3E%3C/g%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.ciWarm,
+.ciSheen {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ciWarm {
+  inset: 0;
+  background: radial-gradient(90% 60% at 72% 80%, rgba(222, 160, 90, 0.26), transparent 70%);
+  mix-blend-mode: multiply;
+}
+
+.ciSheen {
+  top: 0;
+  bottom: 0;
+  width: 60%;
+  left: 20%;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 228, 180, 0.6) 50%, transparent 80%);
+  mix-blend-mode: soft-light;
+}
+
+/* the parchment bending into the roll */
+.ciCurl {
+  position: absolute;
+  z-index: 2;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(80, 48, 16, 0.1) 55%, rgba(60, 34, 10, 0.34));
+}
+
+:global(html[data-intro="play"]) .ciCurl {
+  transform: translate3d(0, var(--ci-mast-h), 0);
+}
+
+/* the roll */
+.ciRoll {
+  --ci-r: var(--ci-roll, 54px);
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 0;
+  width: calc(100% + 24px);
+  height: var(--ci-r);
+  transform: translate3d(-50%, calc(var(--ci-y, var(--ci-mast-h)) - var(--ci-r) / 2), 0);
+  pointer-events: none;
+}
+
+.ciAxle {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--ci-r) * -0.3 - 4px);
+  right: calc(var(--ci-r) * -0.3 - 4px);
+  height: 11px;
+  margin-top: -5.5px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #4a2f06 0%, #c99a3c 20%, #fbe6a2 36%, #d9ab4f 52%, #8f6420 78%, #3d2604 100%);
+  box-shadow: inset 0 0 0 1px rgba(60, 35, 5, 0.55);
+}
+
+.ciRollShadow {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: 55%;
+  height: 120%;
+  background: radial-gradient(50% 45% at 50% 30%, rgba(0, 0, 0, 0.55), transparent 75%);
+  filter: blur(6px);
+}
+
+.ciRollFace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--ci-r) * 0.17);
+  right: calc(var(--ci-r) * 0.17);
+  /* cylinder shading + parchment fibres that travel with the rotation + scorched ends */
+  background:
+    linear-gradient(90deg, rgba(62, 30, 6, 0.55), transparent 4%, transparent 96%, rgba(62, 30, 6, 0.55)),
+    linear-gradient(
+      180deg,
+      rgba(255, 244, 214, 0.1) 0%,
+      rgba(255, 244, 214, 0.75) 20%,
+      rgba(255, 244, 214, 0) 42%,
+      rgba(70, 40, 12, 0) 52%,
+      rgba(70, 40, 12, 0.45) 84%,
+      rgba(40, 22, 6, 0.75) 100%
+    ),
+    repeating-linear-gradient(180deg, rgba(110, 66, 24, 0.16) 0 1px, transparent 1px 8px),
+    linear-gradient(#dcc493, #dcc493);
+  background-position:
+    0 0,
+    0 0,
+    0 var(--ci-travel, 0px),
+    0 0;
+}
+
+.ciCap {
+  position: absolute;
+  top: 0;
+  width: var(--ci-r);
+  height: var(--ci-r);
+  transform: scaleX(0.34);
+}
+.ciCapL {
+  left: calc(var(--ci-r) * -0.33);
+}
+.ciCapR {
+  right: calc(var(--ci-r) * -0.33);
+}
+
+.ciCapSpiral {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(var(--ci-angle, 0deg));
+}
+.ciCapR .ciCapSpiral {
+  transform: rotate(calc(var(--ci-angle, 0deg) * -1)) scaleX(-1);
+}
+
+.ciCapDisc {
+  fill: #d9bf8a;
+  stroke: #4a2a10;
+  stroke-width: 3;
+}
+.ciCapLine {
+  fill: none;
+  stroke: rgba(110, 70, 30, 0.62);
+  stroke-width: 1.6;
+}
+.ciCapCore {
+  fill: #3e240e;
+}
+
+/* jute twine with a bow round the rolled document */
+.ciTwine {
+  position: absolute;
+  left: 50%;
+  top: -35px;
+  width: 143px;
+  height: 175px;
+  margin-left: -71.5px;
+  transform-origin: 50% 30%;
+}
+.ciTwine svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ciTwineShade {
+  fill: none;
+  stroke: rgba(50, 32, 12, 0.55);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.ciTwineCord {
+  fill: none;
+  stroke: #b99a67;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 1.6 0.9;
+}
+.ciTwineKnot {
+  fill: #9d7f50;
+  stroke: rgba(50, 32, 12, 0.6);
+  stroke-width: 1;
+}
+
+/* the mor pankh quill: placed by the timeline (nib = transform origin) */
+.ciQuill {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 264px;
+  transform-origin: 30px 262px;
+  pointer-events: none;
+}
+.ciQuillBody {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 30px 262px;
+  opacity: 0;
+  visibility: hidden;
+  filter: drop-shadow(-8px 10px 6px rgba(40, 20, 0, 0.35));
+}
+.ciQuillBody svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ciBarbA,
+.ciBarbB,
+.ciBarbC,
+.ciWisp {
+  fill: none;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+.ciBarbA {
+  stroke: rgba(92, 128, 52, 0.85);
+}
+.ciBarbB {
+  stroke: rgba(176, 134, 56, 0.85);
+}
+.ciBarbC {
+  stroke: rgba(36, 122, 118, 0.8);
+}
+.ciWisp {
+  stroke: rgba(140, 152, 70, 0.6);
+  stroke-width: 0.7;
+}
+.ciEye1 {
+  fill: #8fa23a;
+}
+.ciEye2 {
+  fill: #b07a2a;
+}
+.ciEye3 {
+  fill: #1f8a86;
+}
+.ciEye4 {
+  fill: #1d4fa0;
+}
+.ciEye5 {
+  fill: #0c1d4a;
+}
+.ciShaft {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.ciNib {
+  fill: #2b2118;
+}
+.ciNibSlit {
+  stroke: #c9b48a;
+  stroke-width: 0.6;
+}
+
+/* ── resume typography ──────────────────────────────────────── */
+.ciDoc {
+  position: relative;
+  padding: 0 clamp(26px, 6vw, 64px) clamp(44px, 6vw, 64px);
+  font-family: var(--jb-sans);
+}
+
+.ciMast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--ci-mast-h);
+  border-bottom: 1px solid rgba(43, 29, 16, 0.28);
+  font-family: var(--ci-display);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ci-ink-2);
+}
+
+.ciMastOrn {
+  font-family: Georgia, serif;
+  font-size: 15px;
+  letter-spacing: 0;
+  color: var(--ci-accent);
+}
+
+.ciMastDot {
+  width: 5px;
+  height: 5px;
+  rotate: 45deg;
+  background: var(--ci-accent);
+}
+
+.ciMastPlace {
+  margin-left: auto;
+}
+
+.ciSection {
+  padding-top: 34px; /* no will-change: separate layers break the paper's multiply blend into visible boxes */
+}
+
+:global(html[data-intro="play"]) .ciSection {
+  opacity: 0.1;
+}
+
+.ciHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-family: var(--ci-display);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ci-ink-2);
+}
+
+.ciHeadNum {
+  min-width: 1.6em;
+  font-family: var(--ci-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ci-accent);
+}
+
+.ciHeadRule {
+  width: 28px;
+  height: 1px;
+  background: rgba(43, 29, 16, 0.4);
+}
+
+.ciName {
+  margin: 0 0 12px;
+  font-family: var(--jb-serif);
+  font-size: clamp(42px, 7vw, 70px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  color: var(--ci-ink);
+}
+
+.ciRole {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0 0 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.ciRoleStack {
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--ci-accent-ink);
+}
+
+.ciLede {
+  max-width: 56ch;
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+.ciLede::first-letter {
+  float: left;
+  margin: 6px 10px 0 0;
+  font-family: var(--ci-display);
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 0.8;
+  color: var(--ci-accent-ink);
+}
+
+.ciKicker {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ci-accent-ink);
+}
+
+.ciSkills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px 28px;
+}
+
+.ciSkillList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.ciRoles,
+.ciPoints,
+.ciWork,
+.ciEntries,
+.ciContactList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ciRoleItem {
+  padding: 16px 0 18px;
+  border-top: 1px solid rgba(43, 29, 16, 0.16);
+}
+.ciRoleItem:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ciRoleTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 18px;
+  margin-bottom: 10px;
+}
+
+.ciRoleTitle {
+  margin: 0;
+  font-family: var(--jb-serif);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.ciRoleAt {
+  font-style: italic;
+  color: var(--ci-ink-2);
+}
+
+.ciRoleWhen {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ci-ink-2);
+}
+
+.ciPoints li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.ciPoints li + li {
+  margin-top: 6px;
+}
+.ciPoints li::before {
+  content: "❧";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: var(--ci-accent);
+}
+
+.ciProducts {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--ci-ink-2);
+}
+
+.ciWork {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 32px;
+}
+
+.ciWorkItem {
+  padding-top: 12px;
+  border-top: 1px solid rgba(43, 29, 16, 0.16);
+}
+
+.ciWorkTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.ciWorkNote {
+  margin: 3px 0 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ci-accent-ink);
+}
+
+.ciWorkDesc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.ciWorkStack {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--ci-ink-2);
+}
+
+.ciEntries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 32px;
+}
+
+.ciEntry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ciEntryTitle {
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.ciEntryPlace {
+  font-size: 14px;
+}
+
+.ciEntryMeta {
+  font-size: 12px;
+  color: var(--ci-ink-2);
+}
+
+.ciContactList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 32px;
+}
+
+.ciContactList a {
+  color: var(--ci-ink);
+  font-size: 15px;
+  text-decoration: underline;
+  text-decoration-color: rgba(122, 63, 22, 0.6);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+.ciContactList a:hover {
+  text-decoration-color: var(--ci-ink);
+}
+
+/* sign-off: quill-written signature + wax seal */
+.ciSignoff {
+  position: relative;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(43, 29, 16, 0.2);
+}
+
+.ciSign {
+  margin: 0 0 18px;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: 22px;
+  text-align: center;
+  color: var(--ci-ink-2);
+}
+
+.ciSignRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.ciSignBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.ciSignNote {
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ci-ink-2);
+}
+
+.ciSignature {
+  display: inline-block;
+  padding: 0.16em 0.45em 0.28em 0.1em;
+  font-family: var(--ci-script);
+  font-size: clamp(34px, 5.2vw, 48px);
+  line-height: 1.25;
+  white-space: nowrap;
+  color: #24160a; /* iron-gall ink */
+}
+
+:global(html[data-intro="play"]) .ciSignature {
+  clip-path: inset(0 100% 0 0); /* written by the quill */
+}
+
+.ciSignLine {
+  align-self: stretch;
+  min-width: 200px;
+  height: 1px;
+  margin-top: -10px;
+  background: rgba(43, 29, 16, 0.45);
+}
+
+.ciSignMeta {
+  margin-top: 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ci-ink-2);
+}
+
+.ciSeal {
+  flex: none;
+  width: 92px;
+  height: 92px;
+  margin-bottom: 4px;
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 4px 3px rgba(60, 10, 5, 0.45));
+}
+.ciSeal svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+:global(html[data-intro="play"]) .ciSeal {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ciSealWax {
+  fill: #8f1d17;
+}
+.ciSealRing {
+  fill: none;
+  stroke: rgba(60, 4, 2, 0.55);
+  stroke-width: 2.2;
+}
+.ciSealRing2 {
+  fill: rgba(255, 140, 120, 0.08);
+  stroke: rgba(255, 170, 150, 0.28);
+  stroke-width: 1;
+}
+.ciSealText {
+  font-family: var(--ci-display);
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  fill: #5e0f0b;
+  stroke: rgba(255, 170, 150, 0.35);
+  stroke-width: 0.6;
+  paint-order: stroke;
+}
+
+/* ── controls ───────────────────────────────────────────────── */
+.ciChrome {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.ciSkip,
+.ciDownload,
+.ciToSite {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(229, 199, 127, 0.28);
+  border-radius: 999px;
+  background: rgba(16, 17, 20, 0.78);
+  backdrop-filter: blur(10px);
+  color: var(--ci-on-dark);
+  font: 500 12px/1 var(--jb-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background-color 0.25s var(--jb-ease),
+    border-color 0.25s var(--jb-ease);
+}
+.ciSkip:hover,
+.ciDownload:hover,
+.ciToSite:hover {
+  background: rgba(182, 138, 96, 0.22);
+  border-color: rgba(229, 199, 127, 0.7);
+}
+.ciSkip:focus-visible,
+.ciDownload:focus-visible,
+.ciToSite:focus-visible {
+  outline: 2px solid var(--ci-gold);
+  outline-offset: 3px;
+}
+
+.ciSkip {
+  position: absolute;
+  top: calc(var(--ci-safe-t) + 18px);
+  right: var(--jb-gutter, 24px);
+}
+
+.ciDownload {
+  position: absolute;
+  left: var(--jb-gutter, 24px);
+  top: calc(var(--ci-safe-t) + 18px);
+}
+
+/* chapter index */
+.ciRail {
+  --ci-p: 0;
+  position: absolute;
+  right: calc(var(--jb-gutter, 24px) + 6px);
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  translate: 0 -50%;
+  pointer-events: auto;
+  font-family: var(--ci-display);
+  color: rgba(241, 230, 204, 0.75);
+}
+
+.ciRailCount {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #e5c77f;
+}
+.ciRailOf {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.ciRailTrack {
+  position: relative;
+  width: 1px;
+  height: 46svh;
+  background: linear-gradient(180deg, transparent, rgba(229, 199, 127, 0.3) 6%, rgba(229, 199, 127, 0.3) 94%, transparent);
+}
+
+.ciRailBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, #f5dc9a, #b8862f);
+  box-shadow: 0 0 8px rgba(229, 199, 127, 0.6);
+  transform-origin: 50% 0%;
+  transform: scaleY(var(--ci-p));
+}
+
+.ciMark {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--at, 0) * 100%);
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: top 0.4s var(--jb-ease);
+}
+.ciMark:focus-visible {
+  outline: 2px solid var(--ci-gold);
+  outline-offset: 0;
+}
+
+.ciMarkGem {
+  width: 7px;
+  height: 7px;
+  rotate: 45deg;
+  border: 1px solid rgba(229, 199, 127, 0.75);
+  background: #101114;
+  transition:
+    width 0.35s var(--jb-ease),
+    height 0.35s var(--jb-ease),
+    background-color 0.35s var(--jb-ease),
+    box-shadow 0.35s var(--jb-ease),
+    scale 0.35s var(--jb-ease);
+}
+.ciMark[data-passed] .ciMarkGem {
+  background: #b8862f;
+}
+.ciMark[data-active] .ciMarkGem {
+  width: 11px;
+  height: 11px;
+  background: #f5dc9a;
+  box-shadow:
+    0 0 0 4px rgba(229, 199, 127, 0.14),
+    0 0 14px rgba(245, 220, 154, 0.75);
+}
+.ciMark:hover .ciMarkGem {
+  scale: 1.35;
+}
+
+.ciMarkNum {
+  position: absolute;
+  left: 24px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  opacity: 0; /* short chapters sit close together: only the active / hovered numeral is shown */
+  transition: opacity 0.3s var(--jb-ease);
+}
+.ciMark[data-active] .ciMarkNum,
+.ciMark:hover .ciMarkNum {
+  opacity: 1;
+  color: #f5dc9a;
+}
+
+.ciMarkLabel {
+  position: absolute;
+  right: 26px;
+  padding: 7px 11px;
+  border: 1px solid rgba(229, 199, 127, 0.28);
+  border-radius: 999px;
+  background: rgba(16, 17, 20, 0.78);
+  white-space: nowrap;
+  font: 500 10.5px/1 var(--jb-sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f1e6cc;
+  opacity: 0;
+  translate: 10px 0;
+  pointer-events: none;
+  transition:
+    opacity 0.35s var(--jb-ease),
+    translate 0.35s var(--jb-ease);
+}
+.ciMark:hover .ciMarkLabel,
+.ciMark:focus-visible .ciMarkLabel {
+  opacity: 1;
+  translate: 0 0;
+}
+@media (min-width: 1200px) {
+  .ciMark[data-active] .ciMarkLabel {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.ciRailLabel {
+  display: none;
+  font: 500 10.5px/1 var(--jb-sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* golden mist off the pointer */
+.ciDust {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.ciRoot:not([data-cursor]) .ciDust {
+  display: none;
+}
+
+/* ── cursor (desktop pointer only; set up by introPointer) ── */
+.ciCursor {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--jb-ease);
+}
+.ciRoot:not([data-cursor]) .ciCursor {
+  display: none;
+}
+.ciCursor[data-on] {
+  opacity: 1;
+}
+.ciRoot[data-cursor] .ciStage,
+.ciRoot[data-cursor] .ciStage * {
+  cursor: none;
+}
+
+.ciCursorRing {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.ciCursorRingInner {
+  position: absolute;
+  left: -18px;
+  top: -18px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(229, 199, 127, 0.8);
+  border-radius: 50%;
+  transition:
+    transform 0.4s var(--jb-ease),
+    background-color 0.3s var(--jb-ease),
+    border-color 0.3s var(--jb-ease);
+}
+.ciCursor[data-state="hot"] .ciCursorRingInner {
+  transform: scale(1.6);
+  background: rgba(229, 199, 127, 0.12);
+  border-color: #f5dc9a;
+}
+.ciCursor[data-state="read"] .ciCursorRingInner {
+  transform: scale(1.9);
+  background: rgba(43, 29, 16, 0.07);
+  border-color: rgba(90, 55, 20, 0.75);
+}
+.ciCursor[data-down] .ciCursorRingInner {
+  transform: scale(0.8);
+}
+
+.ciCursorLabel {
+  font-family: var(--ci-display);
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5a3714;
+  opacity: 0;
+  transition: opacity 0.3s var(--jb-ease);
+}
+.ciCursor[data-state="read"] .ciCursorLabel {
+  opacity: 1;
+}
+
+.ciCursorDot {
+  position: absolute;
+  left: -2.5px;
+  top: -2.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f5dc9a;
+  box-shadow: 0 0 8px rgba(245, 220, 154, 0.8);
+}
+
+/* ── tablet ─────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .ciRoot {
+    --ci-len: 3;
+  }
+  .ciCloudFar {
+    display: none;
+  }
+  .ciRail {
+    right: 14px;
+  }
+}
+
+/* the rail would sit on the paper: move it to the bottom edge */
+@media (max-width: 899px) {
+  .ciRail {
+    top: auto;
+    bottom: calc(var(--ci-safe-b) + 10px);
+    left: var(--jb-gutter, 16px);
+    right: var(--jb-gutter, 16px);
+    flex-direction: row;
+    gap: 14px;
+    translate: none;
+  }
+  .ciRailCount {
+    font-size: 14px;
+  }
+  .ciRailTrack {
+    flex: 1;
+    width: auto;
+    height: 1px;
+    background: rgba(229, 199, 127, 0.3);
+  }
+  .ciRailBar {
+    width: 100%;
+    height: 1px;
+    transform-origin: 0% 50%;
+    transform: scaleX(var(--ci-p));
+  }
+  .ciMark {
+    left: calc(var(--at, 0) * 100%);
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    transition: left 0.4s var(--jb-ease);
+  }
+  .ciMarkNum,
+  .ciMarkLabel {
+    display: none;
+  }
+  .ciRailLabel {
+    display: block;
+    max-width: 38vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ciCue {
+    bottom: calc(var(--ci-safe-b) + 46px);
+    width: 84px;
+    height: 84px;
+    margin-left: -42px;
+  }
+}
+
+/* ── phone ──────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .ciRoot {
+    --ci-len: 3;
+    --ci-top: 10svh;
+    --ci-w: calc(100vw - 60px); /* room for the roll caps and the rod's finials */
+    --ci-mast-h: 56px;
+  }
+  .ciIdInner {
+    gap: 12px;
+  }
+  .ciLogo {
+    --ci-logo-w: 94vw;
+  }
+  .ciIdRole {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+  }
+  .ciIdStack::before {
+    display: none;
+  }
+  .ciRays::before {
+    filter: none;
+  }
+  .ciSkip,
+  .ciDownload {
+    padding: 0 14px;
+    font-size: 11px;
+  }
+  .ciDownload {
+    left: 14px;
+  }
+  .ciSkip {
+    right: 14px;
+  }
+  .ciRod {
+    left: -8px;
+    right: -8px;
+    height: 13px;
+    top: -7px;
+  }
+  .ciPeacock {
+    width: 28px;
+    height: 24px;
+  }
+  .ciFluteTip {
+    width: 15px;
+    height: 24px;
+  }
+  .ciTassel {
+    left: 3px;
+    top: 18px;
+    width: 10px;
+    height: 28px;
+  }
+  .ciBind {
+    width: 8px;
+    margin-left: -4px;
+  }
+  .ciHole {
+    width: 5px;
+    height: 4px;
+    margin: -2px 0 0 -2.5px;
+  }
+  .ciAxle {
+    left: calc(var(--ci-r) * -0.3);
+    right: calc(var(--ci-r) * -0.3);
+    height: 8px;
+    margin-top: -4px;
+  }
+  .ciTwine {
+    top: -26px;
+    width: 106px;
+    height: 130px;
+    margin-left: -53px;
+  }
+  .ciWatermark {
+    width: 240px;
+    height: 240px;
+    right: -50px;
+  }
+  .ciMast {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    gap: 8px;
+  }
+  .ciWork,
+  .ciEntries,
+  .ciContactList {
+    grid-template-columns: 1fr;
+  }
+  .ciSkills {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+  }
+  .ciSkillList {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .ciPoints li:nth-child(n + 3),
+  .ciWorkStack {
+    display: none;
+  }
+  .ciRoleTitle {
+    font-size: 21px;
+  }
+  .ciLede {
+    font-size: 15px;
+  }
+  .ciSignRow {
+    align-items: center;
+  }
+  .ciSignLine {
+    min-width: 0;
+  }
+  .ciSignature {
+    font-size: 30px;
+  }
+  .ciSeal {
+    width: 66px;
+    height: 66px;
+  }
+}
+
+/* ── short phones (iPhone SE / 8 class): lift the paper, smaller seal + twine so nothing collides ── */
+@media (max-width: 639px) and (max-height: 720px) {
+  .ciRoot {
+    --ci-roll-at: 0.72;
+  }
+  .ciCue {
+    width: 64px;
+    height: 64px;
+    margin-left: -32px;
+    bottom: calc(var(--ci-safe-b) + 40px);
+  }
+  .ciCueText {
+    font-size: 11px;
+  }
+  .ciCueCore {
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+  }
+  .ciCueCore svg {
+    width: 16px;
+    height: 16px;
+  }
+  .ciTwine {
+    top: -20px;
+    width: 82px;
+    height: 100px;
+    margin-left: -41px;
+  }
+}
+
+/* ── landscape phones (very short): compact opening — name, role and the paper only ── */
+@media (max-height: 500px) {
+  .ciRoot {
+    --ci-roll-at: 0.84;
+  }
+  .ciIdentity {
+    padding-top: calc(var(--ci-safe-t) + 64px);
+  }
+  .ciIdInner {
+    gap: 8px;
+  }
+  .ciIdKicker,
+  .ciIdQuote,
+  .ciCue {
+    display: none; /* the paper peeking in and the chapter bar already say "scroll" here */
+  }
+  .ciLogo {
+    --ci-logo-w: min(70vw, 100svh);
+  }
+  .ciIdRole {
+    flex-direction: row;
+    font-size: 11px;
+  }
+}
+
+/* ── the narrowest phones: Download becomes an icon button (the label stays for screen readers) ── */
+@media (max-width: 399px) {
+  .ciDownload {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .ciDownloadLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* the reduced-motion version's "Go to portfolio" only exists there (Skip intro does the job in play) */
+:global(html[data-intro="play"]) .ciToSite {
+  display: none;
+}
+
+/* ── static (reduced motion): everything open, nothing moves ── */
+:global(html[data-intro="static"]) .ciIdentity {
+  position: relative;
+  inset: auto;
+  min-height: 78svh;
+  padding-bottom: 48px;
+}
+:global(html[data-intro="static"]) .ciCue,
+:global(html[data-intro="static"]) .ciSkip,
+:global(html[data-intro="static"]) .ciRail,
+:global(html[data-intro="static"]) .ciCurtain,
+:global(html[data-intro="static"]) .ciCurl,
+:global(html[data-intro="static"]) .ciTwine,
+:global(html[data-intro="static"]) .ciQuill {
+  display: none;
+}
+:global(html[data-intro="static"]) .ciToSite {
+  display: inline-flex;
+  margin-top: 14px;
+  animation-delay: 1.2s;
+}
+:global(html[data-intro="static"]) .ciScene {
+  position: relative;
+  inset: auto;
+  padding: 0 0 18svh;
+  perspective: none;
+}
+:global(html[data-intro="static"]) .ciRoll {
+  --ci-r: 28px;
+  top: auto;
+  bottom: 0;
+  transform: translate3d(-50%, 50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ciCloudInner::before,
+  .ciFog::before,
+  .ciRays::before,
+  .ciGrain::before,
+  .ciRodBody::after,
+  .ciTassel,
+  .ciGoldFog::before,
+  .ciGoldFog::after,
+  .ciIdKicker,
+  .ciIdRole,
+  .ciIdQuote,
+  .ciCue,
+  .ciCueRing,
+  .ciCueCore svg,
+  .ciToSite {
+    animation: none;
+  }
+}

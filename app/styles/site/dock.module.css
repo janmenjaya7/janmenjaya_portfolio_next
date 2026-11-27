@@ -1,0 +1,469 @@
+/* ─────────────────────────────────────────────────────────────
+   Floating Liquid Glass dock (main site). Prefix: dock.
+   States on .dock (set by SiteDock):
+     [data-visible]          slid in (hidden over the hero)
+     [data-collapsed]        icons only while scrolling down
+     [data-tone=dark|light]  glass tint follows the section behind it
+   Layering inside .dockWrap (its own stacking context):
+     0  glass bodies   (.dockGroup::before / ::after)
+     1  hover highlight + active lens
+     2  tab links (icons + labels)
+   ───────────────────────────────────────────────────────────── */
+.dock {
+  --dock-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dock-tone-t: 0.4s;
+  /* tone tokens (dark glass by default) */
+  --dock-glass: rgba(10, 22, 44, 0.52);
+  --dock-edge: rgba(255, 255, 255, 0.14);
+  --dock-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --dock-text: rgba(235, 232, 225, 0.66);
+  --dock-text-hover: rgba(255, 255, 255, 0.95);
+  --dock-text-active: #ffffff;
+  --dock-icon-active: var(--jb-accent-ink);
+  --dock-lens: rgba(143, 176, 255, 0.16);
+  --dock-lens-edge: rgba(255, 255, 255, 0.34);
+  --dock-hover: rgba(255, 255, 255, 0.08);
+
+  position: fixed;
+  left: 50%;
+  bottom: max(18px, calc(env(safe-area-inset-bottom) + 10px));
+  z-index: 70;
+  max-width: calc(100vw - 24px);
+  /* hidden until the visitor is past most of the hero. A transition, not a filled animation:
+     a lingering opacity animation would make .dock a backdrop root and the glass would stop
+     blurring the page behind it */
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 28px) scale(0.96);
+  transition:
+    opacity 0.35s ease,
+    transform 0.55s var(--dock-ease),
+    visibility 0s linear 0.55s;
+}
+
+.dock[data-visible] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%);
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s var(--dock-ease),
+    visibility 0s;
+}
+
+/* over paper (light) sections: frosted light glass, dark ink text */
+.dock[data-tone="light"] {
+  --dock-glass: rgba(250, 248, 244, 0.6);
+  --dock-edge: rgba(21, 24, 29, 0.1);
+  --dock-shadow: 0 18px 40px -14px rgba(21, 24, 29, 0.28), 0 2px 6px rgba(21, 24, 29, 0.08);
+  --dock-text: rgba(21, 24, 29, 0.62);
+  --dock-text-hover: rgba(21, 24, 29, 0.95);
+  --dock-text-active: #15181d;
+  --dock-icon-active: var(--jb-accent-paper);
+  --dock-lens: rgba(255, 255, 255, 0.72);
+  --dock-lens-edge: rgba(21, 24, 29, 0.08);
+  --dock-hover: rgba(21, 24, 29, 0.06);
+}
+
+.dockWrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  isolation: isolate;
+}
+
+/* ── glass bodies ── */
+.dockGroup {
+  --gx: -200px;
+  --gy: -200px;
+  position: relative;
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+/* the glass itself: tinted, blurred, saturated, with a fine edge and depth.
+   The tint lives in background-color (transitionable) under a fixed highlight gradient,
+   so a tone change fades instead of snapping */
+.dockGroup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 999px;
+  background-color: var(--dock-glass);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid var(--dock-edge);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 18px rgba(255, 255, 255, 0.03),
+    var(--dock-shadow);
+  backdrop-filter: blur(28px) saturate(180%);
+  pointer-events: none;
+  transition:
+    background-color var(--dock-tone-t) ease,
+    border-color var(--dock-tone-t) ease,
+    box-shadow var(--dock-tone-t) ease;
+}
+
+/* reflected light that follows the pointer across the glass */
+.dockGroup::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 999px;
+  background: radial-gradient(160px circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.12), transparent 70%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ── the call to action: a solid accent pill, not glass ──
+   gradient mid-tone ≈ #2f5fd0 keeps white 14px text at ~5:1 contrast */
+.dockGroupSolo::before {
+  background-color: #2f5fd0;
+  background-image: linear-gradient(180deg, #5a86f5 0%, #2f5fd0 50%, #1f468a 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 14px 32px -12px rgba(45, 79, 224, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.22);
+}
+
+.dockGroupSolo::after {
+  background: radial-gradient(120px circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.22), transparent 70%);
+}
+
+.dockLi {
+  display: flex;
+}
+
+/* ── active lens: one physical glass object that slides between tabs ── */
+.dockLens,
+.dockHover {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  z-index: 1;
+  border-radius: 999px;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+}
+
+.dockLens {
+  background-color: var(--dock-lens);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.12) 48%, rgba(255, 255, 255, 0.18) 100%);
+  border: 1px solid var(--dock-lens-edge);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -6px 12px rgba(79, 125, 240, 0.12),
+    0 6px 16px -6px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px) saturate(160%);
+  transition:
+    background-color var(--dock-tone-t) ease,
+    border-color var(--dock-tone-t) ease;
+}
+
+.dock[data-tone="light"] .dockLens {
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -6px 12px rgba(45, 79, 224, 0.06),
+    0 6px 16px -8px rgba(21, 24, 29, 0.35);
+}
+
+/* a lighter, independent highlight under the hovered tab */
+.dockHover {
+  background: var(--dock-hover);
+  border: 1px solid transparent;
+}
+
+/* ── tabs ── */
+.dockItem {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: var(--dock-text);
+  font-family: var(--jb-sans);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--dock-tone-t) ease,
+    transform 0.3s var(--dock-ease),
+    gap 0.35s var(--dock-ease),
+    padding 0.35s var(--dock-ease),
+    height 0.35s var(--dock-ease);
+}
+
+.dockIconWrap {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.dockIcon {
+  flex: none;
+  transition:
+    transform 0.35s var(--dock-ease),
+    color var(--dock-tone-t) ease;
+}
+
+/* labels fold away (width + fade) rather than disappearing, so the dock morphs smoothly.
+   They stay in the accessibility tree in both states */
+.dockLabel {
+  display: inline-block;
+  max-width: 8em;
+  max-height: 1.5em;
+  overflow: hidden;
+  transition:
+    max-width 0.35s var(--dock-ease),
+    max-height 0.35s var(--dock-ease),
+    opacity 0.25s ease;
+}
+
+.dockItem:hover {
+  color: var(--dock-text-hover);
+  transform: translateY(-1.5px);
+}
+
+.dockItem:hover .dockIcon {
+  transform: scale(1.1);
+}
+
+.dockItemActive {
+  color: var(--dock-text-active);
+}
+
+.dockItemActive .dockIcon {
+  color: var(--dock-icon-active);
+}
+
+/* press feedback */
+.dockItem:active {
+  transform: translateY(0) scale(0.95);
+  transition-duration: 0.08s;
+}
+
+.dockItem:focus-visible {
+  outline: 2px solid var(--jb-accent-ink);
+  outline-offset: 2px;
+}
+
+.dock[data-tone="light"] .dockItem:focus-visible {
+  outline-color: var(--jb-accent-paper);
+}
+
+/* CTA text is always white on the solid accent, in both tones */
+.dockCta,
+.dockCta:hover,
+.dockCta.dockItemActive {
+  color: #ffffff;
+}
+
+.dockCta .dockIcon,
+.dockCta.dockItemActive .dockIcon {
+  color: #ffffff;
+}
+
+/* in the contact section the CTA itself is the active state */
+.dockCta.dockItemActive {
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6);
+}
+
+.dockCta:focus-visible,
+.dock[data-tone="light"] .dockCta:focus-visible {
+  outline-color: #ffffff;
+  outline-offset: -4px;
+}
+
+/* "available for work" dot on the CTA icon */
+.dockLive {
+  position: absolute;
+  top: -3px;
+  right: -4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jb-ok);
+  box-shadow: 0 0 0 2px #4f7df0;
+}
+
+.dockLive::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--jb-ok);
+  opacity: 0;
+  animation: dockLivePulse 2.4s ease-out infinite;
+}
+
+.dock:not([data-visible]) .dockLive::after {
+  animation-play-state: paused;
+}
+
+/* ── collapsed (scrolling down): section tabs drop their labels, the CTA keeps "Let's talk" ── */
+.dock[data-collapsed] .dockNav .dockItem {
+  gap: 0;
+  padding: 0 13px;
+}
+
+.dock[data-collapsed] .dockNav .dockLabel {
+  max-width: 0;
+  opacity: 0;
+}
+
+/* tooltip above a collapsed tab (pointer devices). Hover never re-lays out the dock,
+   so the tab stays exactly where the visitor is aiming */
+.dockTip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 14px);
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(10, 22, 44, 0.92);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  pointer-events: none;
+  transition:
+    opacity 0.18s ease,
+    transform 0.25s var(--dock-ease);
+}
+
+.dock[data-tone="light"] .dockTip {
+  background: #0c1b35;
+}
+
+.dock[data-collapsed] .dockNav .dockItem:hover .dockTip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ── no backdrop-filter support: a more opaque glass so text stays readable ── */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .dock {
+    --dock-glass: rgba(10, 22, 44, 0.94);
+    --dock-lens: #1a2c4f;
+  }
+
+  .dock[data-tone="light"] {
+    --dock-glass: rgba(250, 248, 244, 0.96);
+    --dock-lens: #ffffff;
+  }
+}
+
+/* ── tablet ── */
+@media (max-width: 900px) {
+  .dockItem {
+    padding: 0 13px;
+  }
+}
+
+/* ── phones: icon over label, compact, still ≥ 44px tall ── */
+@media (max-width: 640px) {
+  .dock {
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+  }
+
+  .dockWrap {
+    gap: 6px;
+  }
+
+  .dockGroup {
+    padding: 5px;
+  }
+
+  .dockLens,
+  .dockHover {
+    top: 5px;
+    bottom: 5px;
+  }
+
+  .dockItem {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    height: 54px;
+    min-width: 54px;
+    padding: 0 9px;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+  }
+
+  .dockItem:hover {
+    transform: none;
+  }
+
+  /* collapsed on phones: every label folds (the CTA too) and the dock drops to 44px tall */
+  .dock[data-collapsed] .dockItem,
+  .dock[data-collapsed] .dockNav .dockItem {
+    gap: 0;
+    height: 44px;
+    padding: 0 9px;
+  }
+
+  .dock[data-collapsed] .dockLabel {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 370px) {
+  .dockItem {
+    min-width: 48px;
+    padding: 0 6px;
+    font-size: 10.5px;
+  }
+}
+
+@keyframes dockLivePulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock,
+  .dock[data-visible],
+  .dockItem,
+  .dockIcon,
+  .dockLabel,
+  .dockTip,
+  .dockGroup::before,
+  .dockLens {
+    transition: none;
+  }
+
+  .dockItem:hover {
+    transform: none;
+  }
+
+  .dockLive::after {
+    animation: none;
+  }
+}

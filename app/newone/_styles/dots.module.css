@@ -1,0 +1,20 @@
+/* Dot-matrix canvases on /newone (hero portrait, hero dome). Prefix: nd. */
+
+/* the hero's dome of dots: fills the whole hero, behind everything */
+.ndField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.ndCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: opacity 0.9s var(--no-ease);
+}

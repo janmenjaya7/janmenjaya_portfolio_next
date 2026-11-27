@@ -1,0 +1,452 @@
+/* Journey story (after the hero). All classes are prefixed `sy`. */
+
+.sy {
+  /* the site's floating dock sits at the bottom of the screen (≈ 18–74px); story UI stays clear of it */
+  --sy-dock-clear: calc(96px + env(safe-area-inset-bottom, 0px));
+  --sy-top: clamp(20px, 4vh, 40px);
+  position: relative;
+  height: var(--sy-len-d);
+  background: var(--jb-ink);
+}
+
+.syStage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.syCanvas,
+.syPoster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: opacity 0.5s var(--jb-ease);
+}
+
+.syPoster {
+  object-fit: cover;
+}
+
+.syHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* keeps titles, subtitles and controls readable over any frame */
+.syShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(7, 19, 39, 0.55) 0%, transparent 22%),
+    linear-gradient(to top, rgba(7, 19, 39, 0.75) 0%, transparent 34%);
+}
+
+/* ── scene title (top left) ── */
+.syTitleBox {
+  position: absolute;
+  top: var(--sy-top);
+  left: var(--jb-gutter);
+  right: calc(var(--jb-gutter) + 360px); /* room for the controls */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.syTitle {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  color: var(--jb-on-ink);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+  animation: syRise 0.7s var(--jb-ease) both;
+  transition: opacity 0.4s var(--jb-ease);
+}
+
+.syTitleNum {
+  font-family: var(--jb-sans);
+  font-style: normal;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--jb-gold);
+}
+
+/* ── subtitles (bottom centre) ── */
+.sySub {
+  position: absolute;
+  left: 50%;
+  bottom: var(--sy-dock-clear);
+  transform: translateX(-50%);
+  width: min(760px, calc(100% - 2 * var(--jb-gutter)));
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  line-height: 1.45;
+  color: #fff;
+  background: rgba(7, 19, 39, 0.55);
+  backdrop-filter: blur(6px);
+  animation: syFade 0.45s var(--jb-ease) both;
+}
+
+/* ── final card ── */
+.syFinal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 var(--jb-gutter);
+  text-align: center;
+  background: radial-gradient(ellipse at center, rgba(7, 19, 39, 0.62), rgba(7, 19, 39, 0.2) 70%);
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition:
+    opacity 0.8s var(--jb-ease),
+    transform 0.8s var(--jb-ease);
+}
+
+.syFinalOn {
+  opacity: 1;
+  transform: none;
+}
+
+.syFinal p {
+  margin: 0;
+}
+
+.syFinalName {
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  color: var(--jb-on-ink);
+}
+
+.syFinalRole {
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  color: var(--jb-gold);
+  letter-spacing: 0.04em;
+}
+
+.syFinalStack {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--jb-on-ink-muted);
+}
+
+.syFinalLine {
+  margin-top: 14px !important;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  color: var(--jb-on-ink);
+}
+
+/* ── chapter progress (right rail on desktop, bottom strip on small screens) ── */
+.syProgress {
+  position: absolute;
+  right: var(--jb-gutter);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.syProgressList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.syDot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--jb-on-ink-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color 0.3s var(--jb-ease);
+}
+
+.syDot::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  transition:
+    background 0.3s var(--jb-ease),
+    transform 0.3s var(--jb-ease);
+}
+
+.syDotLabel {
+  position: absolute;
+  right: calc(100% + 6px);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(6px);
+  transition:
+    opacity 0.3s var(--jb-ease),
+    transform 0.3s var(--jb-ease);
+}
+
+.syDot:hover .syDotLabel,
+.syDot:focus-visible .syDotLabel,
+.syDotOn .syDotLabel {
+  opacity: 1;
+  transform: none;
+}
+
+.syDotPast {
+  color: var(--jb-on-ink);
+}
+
+.syDotOn {
+  color: var(--jb-gold);
+}
+
+.syDotOn::after {
+  background: var(--jb-gold);
+  transform: scale(1.25);
+}
+
+.syDot:focus-visible,
+.syBtn:focus-visible {
+  outline: 2px solid var(--jb-gold);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ── controls (top right; the bottom of the screen belongs to the dock) ── */
+.syControls {
+  position: absolute;
+  right: var(--jb-gutter);
+  top: var(--sy-top);
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.syBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--jb-line-ink);
+  background: rgba(7, 19, 39, 0.55);
+  backdrop-filter: blur(6px);
+  color: var(--jb-on-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    border-color 0.3s var(--jb-ease),
+    color 0.3s var(--jb-ease);
+}
+
+.syBtn:hover {
+  border-color: var(--jb-gold);
+}
+
+.syBtnOn {
+  color: var(--jb-gold);
+}
+
+.syBtnPrompt {
+  border-color: rgba(217, 180, 106, 0.55);
+}
+
+.syPromptShort {
+  display: none;
+}
+
+@media (max-width: 419.98px) {
+  .syPromptLong {
+    display: none;
+  }
+
+  .syPromptShort {
+    display: inline;
+  }
+}
+
+/* screen-reader text */
+.syVisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── reduced motion: static chapters ── */
+.syStatic {
+  padding: clamp(64px, 10vw, 128px) 0;
+}
+
+.syStaticInner {
+  display: grid;
+  gap: 24px;
+}
+
+.syStaticTitle {
+  margin: 0;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--jb-on-ink);
+}
+
+.syStaticPoster {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.syStaticList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px 32px;
+}
+
+.syStaticItem {
+  display: flex;
+  gap: 14px;
+}
+
+.syStaticNum {
+  color: var(--jb-gold);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  padding-top: 4px;
+}
+
+.syStaticHead {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  color: var(--jb-on-ink);
+}
+
+.syStaticText {
+  margin: 0;
+  color: var(--jb-on-ink-muted);
+  line-height: 1.6;
+}
+
+.syStaticFinal {
+  margin: 0;
+  color: var(--jb-on-ink-muted);
+}
+
+.syStaticFinal strong {
+  color: var(--jb-on-ink);
+}
+
+@keyframes syRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes syFade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ── tablet & phone ── */
+@media (max-width: 767.98px) {
+  .sy {
+    height: var(--sy-len-m);
+  }
+
+  .syTitleBox {
+    right: var(--jb-gutter);
+  }
+
+  .syProgress {
+    top: auto;
+    right: auto;
+    left: 50%;
+    bottom: var(--sy-dock-clear);
+    transform: translateX(-50%);
+  }
+
+  .syProgressList {
+    flex-direction: row;
+    gap: 0;
+  }
+
+  .syDot {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.66rem;
+    padding: 0 2px;
+  }
+
+  .syDotLabel {
+    display: none;
+  }
+
+  .sySub {
+    bottom: calc(var(--sy-dock-clear) + 52px);
+  }
+
+  /* under the title on phones */
+  .syControls {
+    top: calc(var(--sy-top) + 48px);
+    left: var(--jb-gutter);
+    right: var(--jb-gutter);
+    justify-content: flex-start;
+  }
+
+  .syBtnPrompt {
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .syTitle,
+  .sySub {
+    animation: none;
+  }
+}

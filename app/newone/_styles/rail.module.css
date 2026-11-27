@@ -1,0 +1,176 @@
+/* /newone scroll rail (right) + vertical chapter label (left). Prefix: rl.
+   Desktop with a mouse only; phones/tablets keep their own overlay scrollbar. */
+.rlRail,
+.rlChapter {
+  display: none;
+}
+
+@media (min-width: 900px) and (pointer: fine) {
+  /* hide the browser scrollbar only here: the rail takes its place (scrolling is unchanged) */
+  :global(html:has(#no-root)) {
+    scrollbar-width: none;
+  }
+
+  :global(html:has(#no-root))::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rlRail {
+    display: block;
+    position: fixed;
+    top: 16vh;
+    bottom: 16vh;
+    right: 18px;
+    z-index: 60;
+    width: 14px;
+    /* invert against whatever is underneath: light on espresso, dark on the ivory About band */
+    mix-blend-mode: difference;
+  }
+
+  /* two columns of fine dots; the part already read (top down, like a scrollbar) is bright, the rest faint */
+  .rlTrack {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, var(--no-primary-10) 0.9px, transparent 1.3px) 0 0 / 6px 6px;
+  }
+
+  .rlFill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--no-progress, 0) * 100%);
+    background: radial-gradient(circle, var(--no-primary-60) 1px, transparent 1.4px) 0 0 / 6px 6px;
+  }
+
+  /* the amber leading dot rides the end of the fill */
+  .rlHead {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--no-progress, 0) * 100%);
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--no-secondary);
+    box-shadow: 0 0 0 3px var(--no-secondary-30), 0 0 12px var(--no-secondary-60);
+  }
+
+  .rlTicks {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* one tick where each section starts (top set inline, as a share of the page) */
+  .rlTicks li {
+    position: absolute;
+    right: -6px;
+    transform: translateY(-50%);
+  }
+
+  .rlTick {
+    position: relative;
+    display: block;
+    width: 26px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .rlTick::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 12px;
+    height: 1px;
+    background: var(--no-primary-30);
+    transition: width 0.3s var(--no-ease), background-color 0.3s var(--no-ease);
+  }
+
+  .rlTick:hover::before,
+  .rlTick:focus-visible::before,
+  .rlTick[aria-current="location"]::before {
+    width: 22px;
+    background: var(--no-secondary);
+  }
+
+  /* the section name slides out on hover/focus */
+  .rlTickLabel {
+    position: absolute;
+    top: 50%;
+    right: 34px;
+    padding: 4px 10px;
+    border: 1px solid var(--no-tertiary);
+    border-radius: var(--no-radius-full);
+    background: rgba(20, 16, 12, 0.85);
+    backdrop-filter: blur(8px);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--no-primary);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(6px, -50%);
+    pointer-events: none;
+    transition: opacity 0.25s var(--no-ease), transform 0.25s var(--no-ease);
+  }
+
+  .rlTick:hover .rlTickLabel,
+  .rlTick:focus-visible .rlTickLabel {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  /* left edge: current chapter, written bottom-to-top */
+  .rlChapter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: fixed;
+    left: 22px;
+    bottom: 120px;
+    z-index: 60;
+    margin: 0;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--no-primary-60);
+    opacity: 0;
+    transition: opacity 0.4s var(--no-ease);
+    pointer-events: none;
+    mix-blend-mode: difference; /* stays readable over the ivory band too */
+  }
+
+  .rlChapter[data-on] {
+    opacity: 1;
+  }
+
+  .rlChapterDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--no-secondary);
+  }
+
+  .rlChapterText {
+    animation: rlIn 0.5s var(--no-ease);
+  }
+}
+
+@keyframes rlIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rlChapterText {
+    animation: none;
+  }
+}

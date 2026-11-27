@@ -1,0 +1,76 @@
+.noDock {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid var(--no-tertiary);
+  border-radius: var(--no-radius-full);
+  background: rgba(17, 17, 17, 0.82);
+  backdrop-filter: blur(12px);
+  transform: translateX(-50%);
+  animation: noDockIn 0.9s var(--no-ease) 0.6s both;
+}
+
+.noDockIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--no-primary-60) !important;
+  text-decoration: none;
+  transition: color 0.2s var(--no-ease), background-color 0.2s var(--no-ease);
+}
+
+.noDockIcon:hover {
+  color: var(--no-primary) !important;
+  background: var(--no-primary-10);
+}
+
+.noDockSep {
+  width: 1px;
+  height: 20px;
+  background: var(--no-tertiary);
+}
+
+.noDockSegment {
+  display: flex;
+  gap: 2px;
+}
+
+.noDockItem {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--no-radius-full);
+  font-size: 15px;
+  color: var(--no-primary-60);
+  text-decoration: none;
+  transition: color 0.2s var(--no-ease), background-color 0.2s var(--no-ease);
+}
+
+a.noDockItem:hover {
+  color: var(--no-primary);
+  background: var(--no-primary-10);
+}
+
+.noDockItemActive {
+  background: var(--no-primary);
+  color: var(--no-neutral);
+}
+
+@keyframes noDockIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

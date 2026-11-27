@@ -1,0 +1,377 @@
+.noSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--no-space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(72px, 10vw, 128px) var(--no-gutter) 0;
+}
+
+.noSecHead {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.noSecIndex {
+  color: var(--no-secondary);
+}
+
+.noStatement {
+  max-width: 22ch;
+  margin: 0;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* ── about ── */
+.noAboutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 96px);
+  position: relative;
+  align-items: start;
+  padding-top: var(--no-space-md);
+}
+
+.noAboutRule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.noAboutText {
+  font-weight: 300;
+  color: var(--no-primary-60);
+}
+
+.noStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.noStat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--no-tertiary);
+}
+
+.noStatNum {
+  margin: 0;
+  font-size: clamp(32px, 3.4vw, 44px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.noStatLabel {
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--no-primary-60);
+}
+
+/* ── paper band: an ivory chapter (light/dark rhythm). The page tokens are remapped, so everything inside
+   (split text, reveal lines, chips) reads correctly on paper without per-component overrides. ── */
+.noPaperBand {
+  --no-primary: var(--no-on-paper);
+  --no-primary-60: var(--no-on-paper-60);
+  --no-primary-30: #111a2e4d;
+  --no-tertiary: var(--no-line-paper);
+  --no-neutral: var(--no-paper);
+  --no-secondary: #4a6300; /* deep amber on paper: 5.4:1 */
+  --no-highlight: var(--no-highlight-paper);
+  margin-top: clamp(72px, 10vw, 128px);
+  padding-bottom: clamp(72px, 10vw, 128px);
+  background: var(--no-paper);
+  color: var(--no-on-paper);
+}
+
+.noPaperBand ::selection {
+  background: #d99b5266;
+  color: var(--no-on-paper);
+}
+
+/* dot-matrix numerals: real text, masked into a grid of round dots */
+.noPaperBand .noStats {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 clamp(20px, 3vw, 40px);
+}
+
+.noPaperBand .noStatNum {
+  font-size: clamp(48px, 5.4vw, 84px);
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  -webkit-mask: radial-gradient(circle, #000 52%, transparent 58%) 0 0 / 5px 5px;
+  mask: radial-gradient(circle, #000 52%, transparent 58%) 0 0 / 5px 5px;
+}
+
+.noPaperBand .noStat {
+  padding: 20px 0 24px;
+}
+
+/* ── chips ── */
+.noChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--no-tertiary);
+  border-radius: var(--no-radius-full);
+  background: var(--no-neutral);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.06em;
+  color: var(--no-primary-60);
+  white-space: nowrap;
+}
+
+.noChipDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--no-success);
+}
+
+/* ── experience: giant-year timeline ── */
+.noTimeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.noTlItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 5vw, 80px);
+  padding: 32px 0;
+  border-top: 1px solid var(--no-tertiary);
+}
+
+.noTlItem:last-child {
+  border-bottom: 1px solid var(--no-tertiary);
+}
+
+/* the year pins while this role's details scroll past */
+.noTlYear {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+  font-size: clamp(72px, 14vw, 200px);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--no-primary);
+}
+
+.noTlYear[data-now] {
+  color: var(--no-highlight);
+}
+
+.noTlBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: clamp(220px, 34vh, 380px);
+  padding-top: 8px;
+}
+
+.noTlDate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--no-primary-60);
+}
+
+.noTlTitle {
+  margin: 0;
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.noTlCompany {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--no-primary-60);
+}
+
+.noTlPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.noTlPoints li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--no-primary-60);
+}
+
+.noTlPoints li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  background: var(--no-highlight);
+}
+
+/* ── footer ── */
+.noFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px var(--no-gutter) clamp(24px, 4vw, 48px);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--no-primary-60);
+}
+
+/* footer shell: the row above, the giant speckled name below (it bleeds off the bottom edge) */
+.noFooterWrap {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--no-tertiary);
+}
+
+.noBigName {
+  --nbn-size: clamp(104px, 16vw, 260px);
+  position: relative;
+  /* show most of the letters: the bottom edge is cut by the page, like a print run off the sheet */
+  height: calc(var(--nbn-size) * 0.86);
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+}
+
+.noBigNameTrack {
+  display: flex;
+  width: max-content;
+  font-size: var(--nbn-size);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+  /* letters are made of random speckle: amber flecks over a cream grain, on a barely-there fill */
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='a'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='1' seed='7'/><feColorMatrix values='0 0 0 0 0.851  0 0 0 0 0.608  0 0 0 0 0.322  0 0 0 18 -13.2'/></filter><rect width='100%' height='100%' filter='url(%23a)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' seed='3'/><feColorMatrix values='0 0 0 0 0.961  0 0 0 0 0.937  0 0 0 0 0.902  0 0 0 14 -7.6'/></filter><rect width='100%' height='100%' filter='url(%23c)'/></svg>"),
+    linear-gradient(rgba(245, 239, 230, 0.05), rgba(245, 239, 230, 0.05));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* scroll reveal (--no-foot from NoScrollFx, 0 → 1 as the footer comes into view): the name rises from
+     below the page edge and its grain fills in. 'translate' composes with the marquee's 'transform'. */
+  translate: 0 calc((1 - var(--no-foot, 1)) * 75%);
+  opacity: calc(0.15 + var(--no-foot, 1) * 0.85);
+  animation:
+    nbnMarquee 46s linear infinite,
+    nbnShimmer 0.48s steps(1) infinite;
+}
+
+.noBigNameHalf {
+  display: flex;
+  padding-right: 0.25em;
+}
+
+.noBigNameWord {
+  padding-right: 0.25em;
+}
+
+@keyframes nbnMarquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* the grain jumps a few times a second: the letters shimmer like live static */
+@keyframes nbnShimmer {
+  0% {
+    background-position: 0 0, 0 0, 0 0;
+  }
+  33% {
+    background-position: 61px 23px, -37px 11px, 0 0;
+  }
+  66% {
+    background-position: -29px 47px, 23px -41px, 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noBigNameTrack {
+    animation: none;
+    translate: none;
+    opacity: 1;
+  }
+}
+
+.noFooterTop {
+  text-decoration: none;
+  transition: color 0.2s var(--no-ease);
+}
+
+.noFooterTop:hover {
+  color: var(--no-primary);
+}
+
+/* ── responsive ── */
+@media (max-width: 900px) {
+  .noAboutGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+
+  .noTlItem {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .noTlYear {
+    position: static;
+  }
+
+  .noTlBody {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .noPaperBand .noStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+
+  .noFooter {
+    flex-direction: column;
+    text-align: center;
+  }
+}
