@@ -1,0 +1,123 @@
+/* ── SKILLS ── */
+.skSection {
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(79, 125, 240, 0.08), transparent 60%),
+    var(--jb-ink);
+}
+
+/* three groups side by side: dense, scannable, every skill with an honest level word */
+.skGroups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(32px, 4vw, 56px);
+}
+
+.skGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--jb-line-ink);
+}
+
+.skGroupHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skGroupNum {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.skGroupName {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.skGroupNote {
+  max-width: 34ch;
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: var(--jb-on-ink-muted);
+}
+
+.skList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skItem {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 2px;
+  border-bottom: 1px solid var(--jb-line-ink);
+  overflow: hidden;
+}
+
+/* a soft fill sweeps in from the left on hover */
+.skItem::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(79, 125, 240, 0.14), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--jb-ease);
+}
+
+.skItem:hover::before {
+  transform: scaleX(1);
+}
+
+.skItemName {
+  position: relative;
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: transform 0.45s var(--jb-ease);
+}
+
+.skItem:hover .skItemName {
+  transform: translateX(6px);
+}
+
+.skItemLevel {
+  position: relative;
+  flex: none;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--jb-on-ink-muted);
+}
+
+.skEmpty {
+  margin: 0;
+  color: var(--jb-on-ink-muted);
+}
+
+.skExtra {
+  margin: clamp(40px, 5vw, 64px) 0 0;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: var(--jb-on-ink);
+}
+
+.skExtra span {
+  margin-right: 12px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--jb-on-ink-muted);
+}
+
+/* ── responsive: the grid above wraps on its own (auto-fit) ── */

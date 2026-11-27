@@ -12,6 +12,9 @@ import AdminOverview from "./AdminOverview";
 import AdminSidebar from "./AdminSidebar";
 import { EditorSkeleton, OverviewSkeleton } from "./AdminSkeleton";
 import MessagesPanel from "./MessagesPanel";
+import ResumePanel from "./ResumePanel";
+import ShotsPanel from "./ShotsPanel";
+import VisitorsPanel from "./VisitorsPanel";
 import SectionEditor from "./SectionEditor";
 import Tooltip from "./Tooltip";
 import styles from "../_styles/admin.module.css";
@@ -243,9 +246,9 @@ export default function AdminShell({
       <main className={styles.admMain}>
         <div className={styles.admTitleRow}>
           <h1 className={styles.admTitle}>
-            {group ? group.label : active === "messages" ? "Messages" : "Portfolio"}{" "}
+            {group ? group.label : active === "messages" ? "Messages" : active === "resume" ? "Resume" : active === "visitors" ? "Visitors" : "Portfolio"}{" "}
             <span className={styles.admTitleMuted}>
-              {group ? "editor" : active === "messages" ? "inbox" : "overview"}
+              {group ? "editor" : active === "messages" ? "inbox" : active === "resume" ? "file" : active === "visitors" ? "analytics" : "overview"}
             </span>
           </h1>
           <Tooltip
@@ -286,6 +289,16 @@ export default function AdminShell({
 
         {busy === "refresh" ? (
           group || active === "messages" ? <EditorSkeleton /> : <OverviewSkeleton />
+        ) : active === "visitors" ? (
+          <VisitorsPanel
+            onNotice={(tone, text) => setNotice({ tone, text })}
+            onUnauthorized={() => router.replace("/admin/login")}
+          />
+        ) : active === "resume" ? (
+          <ResumePanel
+            onNotice={(tone, text) => setNotice({ tone, text })}
+            onUnauthorized={() => router.replace("/admin/login")}
+          />
         ) : active === "messages" ? (
           <MessagesPanel
             messages={messages}
@@ -294,22 +307,33 @@ export default function AdminShell({
             onDelete={deleteMessage}
           />
         ) : group ? (
-          <SectionEditor
-            key={group.id}
-            group={group}
-            draft={draft}
-            dirty={dirtyGroups.has(group.id)}
-            saving={busy === "save"}
-            canSave={canSave}
-            onChange={(key, value) => setDraft((d) => ({ ...d, [key]: value }))}
-            onSave={save}
-            onDiscard={discard}
-          />
+          <>
+            <SectionEditor
+              key={group.id}
+              group={group}
+              draft={draft}
+              dirty={dirtyGroups.has(group.id)}
+              saving={busy === "save"}
+              canSave={canSave}
+              onChange={(key, value) => setDraft((d) => ({ ...d, [key]: value }))}
+              onSave={save}
+              onDiscard={discard}
+            />
+            {/* screenshots attach to the saved (live) projects, not unsaved edits */}
+            {group.id === "projects" ? (
+              <ShotsPanel
+                projects={saved.projects}
+                onNotice={(tone, text) => setNotice({ tone, text })}
+                onUnauthorized={() => router.replace("/admin/login")}
+              />
+            ) : null}
+          </>
         ) : (
           <AdminOverview
             data={draft}
             source={source}
             storeConfigured={storeConfigured}
+            messages={messages}
             onOpen={setActive}
             onResetAll={resetAll}
             resetting={busy === "reset"}

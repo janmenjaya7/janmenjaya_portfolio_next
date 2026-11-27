@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DATA } from "./data";
+import { INTRO_BOOT_SCRIPT } from "./lib/intro";
+import { dmSans, syne } from "./lib/fonts";
 import "./globals.css";
 
 const title = `${DATA.name} — ${DATA.role} | React.js & Next.js Developer`;
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     "React Native Developer",
     "Web Developer Pune",
     "UI Developer",
-    "IFAS Educate",
+    "IFAS Edutech Pvt. Ltd.",
     "EdTech Developer",
   ],
   authors: [{ name: DATA.name, url: DATA.siteUrl }],
@@ -87,7 +89,7 @@ const jsonLd = {
         addressRegion: "Maharashtra",
         addressCountry: "IN",
       },
-      worksFor: { "@type": "Organization", name: "IFAS Educate Pvt. Ltd." },
+      worksFor: { "@type": "Organization", name: "IFAS Edutech Pvt. Ltd." },
       alumniOf: {
         "@type": "CollegeOrUniversity",
         name: "Trident Academy of Creative Technology",
@@ -108,13 +110,14 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-      </head>
+    // suppressHydrationWarning: the homepage's intro boot script sets data-intro* on <html> before React loads
+    // (this only silences <html>'s own attributes, not its children)
+    // fonts are self-hosted by next/font (no render-blocking Google stylesheet); their CSS variables live on <html>
+    <html lang="en" className={`scroll-smooth ${syne.variable} ${dmSans.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="bg-[#050d1c] text-slate-300 antialiased overflow-x-hidden">
+        {/* homepage intro: decides before first paint whether it plays (no flash, no layout shift). In the root
+            layout because it persists across client navigations, so React never re-renders this script. */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT_SCRIPT }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

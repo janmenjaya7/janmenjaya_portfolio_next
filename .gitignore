@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw story renders (large source files); only the optimised public/journey output is deployed
+/journey-src/
+# source images for the "story in stills" section (only the optimised public/story-stills is committed)
+/story-stills-src/

@@ -1,0 +1,191 @@
+/* Contact finale on /newone. Prefix: fn. */
+.fnRoot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 3vw, 40px);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(96px, 14vw, 180px) var(--no-gutter) clamp(48px, 6vw, 72px);
+}
+
+.fnGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.fnTitle {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: clamp(52px, 9.6vw, 148px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+}
+
+.fnLine {
+  display: block;
+}
+
+.fnAccent {
+  color: var(--no-secondary);
+}
+
+/* round amber button; leans toward the pointer (NoMagnet) */
+.fnCtaWrap {
+  justify-self: end;
+}
+
+.fnMagnet {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.fnCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: clamp(150px, 15vw, 200px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--no-secondary);
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 0 0 0 rgba(217, 155, 82, 0.35);
+  transition: background-color 0.35s var(--no-ease), box-shadow 0.5s var(--no-ease), transform 0.5s var(--no-ease);
+}
+
+/* dark text on amber (7.9:1); scoped under .fnRoot so it beats the page-wide `.noRoot a { color: inherit }` */
+.fnRoot .fnCta {
+  color: var(--no-on-accent);
+}
+
+.fnCta:hover,
+.fnCta:focus-visible {
+  background: var(--no-accent-hover);
+  box-shadow: 0 0 0 14px rgba(217, 155, 82, 0.12);
+  transform: scale(1.04);
+}
+
+.fnCtaText {
+  max-width: 9ch;
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.fnCtaArrow {
+  transition: transform 0.45s var(--no-ease);
+}
+
+.fnCta:hover .fnCtaArrow,
+.fnCta:focus-visible .fnCtaArrow {
+  transform: translate(3px, -3px) rotate(45deg);
+}
+
+.fnLead {
+  max-width: 46ch;
+  margin: 0;
+  font-size: clamp(17px, 1.5vw, 20px);
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--no-primary-60);
+}
+
+/* direct links: a quiet row of three, hairlines between */
+.fnLinks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--no-tertiary);
+}
+
+.fnLinks li + li {
+  border-left: 1px solid var(--no-tertiary);
+}
+
+.fnLink {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 44px;
+  padding: 20px 20px 20px 0;
+  text-decoration: none;
+}
+
+.fnLinks li + li .fnLink {
+  padding-left: 20px;
+}
+
+.fnLinkHint {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--no-primary-60);
+}
+
+.fnLinkLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-weight: 500;
+  color: var(--no-primary);
+  transition: color 0.25s var(--no-ease);
+}
+
+.fnLinkLabel svg {
+  flex-shrink: 0;
+  transition: transform 0.3s var(--no-ease);
+}
+
+.fnLink:hover .fnLinkLabel,
+.fnLink:focus-visible .fnLinkLabel {
+  color: var(--no-secondary);
+}
+
+.fnLink:hover .fnLinkLabel svg {
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 700px) {
+  .fnGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fnCtaWrap {
+    justify-self: start;
+  }
+
+  .fnLinks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fnLinks li + li {
+    border-left: 0;
+    border-top: 1px solid var(--no-tertiary);
+  }
+
+  .fnLinks li + li .fnLink {
+    padding-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fnMagnet,
+  .fnCta,
+  .fnCtaArrow {
+    transition: none;
+  }
+}

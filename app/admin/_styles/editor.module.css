@@ -321,7 +321,7 @@
   gap: 0.4rem;
   align-self: flex-start;
   padding: 0.6rem 1rem;
-  border: 1.5px dashed rgba(46, 155, 106, 0.45);
+  border: 1.5px dashed rgba(36, 71, 154, 0.45);
   border-radius: 12px;
   background: var(--adm-accent-soft);
   color: var(--adm-accent-strong);

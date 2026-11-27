@@ -1,0 +1,180 @@
+/* ─────────────────────────────────────────────────────────────
+   /newone design tokens — warm espresso & amber (the palette you chose): espresso background,
+   cream type, one amber accent. Contrast: text 16.6:1, secondary text 6.3:1, amber 7.9:1, text on amber 7.9:1.
+   Everything is scoped to .noRoot so the main site is untouched.
+   ───────────────────────────────────────────────────────────── */
+.noRoot {
+  /* colours — your palette: warm espresso ground, cream type, amber accent */
+  --no-primary: #f5efe6; /* text-primary: 16.6:1 on the background */
+  --no-secondary: #d99b52; /* accent-gold: the single accent (marks, links, focus, progress) — 7.9:1 */
+  --no-on-accent: #14100c; /* text-on-accent: 7.9:1 on amber */
+  --no-accent-hover: #b57c3a; /* accent-gold-hover (dark text on it: 5.3:1) */
+  --no-spark: #f5efe6; /* moving highlight in the dot drawings: cream against the amber lines */
+  --no-tertiary: #3b2e22; /* border-subtle */
+  --no-neutral: #14100c; /* bg-primary */
+  --no-surface: #211a14; /* bg-surface */
+  --no-on-surface: #f5efe6;
+  --no-highlight: #d99b52; /* expressive accents (same amber) */
+  --no-highlight-paper: #8a5418; /* amber for the ivory band: 5.4:1 (#d99b52 is only 2.1:1 on paper) */
+  --no-paper: #f2efe8;
+  --no-on-paper: #14100c;
+  --no-on-paper-60: #14100ca3;
+  --no-line-paper: #14100c1f;
+  --no-error: #ff6b6b;
+  --no-success: #4ade80;
+  --no-primary-60: #9e9385; /* text-secondary: 6.3:1 on the background, 5.7:1 on surfaces */
+  --no-primary-30: #f5efe64d;
+  --no-primary-10: #f5efe61a;
+  --no-secondary-60: #d99b5299;
+  --no-secondary-30: #d99b524d;
+
+  /* shape */
+  --no-radius-none: 0px;
+  --no-radius-sm: 4px;
+  --no-radius-md: 8px;
+  --no-radius-lg: 16px;
+  --no-radius-xl: 24px;
+  --no-radius-full: 9999px;
+
+  /* spacing (8px rhythm) */
+  --no-space-xs: 8px;
+  --no-space-sm: 16px;
+  --no-space-md: 24px;
+  --no-space-lg: 32px;
+  --no-space-xl: 64px;
+  --no-gutter: clamp(16px, 4.5vw, 64px);
+
+  /* type */
+  --no-font: var(--no-font-sans), "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --no-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--no-neutral);
+  color: var(--no-on-surface);
+  font-family: var(--no-font);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: auto;
+  overflow-x: clip;
+}
+
+.noRoot *,
+.noRoot *::before,
+.noRoot *::after {
+  box-sizing: border-box;
+}
+
+.noRoot a,
+.noRoot button {
+  cursor: pointer;
+  color: inherit;
+}
+
+.noRoot ::selection {
+  background: var(--no-secondary-60);
+  color: var(--no-primary);
+}
+
+/* The main site hides the pointer and paints a navy page; undo both only while /newone is on screen. */
+:global(body):has(.noRoot) {
+  margin: 0;
+  cursor: auto;
+  background: #14100c;
+}
+
+/* Keyboard focus that stays elegant: a soft indigo ring, no shadows. */
+.noRoot :focus-visible {
+  outline: 2px solid var(--no-secondary);
+  outline-offset: 3px;
+  border-radius: var(--no-radius-sm);
+}
+
+/* ── typography scale ── */
+.noDisplay {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(40px, 6.2vw, 67px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.noHeadlineLg {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(34px, 4.4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+
+.noBodyLg {
+  margin: 0;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.01em;
+}
+
+.noBodyMd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+}
+
+
+.noOverline {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--no-primary-60);
+}
+
+.noMuted {
+  color: var(--no-primary-60);
+}
+
+.noSrOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.noSkipLink {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 8px 16px;
+  border-radius: var(--no-radius-full);
+  background: var(--no-primary);
+  color: var(--no-neutral) !important;
+  font-size: 14px;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.2s var(--no-ease);
+}
+
+.noSkipLink:focus-visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noRoot *,
+  .noRoot *::before,
+  .noRoot *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

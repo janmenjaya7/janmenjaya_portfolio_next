@@ -1,0 +1,409 @@
+/* ── ABOUT ── */
+/* About and Experience share the same paper surface, so together they read as one chapter:
+   the gap between them equals a single section padding, not two. */
+.abSection {
+  padding-top: clamp(72px, 9vw, 120px);
+  padding-bottom: clamp(44px, 5.5vw, 72px);
+}
+
+.abGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+
+.abAside {
+  position: sticky;
+  top: calc(var(--jb-nav-h) + 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.abTitle {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+}
+
+.abFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abFacts li {
+  padding: 6px 14px;
+  border: 1px solid var(--jb-line-paper);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--jb-on-paper);
+}
+
+.abBody {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.abLead {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--jb-on-paper);
+  text-wrap: pretty;
+}
+
+/* one readable column (two uneven columns read as unfinished) */
+.abCols {
+  display: grid;
+  gap: 18px;
+  max-width: 62ch;
+}
+
+/* the intro's line in the aside: fills the column and carries the brand into the site */
+.abQuote {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 14px;
+  margin: 20px 0 0;
+  padding: 22px 0 0;
+  border-top: 1px solid var(--jb-line-paper);
+}
+
+.abQuoteMark {
+  grid-row: span 2;
+  margin-top: 6px;
+}
+
+.abQuoteText {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.1vw, 1.7rem);
+  line-height: 1.3;
+}
+
+.abQuoteBy {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jb-on-paper-muted);
+}
+
+.abText {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--jb-on-paper-muted);
+}
+
+.abHighlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--jb-line-paper);
+}
+
+.abHighlight {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  /* title row hugs the title; the description always starts right under it in every card */
+  grid-template-rows: auto 1fr;
+  align-content: start;
+  gap: 4px 12px;
+  padding: 22px 20px 22px 0;
+  border-bottom: 1px solid var(--jb-line-paper);
+}
+
+.abHighlight:nth-child(even) {
+  padding-left: 20px;
+  border-left: 1px solid var(--jb-line-paper);
+}
+
+.abHighlightNum {
+  grid-row: span 2;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.abHighlightTitle {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--jb-on-paper);
+}
+
+.abHighlightDesc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--jb-on-paper-muted);
+}
+
+/* ── EXPERIENCE ── */
+.exSection {
+  padding-top: clamp(44px, 5.5vw, 72px);
+}
+
+.exList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--jb-on-paper);
+}
+
+.exItem {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(32px, 4vw, 48px) 0;
+  border-bottom: 1px solid var(--jb-line-paper);
+}
+
+.exWhen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exDate {
+  font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+  line-height: 1;
+}
+
+.exNow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jb-on-paper);
+}
+
+.exNowDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1fa971;
+  box-shadow: 0 0 0 4px rgba(31, 169, 113, 0.15);
+}
+
+.exCompany {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--jb-on-paper);
+}
+
+.exRole {
+  margin: 6px 0 20px;
+  font-size: 1rem;
+  color: var(--jb-on-paper);
+}
+
+.exRole span {
+  color: var(--jb-on-paper-muted);
+}
+
+.exPoints {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exPoints li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--jb-on-paper-muted);
+}
+
+/* measurable outcomes stand out at a glance */
+.exFig {
+  font-weight: 600;
+  color: var(--jb-on-paper);
+}
+
+/* the rest of the role, one click away (native <details>: keyboard + screen-reader friendly, no JS) */
+.exMore {
+  margin-top: 12px;
+}
+
+.exMoreToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jb-gold-deep);
+}
+.exMoreToggle::-webkit-details-marker {
+  display: none;
+}
+.exMoreToggle::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.3s var(--jb-ease);
+}
+.exMore[open] .exMoreToggle::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+.exMoreToggle:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.exMoreClose,
+.exMore[open] .exMoreOpen {
+  display: none;
+}
+.exMore[open] .exMoreClose {
+  display: inline;
+}
+
+.exPointsMore {
+  margin-top: 4px;
+}
+
+.exPoints li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 10px;
+  height: 1px;
+  background: var(--jb-on-paper);
+}
+
+.exSide {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.exSideLabel {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--jb-on-paper-muted);
+}
+
+.exTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exTags li {
+  padding: 4px 10px;
+  border: 1px solid var(--jb-line-paper);
+  border-radius: 999px;
+  font-size: 12.5px;
+  color: var(--jb-on-paper);
+}
+
+.exProducts {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exProducts a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14.5px;
+  color: var(--jb-accent-paper);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s var(--jb-ease);
+}
+
+.exProducts a:hover {
+  background-size: 100% 1px;
+}
+
+.exEmpty {
+  color: var(--jb-on-paper-muted);
+}
+
+/* ── responsive ── */
+@media (max-width: 1024px) {
+  .exItem {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  }
+
+  .exSide {
+    grid-column: 2;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .abGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .abAside {
+    position: static;
+  }
+
+}
+
+@media (max-width: 640px) {
+  .abHighlights {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .abHighlight,
+  .abHighlight:nth-child(even) {
+    padding: 18px 0;
+    border-left: 0;
+  }
+
+  .exItem {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .exWhen {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .exSide {
+    grid-column: auto;
+    flex-direction: column;
+  }
+}

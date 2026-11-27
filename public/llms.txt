@@ -2,14 +2,14 @@
 
 > Personal portfolio of Janmenjaya Biswal, a Frontend Developer based in Pune, Maharashtra, India, with 3+ years of experience building fast, scalable web applications with React.js, Next.js, TypeScript and React Native.
 
-Janmenjaya currently builds EdTech products for IFAS Educate Pvt. Ltd. (via e2eHiring), and has delivered 4 live production platforms serving 50,000+ learners across India. Janmenjaya's focus is reusable component architecture, REST API integration, performance optimisation and mobile-first responsive UI. Janmenjaya received an Excellence Award for outstanding project performance and holds a GCP Associate Cloud Engineer certification and an MCA from Trident Academy of Creative Technology.
+Janmenjaya is a Software Developer — Frontend at IFAS Edutech Pvt. Ltd. in Pune (previously e2eHiring, Bengaluru), and has delivered 4 live production platforms serving 50,000+ learners across India. Janmenjaya's focus is reusable component architecture, REST API integration, performance optimisation and mobile-first responsive UI. Janmenjaya received an Excellence Award for outstanding project performance and holds a GCP Associate Cloud Engineer certification and an MCA from Trident Academy of Creative Technology.
 
 ## Portfolio
 
 - [Home](https://www.janmenjaya.in/): Overview, skills, experience, projects, credentials and contact form
 - [About](https://www.janmenjaya.in/#about): Background, interests and highlights
 - [Skills](https://www.janmenjaya.in/#skills): React.js, Next.js, TypeScript, JavaScript, React Native, Tailwind CSS, Material UI, Bootstrap, REST APIs, Git, Webpack, GCP
-- [Experience](https://www.janmenjaya.in/#experience): Junior Developer Engineer — Frontend at e2eHiring for IFAS Educate (Aug 2023 – present)
+- [Experience](https://www.janmenjaya.in/#experience): Software Developer — Frontend at IFAS Edutech Pvt. Ltd., Pune (current); previously Frontend Developer at e2eHiring, Bengaluru (from Aug 2023)
 - [Projects](https://www.janmenjaya.in/#projects): Live EdTech platforms and personal projects
 - [Contact](https://www.janmenjaya.in/#contact): Ways to get in touch
 

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CircleAlert, CircleCheck, Lock, Mail } from "lucide-react";
 import { adminApi } from "../_lib/api";
+import BrandLogo from "../../components/BrandLogo";
 import styles from "../_styles/login.module.css";
 
 const RESEND_SECONDS = 60;
@@ -84,7 +85,11 @@ export default function LoginForm({ configured }: { configured: boolean }) {
     <div className={styles.lgPage}>
       <form className={styles.lgCard} onSubmit={onSubmit} noValidate>
         <div className={styles.lgIcon}>
-          {step === "email" ? <Lock size={22} aria-hidden="true" /> : <Mail size={22} aria-hidden="true" />}
+          <BrandLogo size={60} />
+          {/* small step badge on the logo: lock to sign in, envelope while waiting for the code */}
+          <span className={styles.lgStep} aria-hidden="true">
+            {step === "email" ? <Lock size={13} /> : <Mail size={13} />}
+          </span>
         </div>
         <h1 className={styles.lgTitle}>
           {step === "email" ? "Admin" : "Check"}{" "}

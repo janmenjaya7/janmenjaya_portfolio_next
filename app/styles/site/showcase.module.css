@@ -1,0 +1,480 @@
+/* ── Projects: tabbed MacBook showcase ── */
+.sc {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+
+/* ── tabs ── */
+.scTabs {
+  position: sticky;
+  top: calc(var(--jb-nav-h) + 24px);
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--jb-line-paper);
+}
+
+.scTab {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 18px 16px 18px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--jb-line-paper);
+  background: transparent;
+  color: var(--jb-on-paper);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  isolation: isolate;
+  transition: color 0.3s var(--jb-ease), padding 0.35s var(--jb-ease);
+}
+
+.scTab:hover {
+  padding-left: 10px;
+}
+
+.scTabNum {
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.55;
+  transition: opacity 0.3s var(--jb-ease);
+}
+
+.scTabText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.scTabTitle {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.scTabMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  font-size: 12.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--jb-on-paper-muted);
+}
+
+.scDot,
+.scDotLive {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jb-on-paper-muted);
+}
+
+.scDotLive {
+  background: #1fa971;
+}
+
+/* the active tab gets an ink "card" that slides between tabs */
+.scTabMarker {
+  position: absolute;
+  inset: 4px 0;
+  z-index: -1;
+  border-radius: 12px;
+  background: var(--jb-on-paper);
+}
+
+.scTabOn {
+  padding-left: 14px;
+  color: var(--jb-paper);
+}
+
+.scTabOn:hover {
+  padding-left: 14px;
+}
+
+.scTabOn .scTabNum {
+  opacity: 1;
+  color: var(--jb-accent-ink);
+}
+
+.scTabOn .scTabMeta {
+  color: rgba(242, 239, 232, 0.65);
+}
+
+/* ── stage ── */
+.scStage {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+.scDevice {
+  position: relative;
+}
+
+/* a soft colour field behind the laptop so it doesn't float on flat paper */
+.scDevice::before {
+  content: "";
+  position: absolute;
+  inset: -6% 4% 10%;
+  z-index: -1;
+  border-radius: 40px;
+  background:
+    radial-gradient(60% 60% at 30% 30%, rgba(79, 125, 240, 0.18), transparent 70%),
+    radial-gradient(50% 50% at 80% 70%, rgba(214, 170, 120, 0.2), transparent 70%);
+  filter: blur(20px);
+}
+
+.scScreen {
+  position: absolute;
+  inset: 0;
+}
+
+.scShot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.scImg {
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+/* tall full-page screenshots scroll slowly to the bottom on hover */
+.scShotTall .scImg {
+  transition: object-position 7s cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+.scShotTall:hover .scImg {
+  object-position: 50% 100%;
+  transition-duration: 9s;
+}
+
+.scHint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(21, 24, 29, 0.78);
+  backdrop-filter: blur(6px);
+  font-size: 12px;
+  color: #f2efe8;
+  pointer-events: none;
+  transition: opacity 0.4s var(--jb-ease);
+}
+
+.scShotTall:hover .scHint {
+  opacity: 0;
+}
+
+/* honest covers for projects without a real screenshot */
+.scCover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 8% 9%;
+  color: var(--jb-on-paper);
+}
+
+.scCover0 {
+  background:
+    radial-gradient(70% 60% at 85% 20%, rgba(79, 125, 240, 0.22), transparent 70%),
+    radial-gradient(60% 50% at 10% 90%, rgba(174, 187, 211, 0.45), transparent 70%),
+    #ece8df;
+}
+
+.scCover1 {
+  background:
+    radial-gradient(65% 55% at 15% 20%, rgba(214, 170, 120, 0.3), transparent 70%),
+    radial-gradient(60% 50% at 90% 85%, rgba(174, 187, 211, 0.4), transparent 70%),
+    #efe9de;
+}
+
+.scCover2 {
+  background:
+    radial-gradient(70% 55% at 50% 0%, rgba(120, 160, 150, 0.28), transparent 70%),
+    radial-gradient(55% 50% at 85% 95%, rgba(79, 125, 240, 0.16), transparent 70%),
+    #e8e7e0;
+}
+
+.scCoverKind {
+  font-size: clamp(10px, 1vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--jb-on-paper-muted);
+}
+
+.scCoverTitle {
+  max-width: 14ch;
+  font-size: clamp(1.8rem, 4.2vw, 3.6rem);
+  line-height: 1;
+}
+
+.scCoverStack {
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--jb-on-paper-muted);
+}
+
+/* ── details panel ── */
+.scPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 20px 40px;
+  align-items: start;
+  animation: scPanelIn 0.5s var(--jb-ease) both;
+}
+
+.scPanel[hidden] {
+  display: none;
+}
+
+.scPanelMain {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scTitle {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.scDesc {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--jb-on-paper-muted);
+}
+
+.scFacts {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--jb-line-paper);
+}
+
+.scFacts div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.scFacts dt {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jb-on-paper-muted);
+}
+
+.scFacts dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.scLinks {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+.scLinks a {
+  height: 44px;
+  font-size: 14px;
+}
+
+/* internal (sign-in-only) tools: an honest badge + walkthrough offer instead of a login link */
+.scInternal {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+
+.scInternalBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--jb-line-paper);
+  border-radius: 999px;
+  background: rgba(21, 24, 29, 0.04);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--jb-on-paper);
+  white-space: nowrap;
+}
+
+/* offline: a muted amber tone so it reads as "not available now", distinct from the internal-tool lock */
+.scOfflineBadge {
+  border-color: rgba(138, 90, 20, 0.35);
+  background: rgba(212, 173, 98, 0.12);
+  color: #6b4510;
+}
+
+.scInternalText {
+  flex: 1 1 260px;
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--jb-on-paper-muted);
+}
+
+.scInternalCta {
+  height: 44px;
+  font-size: 14px;
+}
+
+.scCta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: clamp(56px, 7vw, 96px);
+  padding: clamp(22px, 3vw, 32px) clamp(22px, 3vw, 36px);
+  border-radius: 20px;
+  background: var(--jb-on-paper);
+  color: var(--jb-paper);
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  transition: background-color 0.35s var(--jb-ease);
+}
+
+.scCta:hover {
+  background: #232833;
+}
+
+.scCtaGo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--jb-accent-ink);
+}
+
+.scCtaGo svg {
+  transition: transform 0.35s var(--jb-ease);
+}
+
+.scCta:hover .scCtaGo svg {
+  transform: translate(3px, -3px);
+}
+
+.scEmpty {
+  color: var(--jb-on-paper-muted);
+}
+
+@keyframes scPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── tablet & mobile: tabs become a swipeable row above the laptop ── */
+@media (max-width: 900px) {
+  .sc {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scTabs {
+    position: relative;
+    top: 0;
+    flex-direction: row;
+    gap: 8px;
+    margin: 0 calc(var(--jb-gutter) * -1);
+    padding: 4px var(--jb-gutter) 12px;
+    overflow-x: auto;
+    border-top: 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .scTabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scTab {
+    flex: 0 0 auto;
+    grid-template-columns: auto minmax(0, 1fr);
+    width: auto;
+    max-width: 240px;
+    padding: 10px 16px 10px 12px;
+    border: 1px solid var(--jb-line-paper);
+    border-radius: 12px;
+    scroll-snap-align: start;
+  }
+
+  .scTab:hover,
+  .scTabOn,
+  .scTabOn:hover {
+    padding-left: 12px;
+  }
+
+  .scTabMarker {
+    inset: -1px;
+  }
+
+  .scTabNum {
+    font-size: 1.15rem;
+  }
+
+  .scTabTitle {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .scPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (hover: none) {
+  .scHint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scShotTall .scImg,
+  .scShotTall:hover .scImg {
+    transition: none;
+  }
+
+  .scPanel {
+    animation: none;
+  }
+}

@@ -1,0 +1,385 @@
+/* "Story in stills" — six chapter images revealed on scroll. All classes are prefixed `ss`. */
+
+.ss {
+  /* the site's floating dock sits at the bottom (≈ 18–74px) */
+  --ss-dock-clear: calc(92px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  height: var(--ss-len-d);
+  background: var(--jb-ink);
+}
+
+.ssStage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── blurred atmosphere ── */
+.ssBackdrop {
+  position: absolute;
+  inset: -8%;
+  z-index: -1;
+}
+
+.ssBackImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(42px) saturate(1.05) brightness(0.38);
+  will-change: opacity;
+}
+
+.ssBackdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 50%, transparent 0%, rgba(7, 19, 39, 0.55) 70%),
+    linear-gradient(to top, rgba(7, 19, 39, 0.85), transparent 40%);
+}
+
+/* ── layout: image | text ── */
+.ssLayout {
+  position: relative;
+  height: 100%;
+  max-width: var(--jb-max);
+  margin: 0 auto;
+  padding: clamp(40px, 7vh, 80px) var(--jb-gutter) calc(var(--ss-dock-clear) + 64px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 72px);
+}
+
+.ssFrame {
+  position: relative;
+  height: 100%;
+  max-height: 720px;
+  min-height: 0;
+}
+
+.ssGlow {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 70%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 180, 106, 0.18), transparent 65%);
+  pointer-events: none;
+}
+
+.ssImg {
+  /* sized to the photo's own shape (centred), so the soft edges below land on the photo's edges */
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transform-origin: 50% 40%;
+  will-change: opacity, transform;
+  /* soft edges so every crop melts into the backdrop instead of showing a hard rectangle */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 16%, #000 78%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 16%, #000 78%, transparent 100%);
+  mask-composite: intersect;
+  mask-size: auto;
+}
+
+/* ── chapter text ── */
+.ssText {
+  min-width: 0;
+}
+
+.ssCopy {
+  animation: ssRise 0.7s var(--jb-ease) both;
+}
+
+.ssCopy p {
+  margin: 0;
+}
+
+.ssEyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--jb-on-ink-muted);
+}
+
+.ssNum {
+  color: var(--jb-gold);
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+
+.ssTitle {
+  margin-top: 12px !important;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: clamp(2rem, 4.4vw, 3.75rem);
+  line-height: 1.05;
+  color: var(--jb-on-ink);
+}
+
+.ssNarration {
+  margin-top: 18px !important;
+  max-width: 34ch;
+  font-size: clamp(1.02rem, 1.5vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--jb-on-ink);
+  opacity: 0.86;
+}
+
+.ssFinalName {
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-size: clamp(2.2rem, 5vw, 4.25rem);
+  line-height: 1.05;
+  color: var(--jb-on-ink);
+}
+
+.ssFinalRole {
+  margin-top: 10px !important;
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  color: var(--jb-gold);
+  letter-spacing: 0.04em;
+}
+
+.ssFinalStack {
+  margin-top: 6px !important;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--jb-on-ink-muted);
+}
+
+.ssFinalLine {
+  margin-top: 18px !important;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  color: var(--jb-on-ink);
+}
+
+/* ── chapter buttons (bottom, above the dock) ── */
+.ssDots {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--ss-dock-clear) - 8px);
+  transform: translateX(-50%);
+  max-width: calc(100% - 2 * var(--jb-gutter));
+}
+
+.ssDotList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 2px;
+}
+
+.ssDot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--jb-on-ink-muted);
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 0.3s var(--jb-ease);
+}
+
+.ssDot::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.45;
+  transition:
+    opacity 0.3s var(--jb-ease),
+    width 0.3s var(--jb-ease);
+}
+
+.ssDot:hover {
+  color: var(--jb-on-ink);
+}
+
+.ssDotOn {
+  color: var(--jb-gold);
+}
+
+.ssDotOn::before {
+  opacity: 1;
+  width: 40px;
+}
+
+.ssDotLabel {
+  display: none;
+}
+
+.ssDot:focus-visible {
+  outline: 2px solid var(--jb-gold);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.ssVisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── reduced motion ── */
+.ssStatic {
+  padding: clamp(64px, 10vw, 128px) 0;
+}
+
+.ssStaticTitle {
+  margin: 0 0 32px;
+  font-family: var(--jb-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--jb-on-ink);
+}
+
+.ssStaticList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+}
+
+.ssStaticItem {
+  display: grid;
+  gap: 14px;
+}
+
+.ssStaticImg {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  background: var(--jb-ink-2);
+  border-radius: 14px;
+}
+
+.ssStaticHead {
+  margin: 6px 0 4px;
+  font-size: 1.1rem;
+  color: var(--jb-on-ink);
+}
+
+.ssStaticText {
+  margin: 0;
+  color: var(--jb-on-ink-muted);
+  line-height: 1.6;
+}
+
+@keyframes ssRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* ── laptop: show chapter names ── */
+@media (min-width: 1200px) {
+  .ssDotLabel {
+    display: block;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+  }
+
+  .ssDot {
+    min-width: 72px;
+  }
+}
+
+/* ── tablet portrait & phone: image on top, text below ── */
+@media (max-width: 899.98px) {
+  .ss {
+    height: var(--ss-len-m);
+  }
+
+  .ssLayout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    align-content: center;
+    align-items: stretch;
+    gap: 12px;
+    padding-top: 20px;
+    padding-bottom: calc(var(--ss-dock-clear) + 48px);
+  }
+
+  /* sized to the (square) photo: as wide as the screen allows, leaving room for the text, chapters and dock */
+  .ssFrame {
+    height: min(100vw - 2 * var(--jb-gutter), 100svh - 370px);
+    max-height: none;
+  }
+
+  .ssText {
+    text-align: center;
+  }
+
+  .ssTitle {
+    margin-top: 6px !important;
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  .ssNarration {
+    margin: 10px auto 0 !important;
+    font-size: clamp(0.92rem, 3.8vw, 1.05rem);
+    line-height: 1.5;
+  }
+
+  .ssFinalName {
+    font-size: clamp(1.9rem, 8.5vw, 2.8rem);
+  }
+
+  .ssFinalLine {
+    margin-top: 10px !important;
+  }
+
+  .ssDot {
+    min-width: 40px;
+    padding: 4px 2px;
+  }
+
+  .ssDot::before {
+    width: 20px;
+  }
+
+  .ssDotOn::before {
+    width: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ssCopy {
+    animation: none;
+  }
+}

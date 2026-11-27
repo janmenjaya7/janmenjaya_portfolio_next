@@ -1,0 +1,467 @@
+/* Admin → Visitors. All classes are prefixed `vs`; colours come from the admin tokens in admin.module.css. */
+
+.vsToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.vsRanges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--adm-hover);
+}
+
+.vsRange {
+  min-height: 36px;
+  padding: 0 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--adm-text-soft);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.vsRangeOn {
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font-weight: 600;
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.vsActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.vsGhostBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--adm-line);
+  border-radius: 999px;
+  background: var(--adm-card-solid);
+  color: var(--adm-text);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.vsGhostBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.vsDangerBtn {
+  color: var(--adm-danger);
+}
+
+.vsRange:focus-visible,
+.vsGhostBtn:focus-visible,
+.vsLinkBtn:focus-visible,
+.vsVisitHead:focus-visible {
+  outline: 2px solid var(--adm-accent);
+  outline-offset: 2px;
+}
+
+/* ── metrics ── */
+.vsMetrics {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.vsMetric {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-radius-md);
+  background: var(--adm-card-solid);
+  color: var(--adm-muted);
+}
+
+.vsMetricLive {
+  border-color: var(--adm-ok);
+  background: var(--adm-ok-soft);
+  color: var(--adm-ok-strong);
+}
+
+.vsMetricNum {
+  color: var(--adm-text);
+  font-size: 1.6rem;
+  font-weight: 650;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.vsMetricLabel {
+  font-size: 0.82rem;
+}
+
+/* ── cards ── */
+.vsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.vsCard {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-radius-md);
+  background: var(--adm-card-solid);
+  margin-bottom: 0.75rem;
+}
+
+.vsGrid .vsCard {
+  margin-bottom: 0;
+}
+
+.vsCardTitle {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--adm-text);
+}
+
+/* ── per-day chart ── */
+.vsChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 120px;
+}
+
+.vsCol {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 4px;
+  background: var(--adm-hover);
+}
+
+.vsColBar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 4px;
+  background: var(--adm-accent);
+}
+
+.vsChartAxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.35rem;
+  color: var(--adm-muted);
+  font-size: 0.75rem;
+}
+
+/* ── horizontal bars ── */
+.vsBars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.vsBarRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 30px;
+  padding: 0 0.6rem;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.85rem;
+}
+
+.vsBarFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 8px;
+  background: var(--adm-accent-soft);
+}
+
+.vsBarLabel {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--adm-text);
+}
+
+.vsBarCount {
+  position: relative;
+  flex: none;
+  color: var(--adm-text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.vsBarPct {
+  color: var(--adm-muted);
+  font-weight: 400;
+}
+
+/* ── recent visits ── */
+.vsVisits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.vsVisit {
+  border: 1px solid var(--adm-line);
+  border-radius: 12px;
+  background: var(--adm-surface);
+}
+
+.vsVisitHead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 12px;
+}
+
+.vsVisitHead::-webkit-details-marker {
+  display: none;
+}
+
+.vsVisitFlag {
+  flex: none;
+  font-size: 1.3rem;
+}
+
+.vsVisitMain {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+}
+
+.vsVisitPlace {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--adm-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.vsVisitMeta {
+  overflow: hidden;
+  color: var(--adm-muted);
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vsVisitStats {
+  display: grid;
+  flex: none;
+  text-align: right;
+  color: var(--adm-text-soft);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.vsLiveDot {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--adm-ok);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vsVisitBody {
+  padding: 0 0.9rem 0.8rem 2.85rem;
+}
+
+.vsVisitFacts {
+  margin: 0 0 0.5rem;
+  color: var(--adm-text-soft);
+  font-size: 0.82rem;
+}
+
+.vsVisitFacts code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--adm-hover);
+}
+
+.vsTimeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 3px;
+  font-size: 0.82rem;
+  color: var(--adm-text-soft);
+}
+
+.vsTimeline li {
+  display: flex;
+  gap: 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+.vsTlTime {
+  flex: none;
+  width: 3rem;
+  color: var(--adm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.vsTlClick strong {
+  color: var(--adm-text);
+}
+
+.vsTlHref {
+  color: var(--adm-muted);
+}
+
+/* ── states ── */
+.vsSkeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.vsSkeleton {
+  height: 92px;
+  border-radius: var(--adm-radius-md);
+  background: linear-gradient(90deg, var(--adm-hover) 25%, rgba(0, 0, 0, 0.07) 50%, var(--adm-hover) 75%);
+  background-size: 200% 100%;
+  animation: vsShimmer 1.3s linear infinite;
+}
+
+.vsError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--adm-radius-md);
+  background: var(--adm-danger-soft);
+  color: var(--adm-danger);
+}
+
+.vsLinkBtn {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.vsEmpty {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: 2.5rem 1rem;
+  border: 1px dashed var(--adm-line);
+  border-radius: var(--adm-radius-md);
+  color: var(--adm-muted);
+  text-align: center;
+}
+
+.vsEmptyTitle {
+  margin: 0;
+  color: var(--adm-text);
+  font-weight: 600;
+}
+
+.vsEmptyText {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.88rem;
+}
+
+.vsEmptySmall {
+  margin: 0;
+  color: var(--adm-muted);
+  font-size: 0.85rem;
+}
+
+@keyframes vsShimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ── phones ── */
+@media (max-width: 575.98px) {
+  .vsRanges {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .vsRange {
+    padding: 0 0.3rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+  }
+
+  .vsActions {
+    width: 100%;
+  }
+
+  .vsGhostBtn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .vsVisitHead {
+    flex-wrap: wrap;
+  }
+
+  .vsVisitStats {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2.05rem;
+    text-align: left;
+  }
+
+  .vsVisitBody {
+    padding-left: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vsSkeleton {
+    animation: none;
+  }
+}

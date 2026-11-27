@@ -63,8 +63,8 @@
 }
 
 .msUnread {
-  border-color: rgba(46, 155, 106, 0.35);
-  background: linear-gradient(90deg, rgba(46, 155, 106, 0.06), #fff 40%);
+  border-color: rgba(36, 71, 154, 0.35);
+  background: linear-gradient(90deg, rgba(36, 71, 154, 0.06), #fff 40%);
 }
 
 .msOpen {
@@ -91,7 +91,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2e9b6a, #1f6f8b);
+  background: linear-gradient(135deg, #24479a, #17707a);
   color: #fff;
   font-weight: 700;
 }

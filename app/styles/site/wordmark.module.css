@@ -1,0 +1,111 @@
+.wm {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 clamp(24px, 4vw, 48px);
+  /* the original footer watermark's lettering: Syne ExtraBold, tightly tracked (self-hosted via next/font) */
+  font-family: var(--font-syne), "Syne", var(--jb-sans);
+  /* Syne is wide: size the letters from the footer's own width (container units) so the whole name always fits */
+  container-type: inline-size;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  user-select: none;
+  isolation: isolate;
+}
+
+/* soft light pooling under the word */
+.wmGlow {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -10%;
+  height: 60%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(79, 125, 240, 0.22), transparent);
+  filter: blur(30px);
+  opacity: 0.7;
+}
+
+.wmMask {
+  display: inline-block;
+  font-size: 8.8cqi; /* "Janmenjaya." in Syne ExtraBold is ~11em wide: 8.8% of the width each fills it with a small margin */
+  padding: 0 0 0.04em;
+}
+
+.wmLetter {
+  --p: 0;
+  display: inline-block;
+  color: rgba(143, 176, 255, calc(var(--p) * 0.85));
+  -webkit-text-stroke: 1px rgba(235, 232, 225, calc(0.22 + var(--p) * 0.6));
+  text-shadow: 0 0 calc(var(--p) * 22px) rgba(143, 176, 255, calc(var(--p) * 0.45));
+  transform: translateY(calc(var(--p) * -0.08em));
+  transition: color 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), -webkit-text-stroke-color 0.25s ease, text-shadow 0.25s ease;
+}
+
+.wmDot {
+  color: var(--jb-accent-ink);
+  -webkit-text-stroke: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* entrance: letters fade and rise one after another (no clipping, so the glow can spread) */
+  .wmLetter {
+    opacity: 0;
+    translate: 0 0.35em;
+  }
+
+  .wm[data-shown] .wmLetter {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity 0.9s ease calc(var(--i) * 55ms),
+      translate 1s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 55ms),
+      color 0.25s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      -webkit-text-stroke-color 0.25s ease,
+      text-shadow 0.25s ease;
+    /* ambient: a light wave runs through the outlines every few seconds */
+    animation: wmWave 5.5s ease-in-out calc(1.4s + var(--i) * 0.11s) infinite;
+  }
+
+  .wm[data-shown] .wmGlow {
+    animation: wmBreath 6s ease-in-out infinite;
+  }
+}
+
+/* the light wave and glow only run while the footer is on screen */
+.wm:not([data-active]) .wmLetter,
+.wm:not([data-active]) .wmGlow {
+  animation-play-state: paused;
+}
+
+@keyframes wmWave {
+  0%,
+  70%,
+  100% {
+    -webkit-text-stroke-color: rgba(235, 232, 225, calc(0.2 + var(--p) * 0.6));
+  }
+  80% {
+    -webkit-text-stroke-color: rgba(143, 176, 255, 0.95);
+    text-shadow: 0 0 24px rgba(143, 176, 255, 0.5);
+  }
+}
+
+@keyframes wmBreath {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* no pointer lift on touch screens */
+@media (hover: none) {
+  .wmLetter {
+    transform: none;
+  }
+}
